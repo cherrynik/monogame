@@ -25,3 +25,7 @@ npm start
 ## Dependency Injection
 
 Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage)
+
+## Code Style
+
+Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options)

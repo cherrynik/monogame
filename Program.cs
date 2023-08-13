@@ -8,11 +8,11 @@ builder.Services.AddSingleton<monogame.Game>();
 
 using IHost host = builder.Build();
 
-Main(host.Services, "Main");
+Main(host.Services);
 
 await host.RunAsync();
 
-static void Main(IServiceProvider hostProvider, string lifetime)
+static void Main(IServiceProvider hostProvider)
 {
     using IServiceScope serviceScope = hostProvider.CreateScope();
     IServiceProvider provider = serviceScope.ServiceProvider;
