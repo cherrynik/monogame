@@ -29,3 +29,5 @@ Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions
 ## Code Style
 
 Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options)
+
+Use CSharpier - [Link](https://csharpier.com/docs/Editors)
