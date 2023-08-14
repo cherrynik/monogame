@@ -8,7 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
-    "start": "dotnet run",
+    "start": "dotnet run --project ./src/Apps/GameDesktop/GameDesktop.csproj",
     "prepare": "husky install"
   },
   "author": "Nik Cherednik <me@cherrynik.ru>",
