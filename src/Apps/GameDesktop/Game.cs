@@ -1,6 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Numerics;
+using Mechanics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace GameDesktop;
 
@@ -8,10 +12,14 @@ public class Game : Microsoft.Xna.Framework.Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Vector2 _position;
+    private readonly IMovement _movement;
 
     public Game()
     {
         _graphics = new GraphicsDeviceManager(this);
+        _movement = new SimpleMovement();
+        _position = new Vector2(0, 0);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
@@ -39,6 +47,18 @@ public class Game : Microsoft.Xna.Framework.Game
             Exit();
 
         // TODO: Add your update logic here
+        KeyboardState keyboardState = Keyboard.GetState();
+        float horizontalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Right)) -
+                              Convert.ToSingle(keyboardState.IsKeyDown(Keys.Left));
+
+        float verticalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Down)) -
+                            Convert.ToSingle(keyboardState.IsKeyDown(Keys.Up));
+
+        if (horizontalDir != 0 || verticalDir != 0)
+        {
+            _position = _movement.Move(_position, new Vector2 { X = horizontalDir, Y = verticalDir, });
+            Console.WriteLine(_position.ToString());
+        }
 
         base.Update(gameTime);
     }
@@ -48,6 +68,14 @@ public class Game : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
+        // Rectangle
+        _spriteBatch.Begin();
+        Rectangle rect = new Rectangle((int)_position.X, (int)_position.Y, 200, 150);
+        Color rectColor = Color.Red;
+        Texture2D pixelTexture = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
+        pixelTexture.SetData(new[] { rectColor });
+        _spriteBatch.Draw(pixelTexture, rect, rectColor);
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }

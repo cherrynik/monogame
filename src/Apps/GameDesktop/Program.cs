@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Math = Service.Math;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
@@ -15,10 +14,6 @@ await host.RunAsync();
 
 static void Main(IServiceProvider hostProvider)
 {
-    // Test piece of code, using imported shared library
-    Math math = new();
-    Console.WriteLine($"Service.TestFormula: {math.Multiply(2, 3)}");
-
     using IServiceScope serviceScope = hostProvider.CreateScope();
     IServiceProvider provider = serviceScope.ServiceProvider;
 
