@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameDesktop", "src\Apps\Gam
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{7AE4DC46-59EB-4F69-9240-C7363F0778AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "src\Libs\Service\Service.csproj", "{8DF13D47-3987-42F0-ADF1-C7B1EA264166}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mechanics", "src\Libs\Mechanics\Mechanics.csproj", "{8DF13D47-3987-42F0-ADF1-C7B1EA264166}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
