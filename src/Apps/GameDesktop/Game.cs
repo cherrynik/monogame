@@ -24,6 +24,11 @@ public class Game : Microsoft.Xna.Framework.Game
         IsMouseVisible = true;
     }
 
+    ~Game()
+    {
+        Console.WriteLine("Exit.");
+    }
+
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
