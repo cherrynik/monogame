@@ -36,9 +36,21 @@ LightInject Docs - [Link](https://github.com/seesharper/LightInject)
 
 ## Dependency Graph
 
-(Deepest to abstract)
+Install `Dependensee` - [Link]()
 
+Run the command:
+
+```shell
+dependensee . -t html -o ./dependensee.html
 ```
-Services -> FrontEnd -> Entities -> Game
-        Mechanics ----------↑
+And open the output file in the root of the project.
+
+Or check the docs - [Link](https://github.com/madushans/DependenSee)
+
+[//]: # (TODO: Use make later)
+
+You can also use `npm` to see the project tree.
+
+```shell
+npm run graph
 ```

@@ -37,6 +37,12 @@
       "commands": [
         "mgcb-editor-mac"
       ]
+    },
+    "dependensee": {
+      "version": "2.2.0",
+      "commands": [
+        "DependenSee"
+      ]
     }
   }
 }
