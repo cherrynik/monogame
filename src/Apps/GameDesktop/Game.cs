@@ -1,11 +1,10 @@
-﻿using System;
-using System.Numerics;
-using Entities;
+﻿using Entities;
+using LightInject;
 using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
+using Services;
 
 namespace GameDesktop;
 
@@ -34,7 +33,17 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void LoadContent()
     {
         _texture = Content.Load<Texture2D>("player");
-        _player = new Player(new SimpleMovement(), _texture, _spriteBatch);
+
+        // Really, XNA or MonoGame have created a puzzle by passing "this" into GraphicsDeviceManager,
+        // creating an unsolvable circular dependency problem, by doing so.
+        // So, for now, ole tha entry-point logic will be here.
+        ServiceContainer container = new();
+        container.Register<IMovement, SimpleMovement>();
+        container.Register<InputMovement>();
+        container.Register(factory =>
+            new Player(factory.GetInstance<IMovement>(), _texture, factory.GetInstance<InputMovement>()));
+
+        _player = container.GetInstance<Player>();
     }
 
     protected override void Update(GameTime gameTime)
@@ -44,7 +53,7 @@ public class Game : Microsoft.Xna.Framework.Game
             || Keyboard.GetState().IsKeyDown(Keys.Escape)
         )
             Exit();
-        
+
         _player.Update();
 
         base.Update(gameTime);
@@ -54,7 +63,7 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        _player.Draw();
+        _player.Draw(_spriteBatch);
 
         base.Draw(gameTime);
     }

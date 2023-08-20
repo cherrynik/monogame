@@ -2,21 +2,22 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Services;
 
 namespace Entities;
 
 public class Player
 {
     private readonly IMovement _movement;
-    private readonly SpriteBatch _spriteBatch;
     private readonly Texture2D _texture;
+    private readonly InputMovement _inputMovement;
     private Vector2 _position;
 
-    public Player(IMovement movement, Texture2D texture, SpriteBatch spriteBatch)
+    public Player(IMovement movement, Texture2D texture, InputMovement inputMovement)
     {
         _movement = movement;
         _texture = texture;
-        _spriteBatch = spriteBatch;
+        _inputMovement = inputMovement;
     }
 
     // TODO: Reimplement later to something useful with dependency injection
@@ -24,27 +25,15 @@ public class Player
     public void Update()
     {
         // TODO: Use normalized movement here by math
-        KeyboardState keyboardState = Keyboard.GetState();
-        float horizontalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Right)) -
-                              Convert.ToSingle(keyboardState.IsKeyDown(Keys.Left));
-
-        float verticalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Down)) -
-                            Convert.ToSingle(keyboardState.IsKeyDown(Keys.Up));
-
-        if (horizontalDir == 0 && verticalDir == 0)
-        {
-            return;
-        }
-
-        _position = _movement.Move(_position, new Vector2 { X = horizontalDir, Y = verticalDir });
+        _position = _movement.Move(_position, _inputMovement.GetDirection());
 
         Console.WriteLine(_position.ToString());
     }
 
-    public void Draw()
+    public void Draw(SpriteBatch spriteBatch)
     {
-        _spriteBatch.Begin();
-        _spriteBatch.Draw(_texture, _position, Color.White);
-        _spriteBatch.End();
+        spriteBatch.Begin();
+        spriteBatch.Draw(_texture, _position, Color.White);
+        spriteBatch.End();
     }
 }
