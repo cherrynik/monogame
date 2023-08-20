@@ -10,22 +10,26 @@ public class Player
 {
     private readonly IMovement _movement;
     private readonly Texture2D _texture;
-    private readonly InputMovement _inputMovement;
+    private readonly IInputScanner _inputScanner;
     private Vector2 _position;
 
-    public Player(IMovement movement, Texture2D texture, InputMovement inputMovement)
+    public Player(IMovement movement, Texture2D texture, IInputScanner inputScanner)
     {
         _movement = movement;
         _texture = texture;
-        _inputMovement = inputMovement;
+        _inputScanner = inputScanner;
     }
 
-    // TODO: Reimplement later to something useful with dependency injection
-    // I also prefer having update in a single place
+    // I prefer having update in a single place, but fo' now sum like diz
     public void Update()
     {
-        // TODO: Use normalized movement here by math
-        _position = _movement.Move(_position, _inputMovement.GetDirection());
+        Vector2 direction = _inputScanner.GetDirection();
+        if (direction.Equals(Vector2.Zero))
+        {
+            return;
+        }
+
+        _position = _movement.Move(_position, direction);
 
         Console.WriteLine(_position.ToString());
     }

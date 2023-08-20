@@ -3,9 +3,14 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Services;
 
-public class InputMovement
+public interface IInputScanner
 {
-    public InputMovement() { }
+    Vector2 GetDirection();
+}
+
+public class KeyboardScanner : IInputScanner
+{
+    public KeyboardScanner() { }
 
     public Vector2 GetDirection()
     {

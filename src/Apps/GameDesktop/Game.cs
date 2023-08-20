@@ -39,9 +39,9 @@ public class Game : Microsoft.Xna.Framework.Game
         // So, for now, ole tha entry-point logic will be here.
         ServiceContainer container = new();
         container.Register<IMovement, SimpleMovement>();
-        container.Register<InputMovement>();
+        container.Register<IInputScanner, KeyboardScanner>();
         container.Register(factory =>
-            new Player(factory.GetInstance<IMovement>(), _texture, factory.GetInstance<InputMovement>()));
+            new Player(factory.GetInstance<IMovement>(), _texture, factory.GetInstance<IInputScanner>()));
 
         _player = container.GetInstance<Player>();
     }
