@@ -15,6 +15,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Vector2 _position;
+    private Texture2D _texture;
 
     public Game()
     {
@@ -35,6 +36,8 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+        _texture = Content.Load<Texture2D>("player");
 
         // TODO: use this.Content to load your game content here
     }
@@ -76,6 +79,10 @@ public class Game : Microsoft.Xna.Framework.Game
         Texture2D pixelTexture = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
         pixelTexture.SetData(new[] { rectColor });
         _spriteBatch.Draw(pixelTexture, rect, rectColor);
+        _spriteBatch.End();
+        
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(_texture, new Vector2(0, 0), Color.White);
         _spriteBatch.End();
 
         base.Draw(gameTime);
