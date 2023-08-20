@@ -9,6 +9,7 @@
   "engineStrict": true,
   "scripts": {
     "start": "dotnet run --project ./src/Apps/GameDesktop/GameDesktop.csproj",
+    "editor": "dotnet mgcb-editor",
     "prepare": "husky install"
   },
   "author": "Nik Cherednik <me@cherrynik.ru>",
