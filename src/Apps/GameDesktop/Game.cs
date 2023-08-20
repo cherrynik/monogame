@@ -10,23 +10,19 @@ namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
+    private const string ContentRootDirectory = "Content";
+    private readonly IMovement _movement;
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Vector2 _position;
-    private readonly IMovement _movement;
 
     public Game()
     {
         _graphics = new GraphicsDeviceManager(this);
         _movement = new SimpleMovement();
         _position = new Vector2(0, 0);
-        Content.RootDirectory = "Content";
+        Content.RootDirectory = ContentRootDirectory;
         IsMouseVisible = true;
-    }
-
-    ~Game()
-    {
-        Console.WriteLine("Exit.");
     }
 
     protected override void Initialize()
