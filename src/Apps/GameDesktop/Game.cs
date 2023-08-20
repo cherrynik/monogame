@@ -1,4 +1,5 @@
 ﻿using Entities;
+using FrontEnd;
 using LightInject;
 using Mechanics;
 using Microsoft.Xna.Framework;
@@ -14,12 +15,13 @@ public class Game : Microsoft.Xna.Framework.Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Player _player;
-    private Texture2D _texture;
 
     public Game()
     {
         _graphics = new GraphicsDeviceManager(this);
+
         Content.RootDirectory = ContentRootDirectory;
+
         IsMouseVisible = true;
     }
 
@@ -32,8 +34,6 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
-        _texture = Content.Load<Texture2D>("player");
-
         // Really, XNA or MonoGame have created a puzzle by passing "this" into GraphicsDeviceManager,
         // creating an unsolvable circular dependency problem, by doing so.
         // So, for now, ole tha entry-point logic will be here.
@@ -41,7 +41,10 @@ public class Game : Microsoft.Xna.Framework.Game
         container.Register<IMovement, SimpleMovement>();
         container.Register<IInputScanner, KeyboardScanner>();
         container.Register(factory =>
-            new Player(factory.GetInstance<IMovement>(), _texture, factory.GetInstance<IInputScanner>()));
+            new PlayerView(Content.Load<Texture2D>("SpriteSheets/player"), factory.GetInstance<IInputScanner>()));
+        container.Register(factory =>
+            new Player(factory.GetInstance<IMovement>(),
+                factory.GetInstance<IInputScanner>(), factory.GetInstance<PlayerView>()));
 
         _player = container.GetInstance<Player>();
     }

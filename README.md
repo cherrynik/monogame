@@ -39,5 +39,6 @@ LightInject Docs - [Link](https://github.com/seesharper/LightInject)
 (Deepest to abstract)
 
 ```
-Mechanics -> Entities -> Game
+Services -> FrontEnd -> Entities -> Game
+        Mechanics ----------↑
 ```

@@ -1,7 +1,7 @@
-﻿using Mechanics;
+﻿using FrontEnd;
+using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Services;
 
 namespace Entities;
@@ -9,15 +9,16 @@ namespace Entities;
 public class Player
 {
     private readonly IMovement _movement;
-    private readonly Texture2D _texture;
+    private readonly Texture2D _spriteSheet;
     private readonly IInputScanner _inputScanner;
+    private readonly PlayerView _playerView;
     private Vector2 _position;
 
-    public Player(IMovement movement, Texture2D texture, IInputScanner inputScanner)
+    public Player(IMovement movement, IInputScanner inputScanner, PlayerView playerView)
     {
         _movement = movement;
-        _texture = texture;
         _inputScanner = inputScanner;
+        _playerView = playerView;
     }
 
     // I prefer having update in a single place, but fo' now sum like diz
@@ -36,8 +37,9 @@ public class Player
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Begin();
-        spriteBatch.Draw(_texture, _position, Color.White);
-        spriteBatch.End();
+        // spriteBatch.Begin();
+        // spriteBatch.Draw(_spriteSheet, _position, Color.White);
+        // spriteBatch.End();
+        _playerView.Draw(spriteBatch, _position);
     }
 }

@@ -4,12 +4,13 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion>default</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FrontEnd\FrontEnd.csproj" />
-      <ProjectReference Include="..\Mechanics\Mechanics.csproj" />
+      <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\Services\Services.csproj" />
     </ItemGroup>
 
