@@ -7,4 +7,8 @@
         <LangVersion>default</LangVersion>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Mechanics\Mechanics.csproj" />
+    </ItemGroup>
+
 </Project>

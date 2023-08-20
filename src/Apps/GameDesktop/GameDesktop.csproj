@@ -27,6 +27,7 @@
 
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libs\Entities\Entities.csproj" />
     <ProjectReference Include="..\..\Libs\Mechanics\Mechanics.csproj" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

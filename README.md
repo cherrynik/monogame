@@ -3,6 +3,7 @@
 A MonoGame-based game.
 
 - MonoGame repository - [Link](https://github.com/MonoGame/MonoGame).
+- Project docs - [Link](https://monogame.youtrack.cloud/articles/MG)
 
 # Getting Started
 
@@ -22,12 +23,21 @@ npm i
 npm start
 ```
 
-## Dependency Injection
-
-Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage)
-
 ## Code Style
 
 Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options)
 
 Use CSharpier - [Link](https://csharpier.com/docs/Editors)
+
+
+## Dependency Injection
+
+Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage)
+
+## Dependency Graph
+
+(Deepest to abstract)
+
+```
+Mechanics -> Entities -> Game
+```
