@@ -1,4 +1,6 @@
-﻿using Entities;
+﻿using System;
+using System.IO;
+using Entities;
 using FrontEnd;
 using LightInject;
 using Mechanics;
@@ -45,6 +47,10 @@ public class Game : Microsoft.Xna.Framework.Game
         container.Register(factory =>
             new Player(factory.GetInstance<IMovement>(),
                 factory.GetInstance<IInputScanner>(), factory.GetInstance<PlayerView>()));
+
+        // example of importing JSON data config
+        string content = File.ReadAllText(@"Content\Configs\Player.json");
+        Console.WriteLine(content);
 
         _player = container.GetInstance<Player>();
     }

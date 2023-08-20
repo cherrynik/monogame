@@ -13,6 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Configs/Player.json
+/copy:Configs/Player.json
+
 #begin SpriteSheets/player.png
 /importer:TextureImporter
 /processor:TextureProcessor

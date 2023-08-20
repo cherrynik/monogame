@@ -5,6 +5,19 @@ A MonoGame-based game.
 - MonoGame repository - [Link](https://github.com/MonoGame/MonoGame).
 - Project docs - [Link](https://monogame.youtrack.cloud/articles/MG)
 
+## Importing text files: `JSON`, `txt`...
+
+In MonoGame Content Pipeline file `Content.mgcb`, just use the command:
+```
+#begin <path-within-content-folder>
+/copy:<path-within-content-folder>
+```
+
+Then, just read it in code as it's nothing:
+```csharp
+File.ReadAllText(@"Content\Configs\Player.json");
+```
+
 # Getting Started
 
 ## Install Dependencies
