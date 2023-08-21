@@ -7,16 +7,27 @@ A MonoGame-based game.
 
 ## Importing text files: `JSON`, `txt`...
 
-In MonoGame Content Pipeline file `Content.mgcb`, just use the command:
+In the MonoGame Content Pipeline file `Content.mgcb`, just click on your file and select `Copy` instead of `Build`.
+
+Or write the command below in the file:
 ```
 #begin <path-within-content-folder>
 /copy:<path-within-content-folder>
 ```
 
-Then, just read it in code as it's nothing:
+Then, just read it in your code as in following:
 ```csharp
-File.ReadAllText(@"Content\Configs\Player.json");
+File.ReadAllText(@"Content\<path-to-your-file>.<extension>");
 ```
+
+## Importing sprites in project
+
+1. Use Aseprite for exporting sprite sheets, export 'em with a JSON file.
+   - **HOWTO**, Manual - [Link](https://gamebanana.com/tuts/13811)
+   - Buy Aseprite - [Link]() 
+2. Use QuickType (for generating types from your JSON) - [Link](https://quicktype.io/)
+3. Add the new type in `Models`.
+4. **Use it!**
 
 # Getting Started
 

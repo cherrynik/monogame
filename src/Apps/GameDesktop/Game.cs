@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Models.Aseprite;
 using Entities;
 using FrontEnd;
 using LightInject;
@@ -43,14 +44,16 @@ public class Game : Microsoft.Xna.Framework.Game
         container.Register<IMovement, SimpleMovement>();
         container.Register<IInputScanner, KeyboardScanner>();
         container.Register(factory =>
-            new PlayerView(Content.Load<Texture2D>("SpriteSheets/player"), factory.GetInstance<IInputScanner>()));
+            new PlayerView(Content.Load<Texture2D>(@"SpriteSheets\Player\player-running"),
+                factory.GetInstance<IInputScanner>()));
         container.Register(factory =>
             new Player(factory.GetInstance<IMovement>(),
                 factory.GetInstance<IInputScanner>(), factory.GetInstance<PlayerView>()));
 
         // example of importing JSON data config
-        string content = File.ReadAllText(@"Content\Configs\Player.json");
-        Console.WriteLine(content);
+        string content = File.ReadAllText(@"Content\Configs\SpriteSheets\Player\player-running.json");
+        SpriteSheet spriteSheet = SpriteSheet.FromJson(content);
+        Console.WriteLine(content, spriteSheet.ToJson());
 
         _player = container.GetInstance<Player>();
     }

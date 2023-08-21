@@ -16,7 +16,37 @@
 #begin Configs/Player.json
 /copy:Configs/Player.json
 
-#begin SpriteSheets/player.png
+#begin Configs/SpriteSheets/Player/player-fighting-right.json
+/copy:Configs/SpriteSheets/Player/player-fighting-right.json
+
+#begin Configs/SpriteSheets/Player/player-fighting-up.json
+/copy:Configs/SpriteSheets/Player/player-fighting-up.json
+
+#begin Configs/SpriteSheets/Player/player-fighting.json
+/copy:Configs/SpriteSheets/Player/player-fighting.json
+
+#begin Configs/SpriteSheets/Player/player-laying-down.json
+/copy:Configs/SpriteSheets/Player/player-laying-down.json
+
+#begin Configs/SpriteSheets/Player/player-running-right.json
+/copy:Configs/SpriteSheets/Player/player-running-right.json
+
+#begin Configs/SpriteSheets/Player/player-running-up.json
+/copy:Configs/SpriteSheets/Player/player-running-up.json
+
+#begin Configs/SpriteSheets/Player/player-running.json
+/copy:Configs/SpriteSheets/Player/player-running.json
+
+#begin Configs/SpriteSheets/Player/player-standing-right.json
+/copy:Configs/SpriteSheets/Player/player-standing-right.json
+
+#begin Configs/SpriteSheets/Player/player-standing-up.json
+/copy:Configs/SpriteSheets/Player/player-standing-up.json
+
+#begin Configs/SpriteSheets/Player/player-standing.json
+/copy:Configs/SpriteSheets/Player/player-standing.json
+
+#begin SpriteSheets/Player/player-fighting-right.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -26,5 +56,113 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/player.png
+/build:SpriteSheets/Player/player-fighting-right.png
+
+#begin SpriteSheets/Player/player-fighting-up.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-fighting-up.png
+
+#begin SpriteSheets/Player/player-fighting.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-fighting.png
+
+#begin SpriteSheets/Player/player-laying-down.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-laying-down.png
+
+#begin SpriteSheets/Player/player-running-right.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-running-right.png
+
+#begin SpriteSheets/Player/player-running-up.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-running-up.png
+
+#begin SpriteSheets/Player/player-running.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-running.png
+
+#begin SpriteSheets/Player/player-standing-right.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-standing-right.png
+
+#begin SpriteSheets/Player/player-standing-up.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-standing-up.png
+
+#begin SpriteSheets/Player/player-standing.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/player-standing.png
 
