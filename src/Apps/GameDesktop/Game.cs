@@ -3,6 +3,7 @@ using System.IO;
 using Models.Aseprite;
 using Entities;
 using FrontEnd;
+using GameDesktop.Resources;
 using LightInject;
 using Mechanics;
 using Microsoft.Xna.Framework;
@@ -40,20 +41,24 @@ public class Game : Microsoft.Xna.Framework.Game
         // Really, XNA or MonoGame have created a puzzle by passing "this" into GraphicsDeviceManager,
         // creating an unsolvable circular dependency problem, by doing so.
         // So, for now, ole tha entry-point logic will be here.
+        // TODO: Normalize DI workflow
         ServiceContainer container = new();
         container.Register<IMovement, SimpleMovement>();
         container.Register<IInputScanner, KeyboardScanner>();
+        // TODO: PlayerViewAnimated
         container.Register(factory =>
-            new PlayerView(Content.Load<Texture2D>(@"SpriteSheets\Player\player-running"),
+            new PlayerView(Content.Load<Texture2D>(SpriteSheets.PlayerRunning),
                 factory.GetInstance<IInputScanner>()));
         container.Register(factory =>
             new Player(factory.GetInstance<IMovement>(),
                 factory.GetInstance<IInputScanner>(), factory.GetInstance<PlayerView>()));
 
         // example of importing JSON data config
-        string content = File.ReadAllText(@"Content\Configs\SpriteSheets\Player\player-running.json");
+        string content = File.ReadAllText(Configs.PlayerRunning);
+        // TODO: dictionary with a key containing png (spritesheet) and a value of JSON data (from aseprite).
+        // Then, this is what a View class should have passing tru
         SpriteSheet spriteSheet = SpriteSheet.FromJson(content);
-        Console.WriteLine(content, spriteSheet.ToJson());
+        Console.WriteLine((content, spriteSheet.ToJson()));
 
         _player = container.GetInstance<Player>();
     }
