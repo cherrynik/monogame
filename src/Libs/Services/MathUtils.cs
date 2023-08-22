@@ -2,20 +2,20 @@
 
 namespace Services;
 
+public enum RadDir
+{
+    Right,
+    UpRight,
+    Up,
+    UpLeft,
+    Left,
+    DownLeft,
+    Down,
+    DownRight
+}
+
 public static class MathUtils
 {
-    public enum RadDir
-    {
-        Right,
-        UpRight,
-        Up,
-        UpLeft,
-        Left,
-        DownLeft,
-        Down,
-        DownRight
-    }
-
     // TODO: Unit tests
     private static double Rad8Dir(float x, float y)
     {

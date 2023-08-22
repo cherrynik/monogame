@@ -98,3 +98,5 @@ Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions
 **Explanation**: It's made so as some of them are handled by `Content.Load` of MonoGame, and some
 by `File`, `FileStream`, and the kind of tools, which don't read files starting from the `Content/` folder but from the
 root of the project.
+
+### TODO: Run tests on CI when did git push
