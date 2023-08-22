@@ -22,5 +22,5 @@ public class KeyboardScanner : IInputScanner
 
     public Vector2 GetDirection() =>
         new(GetAxisDirection(Keys.Left, Keys.Right),
-            GetAxisDirection(Keys.Down, Keys.Up));
+            GetAxisDirection(Keys.Up, Keys.Down));
 }

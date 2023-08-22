@@ -16,7 +16,6 @@ public enum RadDir
 
 public static class MathUtils
 {
-    // TODO: Unit tests
     private static double Rad8Dir(float x, float y)
     {
         double radians = Math.Atan2(y, x);
