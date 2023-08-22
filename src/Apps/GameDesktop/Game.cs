@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Models.Aseprite;
 using Entities;
@@ -48,16 +49,31 @@ public class Game : Microsoft.Xna.Framework.Game
         // TODO: PlayerViewAnimated
         container.Register(factory =>
             new PlayerView(Content.Load<Texture2D>(SpriteSheets.PlayerRunning),
-                factory.GetInstance<IInputScanner>()));
+                factory.GetInstance<IInputScanner>(),
+                new Dictionary<RadDir, string>
+                {
+                    { RadDir.Right, "right" },
+                    { RadDir.UpRight, "upright" },
+                    { RadDir.Up, "up" },
+                    { RadDir.UpLeft, "upleft" },
+                    { RadDir.Left, "left" },
+                    { RadDir.DownLeft, "downleft" },
+                    { RadDir.Down, "down" },
+                    { RadDir.DownRight, "downright" },
+                }
+            ));
+
         container.Register(factory =>
             new Player(factory.GetInstance<IMovement>(),
                 factory.GetInstance<IInputScanner>(), factory.GetInstance<PlayerView>()));
 
         // example of importing JSON data config
         string content = File.ReadAllText(Configs.PlayerRunning);
+
         // TODO: dictionary with a key containing png (spritesheet) and a value of JSON data (from aseprite).
         // Then, this is what a View class should have passing tru
         SpriteSheet spriteSheet = SpriteSheet.FromJson(content);
+
         Console.WriteLine((content, spriteSheet.ToJson()));
 
         _player = container.GetInstance<Player>();
