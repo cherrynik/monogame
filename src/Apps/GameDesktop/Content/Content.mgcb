@@ -13,40 +13,49 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Configs/Player.json
-/copy:Configs/Player.json
+#begin Configs/SpriteSheets/Player/Fighting/down.json
+/copy:Configs/SpriteSheets/Player/Fighting/down.json
 
-#begin Configs/SpriteSheets/Player/player-fighting-right.json
-/copy:Configs/SpriteSheets/Player/player-fighting-right.json
+#begin Configs/SpriteSheets/Player/Fighting/left.json
+/copy:Configs/SpriteSheets/Player/Fighting/left.json
 
-#begin Configs/SpriteSheets/Player/player-fighting-up.json
-/copy:Configs/SpriteSheets/Player/player-fighting-up.json
+#begin Configs/SpriteSheets/Player/Fighting/right.json
+/copy:Configs/SpriteSheets/Player/Fighting/right.json
 
-#begin Configs/SpriteSheets/Player/player-fighting.json
-/copy:Configs/SpriteSheets/Player/player-fighting.json
+#begin Configs/SpriteSheets/Player/Fighting/up.json
+/copy:Configs/SpriteSheets/Player/Fighting/up.json
 
-#begin Configs/SpriteSheets/Player/player-laying-down.json
-/copy:Configs/SpriteSheets/Player/player-laying-down.json
+#begin Configs/SpriteSheets/Player/LayingDown/left.json
+/copy:Configs/SpriteSheets/Player/LayingDown/left.json
 
-#begin Configs/SpriteSheets/Player/player-running-right.json
-/copy:Configs/SpriteSheets/Player/player-running-right.json
+#begin Configs/SpriteSheets/Player/LayingDown/right.json
+/copy:Configs/SpriteSheets/Player/LayingDown/right.json
 
-#begin Configs/SpriteSheets/Player/player-running-up.json
-/copy:Configs/SpriteSheets/Player/player-running-up.json
+#begin Configs/SpriteSheets/Player/Running/down.json
+/copy:Configs/SpriteSheets/Player/Running/down.json
 
-#begin Configs/SpriteSheets/Player/player-running.json
-/copy:Configs/SpriteSheets/Player/player-running.json
+#begin Configs/SpriteSheets/Player/Running/left.json
+/copy:Configs/SpriteSheets/Player/Running/left.json
 
-#begin Configs/SpriteSheets/Player/player-standing-right.json
-/copy:Configs/SpriteSheets/Player/player-standing-right.json
+#begin Configs/SpriteSheets/Player/Running/right.json
+/copy:Configs/SpriteSheets/Player/Running/right.json
 
-#begin Configs/SpriteSheets/Player/player-standing-up.json
-/copy:Configs/SpriteSheets/Player/player-standing-up.json
+#begin Configs/SpriteSheets/Player/Running/up.json
+/copy:Configs/SpriteSheets/Player/Running/up.json
 
-#begin Configs/SpriteSheets/Player/player-standing.json
-/copy:Configs/SpriteSheets/Player/player-standing.json
+#begin Configs/SpriteSheets/Player/Standing/down.json
+/copy:Configs/SpriteSheets/Player/Standing/down.json
 
-#begin SpriteSheets/Player/player-fighting-right.png
+#begin Configs/SpriteSheets/Player/Standing/left.json
+/copy:Configs/SpriteSheets/Player/Standing/left.json
+
+#begin Configs/SpriteSheets/Player/Standing/right.json
+/copy:Configs/SpriteSheets/Player/Standing/right.json
+
+#begin Configs/SpriteSheets/Player/Standing/up.json
+/copy:Configs/SpriteSheets/Player/Standing/up.json
+
+#begin SpriteSheets/Player/Fighting/down.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -56,9 +65,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-fighting-right.png
+/build:SpriteSheets/Player/Fighting/down.png
 
-#begin SpriteSheets/Player/player-fighting-up.png
+#begin SpriteSheets/Player/Fighting/left.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -68,9 +77,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-fighting-up.png
+/build:SpriteSheets/Player/Fighting/left.png
 
-#begin SpriteSheets/Player/player-fighting.png
+#begin SpriteSheets/Player/Fighting/right.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -80,9 +89,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-fighting.png
+/build:SpriteSheets/Player/Fighting/right.png
 
-#begin SpriteSheets/Player/player-laying-down.png
+#begin SpriteSheets/Player/Fighting/up.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -92,9 +101,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-laying-down.png
+/build:SpriteSheets/Player/Fighting/up.png
 
-#begin SpriteSheets/Player/player-running-right.png
+#begin SpriteSheets/Player/LayingDown/left.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -104,9 +113,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-running-right.png
+/build:SpriteSheets/Player/LayingDown/left.png
 
-#begin SpriteSheets/Player/player-running-up.png
+#begin SpriteSheets/Player/LayingDown/right.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -116,9 +125,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-running-up.png
+/build:SpriteSheets/Player/LayingDown/right.png
 
-#begin SpriteSheets/Player/player-running.png
+#begin SpriteSheets/Player/Running/down.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -128,9 +137,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-running.png
+/build:SpriteSheets/Player/Running/down.png
 
-#begin SpriteSheets/Player/player-standing-right.png
+#begin SpriteSheets/Player/Running/left.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -140,9 +149,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-standing-right.png
+/build:SpriteSheets/Player/Running/left.png
 
-#begin SpriteSheets/Player/player-standing-up.png
+#begin SpriteSheets/Player/Running/right.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -152,9 +161,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-standing-up.png
+/build:SpriteSheets/Player/Running/right.png
 
-#begin SpriteSheets/Player/player-standing.png
+#begin SpriteSheets/Player/Running/up.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -164,5 +173,53 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SpriteSheets/Player/player-standing.png
+/build:SpriteSheets/Player/Running/up.png
+
+#begin SpriteSheets/Player/Standing/down.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/Standing/down.png
+
+#begin SpriteSheets/Player/Standing/left.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/Standing/left.png
+
+#begin SpriteSheets/Player/Standing/right.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/Standing/right.png
+
+#begin SpriteSheets/Player/Standing/up.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SpriteSheets/Player/Standing/up.png
 

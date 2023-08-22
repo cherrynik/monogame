@@ -31,8 +31,6 @@ public class Player
         }
 
         _position = _movement.Move(_position, direction);
-
-        Console.WriteLine(_position.ToString());
     }
 
     public void Draw(SpriteBatch spriteBatch)

@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+              xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:element name="root" msdata:IsDataSet="true">
-      
+
     </xsd:element>
   </xsd:schema>
   <resheader name="resmimetype">
@@ -13,12 +14,63 @@
     <value>1.3</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+      PublicKeyToken=b77a5c561934e089
+    </value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+      PublicKeyToken=b77a5c561934e089
+    </value>
   </resheader>
-  <data name="PlayerRunning">
-    <value>Content/Configs/SpriteSheets/Player/player-running.json</value>
+
+  <data name="PlayerLayingDownRight">
+    <value>Content/Configs/SpriteSheets/Player/LayingDown/right.json</value>
+    <comment>Not Handled by MonoGame, thus there's an extension and start path with Content</comment>
+  </data>
+  <data name="PlayerLayingDownLeft">
+    <value>Content/Configs/SpriteSheets/Player/LayingDown/left.json</value>
+  </data>
+
+  <data name="PlayerFightingRight">
+    <value>Content/Configs/SpriteSheets/Player/Fighting/right.json</value>
+    <comment>Not Handled by MonoGame, thus there's extension and start path with Content</comment>
+  </data>
+  <data name="PlayerFightingUp">
+    <value>Content/Configs/SpriteSheets/Player/Fighting/up.json</value>
+  </data>
+  <data name="PlayerFightingLeft">
+    <value>Content/Configs/SpriteSheets/Player/Fighting/left.json</value>
+  </data>
+  <data name="PlayerFightingDown">
+    <value>Content/Configs/SpriteSheets/Player/Fighting/down.json</value>
+  </data>
+
+  <data name="PlayerStandingRight">
+    <value>Content/Configs/SpriteSheets/Player/Standing/right.json</value>
+    <comment>Not Handled by MonoGame, thus there's an extension and start path with Content</comment>
+  </data>
+  <data name="PlayerStandingUp">
+    <value>Content/Configs/SpriteSheets/Player/Standing/up.json</value>
+  </data>
+  <data name="PlayerStandingLeft">
+    <value>Content/Configs/SpriteSheets/Player/Standing/left.json</value>
+  </data>
+  <data name="PlayerStandingDown">
+    <value>Content/Configs/SpriteSheets/Player/Standing/down.json</value>
+  </data>
+
+  <data name="PlayerRunningRight">
+    <value>Content/Configs/SpriteSheets/Player/Running/right.json</value>
+    <comment>Not Handled by MonoGame, thus there's an extension and start path with Content</comment>
+  </data>
+  <data name="PlayerRunningUp">
+    <value>Content/Configs/SpriteSheets/Player/Running/up.json</value>
+  </data>
+  <data name="PlayerRunningLeft">
+    <value>Content/Configs/SpriteSheets/Player/Running/left.json</value>
+  </data>
+  <data name="PlayerRunningDown">
+    <value>Content/Configs/SpriteSheets/Player/Running/down.json</value>
   </data>
 </root>

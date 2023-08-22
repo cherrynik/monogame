@@ -60,11 +60,128 @@ namespace GameDesktop.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Content/SpriteSheets/Player/player-running.
+        ///   Looks up a localized string similar to SpriteSheets/Player/Fighting/down.
         /// </summary>
-        internal static string PlayerRunning {
+        internal static string PlayerFightingDown {
             get {
-                return ResourceManager.GetString("PlayerRunning", resourceCulture);
+                return ResourceManager.GetString("PlayerFightingDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Fighting/left.
+        /// </summary>
+        internal static string PlayerFightingLeft {
+            get {
+                return ResourceManager.GetString("PlayerFightingLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Fighting/right.
+        /// </summary>
+        internal static string PlayerFightingRight {
+            get {
+                return ResourceManager.GetString("PlayerFightingRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Fighting/up.
+        /// </summary>
+        internal static string PlayerFightingUp {
+            get {
+                return ResourceManager.GetString("PlayerFightingUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/LayingDown/left.
+        /// </summary>
+        internal static string PlayerLayingDownLeft {
+            get {
+                return ResourceManager.GetString("PlayerLayingDownLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/LayingDown/right.
+        /// </summary>
+        internal static string PlayerLayingDownRight {
+            get {
+                return ResourceManager.GetString("PlayerLayingDownRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Running/down.
+        /// </summary>
+        internal static string PlayerRunningDown {
+            get {
+                return ResourceManager.GetString("PlayerRunningDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Running/left.
+        /// </summary>
+        internal static string PlayerRunningLeft {
+            get {
+                return ResourceManager.GetString("PlayerRunningLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Running/right.
+        /// </summary>
+        internal static string PlayerRunningRight {
+            get {
+                return ResourceManager.GetString("PlayerRunningRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Running/up.
+        /// </summary>
+        internal static string PlayerRunningUp {
+            get {
+                return ResourceManager.GetString("PlayerRunningUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Standing/down.
+        /// </summary>
+        internal static string PlayerStandingDown {
+            get {
+                return ResourceManager.GetString("PlayerStandingDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Standing/left.
+        /// </summary>
+        internal static string PlayerStandingLeft {
+            get {
+                return ResourceManager.GetString("PlayerStandingLeft", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Standing/right.
+        /// </summary>
+        internal static string PlayerStandingRight {
+            get {
+                return ResourceManager.GetString("PlayerStandingRight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SpriteSheets/Player/Standing/up.
+        /// </summary>
+        internal static string PlayerStandingUp {
+            get {
+                return ResourceManager.GetString("PlayerStandingUp", resourceCulture);
             }
         }
     }

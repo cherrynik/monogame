@@ -48,18 +48,25 @@ public class Game : Microsoft.Xna.Framework.Game
         container.Register<IInputScanner, KeyboardScanner>();
         // TODO: PlayerViewAnimated
         container.Register(factory =>
-            new PlayerView(Content.Load<Texture2D>(SpriteSheets.PlayerRunning),
-                factory.GetInstance<IInputScanner>(),
-                new Dictionary<RadDir, string>
+            new PlayerView(factory.GetInstance<IInputScanner>(),
+                new Dictionary<RadDir, Texture2D>
                 {
-                    { RadDir.Right, "right" },
-                    { RadDir.UpRight, "upright" },
-                    { RadDir.Up, "up" },
-                    { RadDir.UpLeft, "upleft" },
-                    { RadDir.Left, "left" },
-                    { RadDir.DownLeft, "downleft" },
-                    { RadDir.Down, "down" },
-                    { RadDir.DownRight, "downright" },
+                    { RadDir.Right, Content.Load<Texture2D>(SpriteSheets.PlayerRunningRight) },
+
+                    // Needs UpRight sprite
+                    { RadDir.UpRight, Content.Load<Texture2D>(SpriteSheets.PlayerRunningRight) },
+                    { RadDir.Up, Content.Load<Texture2D>(SpriteSheets.PlayerRunningUp) },
+
+                    // Needs UpLeft sprite
+                    { RadDir.UpLeft, Content.Load<Texture2D>(SpriteSheets.PlayerRunningLeft) },
+                    { RadDir.Left, Content.Load<Texture2D>(SpriteSheets.PlayerRunningLeft) },
+
+                    // Needs DownLeft sprite
+                    { RadDir.DownLeft, Content.Load<Texture2D>(SpriteSheets.PlayerRunningLeft) },
+                    { RadDir.Down, Content.Load<Texture2D>(SpriteSheets.PlayerRunningDown) },
+
+                    // Needs DownRight sprite
+                    { RadDir.DownRight, Content.Load<Texture2D>(SpriteSheets.PlayerRunningRight) }
                 }
             ));
 
@@ -68,7 +75,8 @@ public class Game : Microsoft.Xna.Framework.Game
                 factory.GetInstance<IInputScanner>(), factory.GetInstance<PlayerView>()));
 
         // example of importing JSON data config
-        string content = File.ReadAllText(Configs.PlayerRunning);
+        // TODO: Configs as a class, so we can call it Configs.Player.<Action>.<Direction> or make a tool for autogen?
+        string content = File.ReadAllText(Configs.PlayerRunningUp);
 
         // TODO: dictionary with a key containing png (spritesheet) and a value of JSON data (from aseprite).
         // Then, this is what a View class should have passing tru
