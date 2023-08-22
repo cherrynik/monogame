@@ -10,17 +10,17 @@ public interface IInputScanner
 
 public class KeyboardScanner : IInputScanner
 {
-    public KeyboardScanner() { }
-
-    public Vector2 GetDirection()
+    private static int GetAxisDirection(Keys negative, Keys positive)
     {
         KeyboardState keyboardState = Keyboard.GetState();
-        float horizontalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Right)) -
-                              Convert.ToSingle(keyboardState.IsKeyDown(Keys.Left));
 
-        float verticalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Down)) -
-                            Convert.ToSingle(keyboardState.IsKeyDown(Keys.Up));
+        int a = keyboardState.IsKeyDown(positive) ? 1 : 0;
+        int b = keyboardState.IsKeyDown(negative) ? 1 : 0;
 
-        return new Vector2(horizontalDir, verticalDir);
+        return a - b;
     }
+
+    public Vector2 GetDirection() =>
+        new(GetAxisDirection(Keys.Left, Keys.Right),
+            GetAxisDirection(Keys.Down, Keys.Up));
 }
