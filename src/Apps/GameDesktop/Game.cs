@@ -11,7 +11,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Aseprite;
+using MonoGame.Aseprite.Content.Processors;
+using MonoGame.Aseprite.Sprites;
 using Services;
+using SpriteSheet = Models.Aseprite.SpriteSheet;
 
 namespace GameDesktop;
 
@@ -51,24 +54,48 @@ public class Game : Microsoft.Xna.Framework.Game
         AsepriteFile asepriteFile = AsepriteFile.Load(SpriteSheets.Player);
         container.Register(factory =>
             new PlayerView(factory.GetInstance<IInputScanner>(),
-                new Dictionary<RadDir, Texture2D>
+                new Dictionary<RadDir, AnimatedSprite>
                 {
-                    { RadDir.Right, Content.Load<Texture2D>(SpriteSheets.PlayerRunningRight) },
+                    {
+                        RadDir.Right,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
+                    },
 
                     // Needs UpRight sprite
-                    { RadDir.UpRight, Content.Load<Texture2D>(SpriteSheets.PlayerRunningRight) },
-                    { RadDir.Up, Content.Load<Texture2D>(SpriteSheets.PlayerRunningUp) },
+                    {
+                        RadDir.UpRight,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
+                    },
+                    {
+                        RadDir.Up,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingUp")
+                    },
 
                     // Needs UpLeft sprite
-                    { RadDir.UpLeft, Content.Load<Texture2D>(SpriteSheets.PlayerRunningLeft) },
-                    { RadDir.Left, Content.Load<Texture2D>(SpriteSheets.PlayerRunningLeft) },
+                    {
+                        RadDir.UpLeft,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingUp")
+                    },
+                    {
+                        RadDir.Left,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
+                    },
 
                     // Needs DownLeft sprite
-                    { RadDir.DownLeft, Content.Load<Texture2D>(SpriteSheets.PlayerRunningLeft) },
-                    { RadDir.Down, Content.Load<Texture2D>(SpriteSheets.PlayerRunningDown) },
+                    {
+                        RadDir.DownLeft,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingDown")
+                    },
+                    {
+                        RadDir.Down,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingDown")
+                    },
 
                     // Needs DownRight sprite
-                    { RadDir.DownRight, Content.Load<Texture2D>(SpriteSheets.PlayerRunningRight) }
+                    {
+                        RadDir.DownRight,
+                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
+                    }
                 }
             ));
 
@@ -91,15 +118,15 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void Update(GameTime gameTime)
     {
+        base.Update(gameTime);
+
         if (
             GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
             || Keyboard.GetState().IsKeyDown(Keys.Escape)
         )
             Exit();
 
-        _player.Update();
-
-        base.Update(gameTime);
+        _player.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)

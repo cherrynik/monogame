@@ -22,7 +22,7 @@ public class Player
     }
 
     // I prefer having update in a single place, but fo' now sum like diz
-    public void Update()
+    public void Update(GameTime gameTime)
     {
         Vector2 direction = _inputScanner.GetDirection();
         if (direction.Equals(Vector2.Zero))
@@ -31,6 +31,7 @@ public class Player
         }
 
         _position = _movement.Move(_position, direction);
+        _playerView.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch)
