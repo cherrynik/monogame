@@ -9,7 +9,7 @@
 3. Add the new type in `Models`.
 4. **Use it!**
 
-## Importing text files: `JSON`, `txt`...
+## Importing special files
 
 In the MonoGame Content Pipeline file `Content.mgcb`, just click on your file and choose `Copy` instead of `Build`.
 
@@ -20,15 +20,30 @@ Or write the command below in the file:
 /copy:<path-within-content-folder>
 ```
 
-Then, just read it in your code as in following:
+Then, use your own processor/reader:
 
 ```csharp
 File.ReadAllText(@"Content\<path-to-your-file>.<extension>");
 ```
 
-Perfectly, add a constant value in resources.
+Perfectly, add a constant value in `*.resx` of the path to your file.
+
+And use it like that:
+
+```csharp
+File.ReadAllText(Some.Path);
+```
 
 Here is how - [Link](#creating-global-const);
+
+### Currently supported (and used) formats
+
+- Aseprite: `ase`, `aseprite`
+- Text: `json`, `txt`
+
+## Aseprite importing
+
+Here is how - [Link](https://monogameaseprite.net/)
 
 ## Creating global `const`
 
