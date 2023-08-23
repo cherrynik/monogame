@@ -60,6 +60,15 @@ namespace GameDesktop.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Content/SpriteSheets/Player.aseprite.
+        /// </summary>
+        internal static string Player {
+            get {
+                return ResourceManager.GetString("Player", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SpriteSheets/Player/Fighting/down.
         /// </summary>
         internal static string PlayerFightingDown {

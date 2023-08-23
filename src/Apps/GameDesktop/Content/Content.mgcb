@@ -55,6 +55,9 @@
 #begin Configs/SpriteSheets/Player/Standing/up.json
 /copy:Configs/SpriteSheets/Player/Standing/up.json
 
+#begin SpriteSheets/Player.aseprite
+/copy:SpriteSheets/Player.aseprite
+
 #begin SpriteSheets/Player/Fighting/down.png
 /importer:TextureImporter
 /processor:TextureProcessor

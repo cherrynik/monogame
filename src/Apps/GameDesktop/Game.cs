@@ -10,6 +10,7 @@ using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Aseprite;
 using Services;
 
 namespace GameDesktop;
@@ -47,6 +48,7 @@ public class Game : Microsoft.Xna.Framework.Game
         container.Register<IMovement, SimpleMovement>();
         container.Register<IInputScanner, KeyboardScanner>();
         // TODO: PlayerViewAnimated
+        AsepriteFile asepriteFile = AsepriteFile.Load(SpriteSheets.Player);
         container.Register(factory =>
             new PlayerView(factory.GetInstance<IInputScanner>(),
                 new Dictionary<RadDir, Texture2D>

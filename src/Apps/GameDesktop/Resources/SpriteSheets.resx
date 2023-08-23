@@ -24,6 +24,9 @@
     </value>
   </resheader>
 
+  <data name="Player">
+    <value>Content/SpriteSheets/Player.aseprite</value>
+  </data>
   <data name="PlayerLayingDownRight">
     <value>SpriteSheets/Player/LayingDown/right</value>
     <comment>Handled by MonoGame, thus there's no extension and doesn't start path with Content</comment>
