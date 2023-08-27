@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using Models.Aseprite;
 using Entities;
 using FrontEnd;
 using GameDesktop.Resources;
@@ -14,7 +12,7 @@ using MonoGame.Aseprite;
 using MonoGame.Aseprite.Content.Processors;
 using MonoGame.Aseprite.Sprites;
 using Services;
-using SpriteSheet = Models.Aseprite.SpriteSheet;
+using SpriteSheet = MonoGame.Aseprite.Sprites.SpriteSheet;
 
 namespace GameDesktop;
 
@@ -47,55 +45,77 @@ public class Game : Microsoft.Xna.Framework.Game
         // creating an unsolvable circular dependency problem, by doing so.
         // So, for now, ole tha entry-point logic will be here.
         // TODO: Normalize DI workflow
-        ServiceContainer container = new();
+        using ServiceContainer container = new();
+
         container.Register<IMovement, SimpleMovement>();
         container.Register<IInputScanner, KeyboardScanner>();
+
         // TODO: PlayerViewAnimated
         AsepriteFile asepriteFile = AsepriteFile.Load(SpriteSheets.Player);
+        container.Register(_ => SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile));
+        // TODO: State Machine for animations
+
+        container.Register(
+            factory =>
+            {
+                AnimatedSprite walkingRight =
+                    factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingRight");
+                walkingRight.Play();
+                return walkingRight;
+            },
+            "WalkingRight");
+
+        container.Register(
+            factory =>
+            {
+                AnimatedSprite animatedSprite = factory.GetInstance<AnimatedSprite>("WalkingRight");
+                animatedSprite.FlipHorizontally = true;
+                animatedSprite.Play();
+                return animatedSprite;
+            },
+            "WalkingLeft"
+        );
+
+        container.Register(
+            factory =>
+            {
+                var walkingUp = factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingUp");
+                walkingUp.Play();
+                return walkingUp;
+            },
+            "WalkingUp"
+        );
+
+        container.Register(
+            factory =>
+            {
+                var walkingDown = factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingDown");
+                walkingDown.Play();
+                return walkingDown;
+            },
+            "WalkingDown"
+        );
+
         container.Register(factory =>
             new PlayerView(factory.GetInstance<IInputScanner>(),
                 new Dictionary<RadDir, AnimatedSprite>
                 {
-                    {
-                        RadDir.Right,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
-                    },
+                    { RadDir.Right, factory.GetInstance<AnimatedSprite>("WalkingRight") },
 
                     // Needs UpRight sprite
-                    {
-                        RadDir.UpRight,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
-                    },
-                    {
-                        RadDir.Up,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingUp")
-                    },
+                    { RadDir.UpRight, factory.GetInstance<AnimatedSprite>("WalkingRight") },
+                    { RadDir.Up, factory.GetInstance<AnimatedSprite>("WalkingUp") },
 
                     // Needs UpLeft sprite
-                    {
-                        RadDir.UpLeft,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingUp")
-                    },
-                    {
-                        RadDir.Left,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
-                    },
+                    { RadDir.UpLeft, factory.GetInstance<AnimatedSprite>("WalkingUp") },
+                    { RadDir.Left, factory.GetInstance<AnimatedSprite>("WalkingLeft") },
 
                     // Needs DownLeft sprite
-                    {
-                        RadDir.DownLeft,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingDown")
-                    },
-                    {
-                        RadDir.Down,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingDown")
-                    },
+                    { RadDir.DownLeft, factory.GetInstance<AnimatedSprite>("WalkingDown") },
+                    { RadDir.Down, factory.GetInstance<AnimatedSprite>("WalkingDown") },
 
                     // Needs DownRight sprite
-                    {
-                        RadDir.DownRight,
-                        SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile).CreateAnimatedSprite("WalkingRight")
-                    }
+                    { RadDir.DownRight, factory.GetInstance<AnimatedSprite>("WalkingRight") }
                 }
             ));
 
@@ -109,9 +129,9 @@ public class Game : Microsoft.Xna.Framework.Game
 
         // TODO: dictionary with a key containing png (spritesheet) and a value of JSON data (from aseprite).
         // Then, this is what a View class should have passing tru
-        SpriteSheet spriteSheet = SpriteSheet.FromJson(content);
+        // SpriteSheet spriteSheet = SpriteSheet.FromJson(content);
 
-        Console.WriteLine((content, spriteSheet.ToJson()));
+        // Console.WriteLine((content, spriteSheet.ToJson()));
 
         _player = container.GetInstance<Player>();
     }

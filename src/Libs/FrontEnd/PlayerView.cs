@@ -19,13 +19,6 @@ public class PlayerView : IView
     {
         _inputScanner = inputScanner;
         _directions = directions;
-
-        foreach (var direction in directions)
-        {
-            direction.Value.Play(); // Important to do when initialized
-        }
-
-        _directions[RadDir.Left].FlipHorizontally = true;
     }
 
     public void Update(GameTime gameTime)
@@ -35,7 +28,7 @@ public class PlayerView : IView
         Vector2 direction = _inputScanner.GetDirection();
         RadDir radDir = MathUtils.Rad8DirYFlipped(direction);
         AnimatedSprite value = _directions[radDir]; // TODO: Persist last state after stopped moving
-        
+
         value.Update(gameTime);
     }
 
