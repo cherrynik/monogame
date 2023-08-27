@@ -1,4 +1,26 @@
-﻿using Game = GameDesktop.Game;
+﻿using LightInject;
+using Microsoft.Xna.Framework;
+using Game = GameDesktop.Game;
 
-using var game = new Game();
+// Game Container Start-Up config
+using ServiceContainer container = new();
+
+container.Register(_ =>
+{
+    Game game = new(container) { IsMouseVisible = true, Content = { RootDirectory = "Content" } };
+
+    // Hack. Resolving cycle dependency issue (fundamental architecture)
+    new GraphicsDeviceManager(game);
+
+    return game;
+});
+
+// Maybe not needed,
+// as we have the GraphicsDevice field in the Game class
+// container.Register(factory =>
+//     factory.GetInstance<Game>()
+//         .Services
+//         .GetService<GraphicsDeviceManager>());
+
+using var game = container.GetInstance<Game>();
 game.Run();

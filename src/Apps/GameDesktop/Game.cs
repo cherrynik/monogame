@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using Entities;
 using FrontEnd;
 using GameDesktop.Resources;
@@ -7,7 +6,6 @@ using LightInject;
 using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Aseprite;
 using MonoGame.Aseprite.Content.Processors;
 using MonoGame.Aseprite.Sprites;
@@ -18,18 +16,13 @@ namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
-    private const string ContentRootDirectory = "Content";
-    private GraphicsDeviceManager _graphics;
+    private readonly ServiceContainer _container;
     private SpriteBatch _spriteBatch;
     private Player _player;
 
-    public Game()
+    public Game(ServiceContainer container)
     {
-        _graphics = new GraphicsDeviceManager(this);
-
-        Content.RootDirectory = ContentRootDirectory;
-
-        IsMouseVisible = true;
+        _container = container;
     }
 
     protected override void Initialize()
@@ -41,21 +34,25 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
-        // Really, XNA or MonoGame have created a puzzle by passing "this" into GraphicsDeviceManager,
-        // creating an unsolvable circular dependency problem, by doing so.
-        // So, for now, ole tha entry-point logic will be here.
-        // TODO: Normalize DI workflow
-        using ServiceContainer container = new();
+        ConfigureServices();
+    }
 
-        container.Register<IMovement, SimpleMovement>();
-        container.Register<IInputScanner, KeyboardScanner>();
-
+    private void RegisterSpriteServices()
+    {
         // TODO: PlayerViewAnimated
         AsepriteFile asepriteFile = AsepriteFile.Load(SpriteSheets.Player);
-        container.Register(_ => SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile));
-        // TODO: State Machine for animations
+        _container.Register(_ => SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile));
+    }
 
-        container.Register(
+    private void RegisterMovementServices()
+    {
+        _container.Register<IMovement, SimpleMovement>();
+        _container.Register<IInputScanner, KeyboardScanner>();
+    }
+
+    private void RegisterPlayerAnimatedSprites()
+    {
+        _container.Register(
             factory =>
             {
                 AnimatedSprite walkingRight =
@@ -65,7 +62,7 @@ public class Game : Microsoft.Xna.Framework.Game
             },
             "WalkingRight");
 
-        container.Register(
+        _container.Register(
             factory =>
             {
                 AnimatedSprite animatedSprite = factory.GetInstance<AnimatedSprite>("WalkingRight");
@@ -76,7 +73,7 @@ public class Game : Microsoft.Xna.Framework.Game
             "WalkingLeft"
         );
 
-        container.Register(
+        _container.Register(
             factory =>
             {
                 var walkingUp = factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingUp");
@@ -86,7 +83,7 @@ public class Game : Microsoft.Xna.Framework.Game
             "WalkingUp"
         );
 
-        container.Register(
+        _container.Register(
             factory =>
             {
                 var walkingDown = factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingDown");
@@ -95,8 +92,11 @@ public class Game : Microsoft.Xna.Framework.Game
             },
             "WalkingDown"
         );
+    }
 
-        container.Register(factory =>
+    private void RegisterPlayerView()
+    {
+        _container.Register(factory =>
             new PlayerView(factory.GetInstance<IInputScanner>(),
                 new Dictionary<RadDir, AnimatedSprite>
                 {
@@ -118,14 +118,31 @@ public class Game : Microsoft.Xna.Framework.Game
                     { RadDir.DownRight, factory.GetInstance<AnimatedSprite>("WalkingRight") }
                 }
             ));
+    }
 
-        container.Register(factory =>
+    private void RegisterPlayer()
+    {
+        RegisterPlayerAnimatedSprites();
+        RegisterPlayerView();
+
+        _container.Register(factory =>
             new Player(factory.GetInstance<IMovement>(),
-                factory.GetInstance<IInputScanner>(), factory.GetInstance<PlayerView>()));
+                factory.GetInstance<IInputScanner>(),
+                factory.GetInstance<PlayerView>()));
+    }
+
+    private void ConfigureServices()
+    {
+        _container.Register(_ => _spriteBatch);
+
+        RegisterSpriteServices();
+
+        RegisterMovementServices();
+        RegisterPlayer();
 
         // example of importing JSON data config
         // TODO: Configs as a class, so we can call it Configs.Player.<Action>.<Direction> or make a tool for autogen?
-        string content = File.ReadAllText(Configs.PlayerRunningUp);
+        // string content = File.ReadAllText(Configs.PlayerRunningUp);
 
         // TODO: dictionary with a key containing png (spritesheet) and a value of JSON data (from aseprite).
         // Then, this is what a View class should have passing tru
@@ -133,18 +150,18 @@ public class Game : Microsoft.Xna.Framework.Game
 
         // Console.WriteLine((content, spriteSheet.ToJson()));
 
-        _player = container.GetInstance<Player>();
+        _player = _container.GetInstance<Player>();
     }
 
     protected override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
 
-        if (
-            GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
-            || Keyboard.GetState().IsKeyDown(Keys.Escape)
-        )
-            Exit();
+        // if (
+        //     GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+        //     || Keyboard.GetState().IsKeyDown(Keys.Escape)
+        // )
+        //     Exit();
 
         _player.Update(gameTime);
     }

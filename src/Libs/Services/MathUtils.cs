@@ -11,7 +11,7 @@ public enum RadDir
     Left,
     DownLeft,
     Down,
-    DownRight
+    DownRight,
 }
 
 public static class MathUtils

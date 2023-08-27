@@ -3,6 +3,7 @@ using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Services;
+using Stateless;
 
 namespace Entities;
 
@@ -19,6 +20,7 @@ public class Player
         _movement = movement;
         _inputScanner = inputScanner;
         _playerView = playerView;
+
     }
 
     // I prefer having update in a single place, but fo' now sum like diz
@@ -29,7 +31,7 @@ public class Player
         {
             return;
         }
-
+        
         _position = _movement.Move(_position, direction);
         _playerView.Update(gameTime);
     }
