@@ -52,11 +52,14 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private void RegisterPlayerAnimatedSprites()
     {
+        // TODO: Use in state machine, and switch between: run, walk, etc.
+        _container.Register<string, AnimatedSprite>((factory, s) =>
+            factory.GetInstance<SpriteSheet>().CreateAnimatedSprite(s));
+
         _container.Register(
             factory =>
             {
-                AnimatedSprite walkingRight =
-                    factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingRight");
+                AnimatedSprite walkingRight = factory.GetInstance<string, AnimatedSprite>("WalkingRight");
                 walkingRight.Play();
                 return walkingRight;
             },
@@ -65,7 +68,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register(
             factory =>
             {
-                AnimatedSprite animatedSprite = factory.GetInstance<AnimatedSprite>("WalkingRight");
+                AnimatedSprite animatedSprite = factory.GetInstance<string, AnimatedSprite>("WalkingRight");
                 animatedSprite.FlipHorizontally = true;
                 animatedSprite.Play();
                 return animatedSprite;
@@ -76,7 +79,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register(
             factory =>
             {
-                var walkingUp = factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingUp");
+                var walkingUp = factory.GetInstance<string, AnimatedSprite>("WalkingUp");
                 walkingUp.Play();
                 return walkingUp;
             },
@@ -86,7 +89,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register(
             factory =>
             {
-                var walkingDown = factory.GetInstance<SpriteSheet>().CreateAnimatedSprite("WalkingDown");
+                var walkingDown = factory.GetInstance<string, AnimatedSprite>("WalkingDown");
                 walkingDown.Play();
                 return walkingDown;
             },
@@ -107,11 +110,11 @@ public class Game : Microsoft.Xna.Framework.Game
                     { RadDir.Up, factory.GetInstance<AnimatedSprite>("WalkingUp") },
 
                     // Needs UpLeft sprite
-                    { RadDir.UpLeft, factory.GetInstance<AnimatedSprite>("WalkingUp") },
+                    { RadDir.UpLeft, factory.GetInstance<AnimatedSprite>("WalkingLeft") },
                     { RadDir.Left, factory.GetInstance<AnimatedSprite>("WalkingLeft") },
 
                     // Needs DownLeft sprite
-                    { RadDir.DownLeft, factory.GetInstance<AnimatedSprite>("WalkingDown") },
+                    { RadDir.DownLeft, factory.GetInstance<AnimatedSprite>("WalkingLeft") },
                     { RadDir.Down, factory.GetInstance<AnimatedSprite>("WalkingDown") },
 
                     // Needs DownRight sprite
