@@ -1,60 +1,80 @@
-﻿using FrontEnd;
-using Mechanics;
+﻿using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Aseprite.Sprites;
 using Services;
 using Stateless;
 
 namespace Entities;
 
+public enum PlayerState
+{
+    Idle,
+    Walking,
+    Running
+}
+
+public enum PlayerTrigger
+{
+    Stop,
+    SpeedUp,
+    SlowDown
+}
+
 public class Player
 {
     private readonly IMovement _movement;
-    private readonly Texture2D _spriteSheet;
     private readonly IInputScanner _inputScanner;
-    private readonly PlayerView _playerView;
     private readonly StateMachine<PlayerState, PlayerTrigger> _stateMachine;
-    private Vector2 _position;
+    private readonly Dictionary<RadDir, AnimatedSprite> _walkingAnimatedSprites;
+    private readonly Dictionary<RadDir, AnimatedSprite> _idleAnimatedSprites;
+    private AnimatedSprite _animatedSprite;
 
-    public Player(IMovement movement, IInputScanner inputScanner, PlayerView playerView)
+    private Vector2 _position;
+    private Vector2 _direction;
+
+    public Player(IMovement movement,
+        IInputScanner inputScanner,
+        StateMachine<PlayerState, PlayerTrigger> stateMachine,
+        Dictionary<RadDir, AnimatedSprite> walkingAnimatedSprites,
+        Dictionary<RadDir, AnimatedSprite> idleAnimatedSprites)
     {
         _movement = movement;
         _inputScanner = inputScanner;
-        _playerView = playerView;
 
-        _stateMachine = new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle);
-        _stateMachine.Configure(PlayerState.Idle)
-            .OnActivate(() =>
-            {
-                // face in the last direction or right by default
-                _playerView.Apply(Vector2.Zero);
-            })
+        _stateMachine = stateMachine;
+
+        _walkingAnimatedSprites = walkingAnimatedSprites;
+        _idleAnimatedSprites = idleAnimatedSprites;
+
+        _animatedSprite = _idleAnimatedSprites[RadDir.Right];
+
+        _stateMachine
+            .Configure(PlayerState.Idle)
             .OnEntry(() =>
             {
-                // face in the last direction or right by default
-                _playerView.Apply(Vector2.Zero);
+                RadDir radDir = MathUtils.Rad8DirYFlipped(_direction);
+                _animatedSprite = _idleAnimatedSprites[radDir];
+                _animatedSprite.SetFrame(0);
             })
             .Ignore(PlayerTrigger.Stop)
             .Permit(PlayerTrigger.SpeedUp, PlayerState.Walking);
 
-        _stateMachine.Configure(PlayerState.Walking).OnEntry(() =>
+        _stateMachine
+            .Configure(PlayerState.Walking)
+            .OnEntry(() =>
             {
-                // face in the direction you walk
-                // play animation of walking
-                Vector2 direction = _inputScanner.GetDirection();
-                _playerView.Apply(direction);
-            })
-            .Ignore(PlayerTrigger.SpeedUp)
-            // .Permit(PlayerTrigger.SpeedUp, PlayerState.Running)
-            .Permit(PlayerTrigger.Stop, PlayerState.Idle);
+                RadDir radDir = MathUtils.Rad8DirYFlipped(_direction);
 
-        // _stateMachine.Configure(PlayerState.Running).OnEntry(() =>
-        //     {
-        //         // face in the direction you walk
-        //         // play animation of running
-        //     })
-        //     .Permit(PlayerTrigger.Stop, PlayerState.Idle)
-        //     .Permit(PlayerTrigger.SlowDown, PlayerState.Walking);
+                var walkingAnimatedSprite = _walkingAnimatedSprites[radDir];
+                if (_animatedSprite.Name != walkingAnimatedSprite.Name ||
+                    _animatedSprite.FlipHorizontally != walkingAnimatedSprite.FlipHorizontally) // Temp hack
+                {
+                    _animatedSprite = walkingAnimatedSprite;
+                }
+            })
+            .PermitReentry(PlayerTrigger.SpeedUp)
+            .Permit(PlayerTrigger.Stop, PlayerState.Idle);
 
         _stateMachine.Activate();
     }
@@ -63,39 +83,28 @@ public class Player
     public void Update(GameTime gameTime)
     {
         Vector2 direction = _inputScanner.GetDirection();
-        
+
         if (direction.Equals(Vector2.Zero))
         {
             _stateMachine.Fire(PlayerTrigger.Stop);
-            return;
         }
-        
-        _stateMachine.Fire(PlayerTrigger.SpeedUp);
+        else
+        {
+            _stateMachine.Fire(PlayerTrigger.SpeedUp);
 
-        _position = _movement.Move(_position, direction);
+            _direction = direction;
 
-        _playerView.Update(gameTime);
+            _position = _movement.Move(_position, _direction);
+        }
+
+
+        _animatedSprite.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        // spriteBatch.Begin();
-        // spriteBatch.Draw(_spriteSheet, _position, Color.White);
-        // spriteBatch.End();
-        _playerView.Draw(spriteBatch, _position);
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _animatedSprite.Draw(spriteBatch, _position);
+        spriteBatch.End();
     }
-}
-
-internal enum PlayerState
-{
-    Idle,
-    Walking,
-    Running
-}
-
-internal enum PlayerTrigger
-{
-    Stop,
-    SpeedUp,
-    SlowDown
 }

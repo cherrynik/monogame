@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Entities;
-using FrontEnd;
 using GameDesktop.Resources;
 using LightInject;
 using Mechanics;
@@ -69,6 +68,15 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register(
             factory =>
             {
+                AnimatedSprite standingRight = factory.GetInstance<string, AnimatedSprite>("StandingRight");
+                standingRight.Play();
+                return standingRight;
+            },
+            "StandingRight");
+
+        _container.Register(
+            factory =>
+            {
                 AnimatedSprite animatedSprite = factory.GetInstance<string, AnimatedSprite>("WalkingRight");
                 animatedSprite.FlipHorizontally = true;
                 animatedSprite.Play();
@@ -76,6 +84,16 @@ public class Game : Microsoft.Xna.Framework.Game
             },
             "WalkingLeft"
         );
+
+        _container.Register(
+            factory =>
+            {
+                AnimatedSprite animatedSprite = factory.GetInstance<string, AnimatedSprite>("StandingRight");
+                animatedSprite.FlipHorizontally = true;
+                animatedSprite.Play();
+                return animatedSprite;
+            },
+            "StandingLeft");
 
         _container.Register(
             factory =>
@@ -90,18 +108,48 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register(
             factory =>
             {
+                AnimatedSprite standingUp = factory.GetInstance<string, AnimatedSprite>("StandingUp");
+                standingUp.Play();
+                return standingUp;
+            },
+            "StandingUp");
+
+
+        _container.Register(
+            factory =>
+            {
                 var walkingDown = factory.GetInstance<string, AnimatedSprite>("WalkingDown");
                 walkingDown.Play();
                 return walkingDown;
             },
             "WalkingDown"
         );
+
+        _container.Register(
+            factory =>
+            {
+                var standingDown = factory.GetInstance<string, AnimatedSprite>("StandingDown");
+                standingDown.Play();
+                return standingDown;
+            },
+            "StandingDown"
+        );
     }
 
-    private void RegisterPlayerView()
+    private void RegisterPlayerStateMachine()
     {
+        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
+    }
+
+    private void RegisterPlayer()
+    {
+        RegisterPlayerAnimatedSprites();
+        RegisterPlayerStateMachine();
+
         _container.Register(factory =>
-            new PlayerView(factory.GetInstance<IInputScanner>(),
+            new Player(factory.GetInstance<IMovement>(),
+                factory.GetInstance<IInputScanner>(),
+                factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
                 new Dictionary<RadDir, AnimatedSprite>
                 {
                     { RadDir.Right, factory.GetInstance<AnimatedSprite>("WalkingRight") },
@@ -120,19 +168,25 @@ public class Game : Microsoft.Xna.Framework.Game
 
                     // Needs DownRight sprite
                     { RadDir.DownRight, factory.GetInstance<AnimatedSprite>("WalkingRight") }
-                }
-            ));
-    }
+                }, new Dictionary<RadDir, AnimatedSprite>
+                {
+                    { RadDir.Right, factory.GetInstance<AnimatedSprite>("StandingRight") },
 
-    private void RegisterPlayer()
-    {
-        RegisterPlayerAnimatedSprites();
-        RegisterPlayerView();
+                    // Needs UpRight sprite
+                    { RadDir.UpRight, factory.GetInstance<AnimatedSprite>("StandingRight") },
+                    { RadDir.Up, factory.GetInstance<AnimatedSprite>("StandingUp") },
 
-        _container.Register(factory =>
-            new Player(factory.GetInstance<IMovement>(),
-                factory.GetInstance<IInputScanner>(),
-                factory.GetInstance<PlayerView>()));
+                    // Needs UpLeft sprite
+                    { RadDir.UpLeft, factory.GetInstance<AnimatedSprite>("StandingLeft") },
+                    { RadDir.Left, factory.GetInstance<AnimatedSprite>("StandingLeft") },
+
+                    // Needs DownLeft sprite
+                    { RadDir.DownLeft, factory.GetInstance<AnimatedSprite>("StandingLeft") },
+                    { RadDir.Down, factory.GetInstance<AnimatedSprite>("StandingDown") },
+
+                    // Needs DownRight sprite
+                    { RadDir.DownRight, factory.GetInstance<AnimatedSprite>("StandingRight") }
+                }));
     }
 
     private void ConfigureServices()

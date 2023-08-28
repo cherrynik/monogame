@@ -16,9 +16,7 @@ public enum RadDir
 
 public static class MathUtils
 {
-    const int Sectors = 8;
-
-    private static double Rad8Dir(float x, float y)
+    private static double RadDir(float x, float y, int sectors)
     {
         double radians = Math.Atan2(y, x);
 
@@ -26,11 +24,16 @@ public static class MathUtils
         radians %= 2 * Math.PI;
         if (radians < 0) radians += 2 * Math.PI;
 
-        return Math.Floor(radians / (2 * Math.PI) * Sectors);
+        return Math.Floor(radians / (2 * Math.PI) * sectors);
     }
 
-    public static RadDir Rad8Dir(Vector2 dir) => (RadDir)Rad8Dir(dir.X, dir.Y);
+    public static RadDir Rad8Dir(Vector2 dir) => (RadDir)RadDir(dir.X, dir.Y, sectors: 8);
 
     // Useful as MonoGame has Y-flipped coordinate system
-    public static RadDir Rad8DirYFlipped(Vector2 dir) => (RadDir)Rad8Dir(dir.X, -dir.Y);
+    public static RadDir Rad8DirYFlipped(Vector2 dir) => (RadDir)RadDir(dir.X, -dir.Y, sectors: 8);
+
+    public static RadDir Rad4Dir(Vector2 dir) => (RadDir)RadDir(dir.X, dir.Y, sectors: 4);
+
+    // Useful as MonoGame has Y-flipped coordinate system
+    public static RadDir Rad4DirYFlipped(Vector2 dir) => (RadDir)RadDir(dir.X, dir.Y, sectors: 4);
 }
