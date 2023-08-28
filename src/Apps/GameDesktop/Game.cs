@@ -39,7 +39,6 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private void RegisterSpriteServices()
     {
-        // TODO: PlayerViewAnimated
         AsepriteFile asepriteFile = AsepriteFile.Load(SpriteSheets.Player);
         _container.Register(_ => SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile));
     }
@@ -56,84 +55,56 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register<string, AnimatedSprite>((factory, s) =>
             factory.GetInstance<SpriteSheet>().CreateAnimatedSprite(s));
 
-        _container.Register(
-            factory =>
-            {
-                AnimatedSprite walkingRight = factory.GetInstance<string, AnimatedSprite>("WalkingRight");
-                walkingRight.Play();
-                return walkingRight;
-            },
-            "WalkingRight");
+        IReadOnlyList<string> tags = new[] { "Standing", "Walking" };
+        IReadOnlyList<RadDir> dirs = new[] { RadDir.Right, RadDir.Down, RadDir.Left, RadDir.Up };
 
-        _container.Register(
-            factory =>
+        // TODO: Simplify
+        foreach (RadDir dir in dirs)
+        {
+            foreach (string tag in tags)
             {
-                AnimatedSprite standingRight = factory.GetInstance<string, AnimatedSprite>("StandingRight");
-                standingRight.Play();
-                return standingRight;
-            },
-            "StandingRight");
+                string animationTag = $"{tag}{dir.ToString()}";
+                _container.Register(factory =>
+                {
+                    AnimatedSprite animatedSprite;
+                    if (dir.ToString() == RadDir.Left.ToString())
+                    {
+                        animatedSprite = factory.GetInstance<string, AnimatedSprite>($"{tag}{RadDir.Right}");
+                        animatedSprite.FlipHorizontally = true;
+                    }
+                    else
+                    {
+                        animatedSprite = factory.GetInstance<string, AnimatedSprite>(animationTag);
+                    }
 
-        _container.Register(
-            factory =>
-            {
-                AnimatedSprite animatedSprite = factory.GetInstance<string, AnimatedSprite>("WalkingRight");
-                animatedSprite.FlipHorizontally = true;
-                animatedSprite.Play();
-                return animatedSprite;
-            },
-            "WalkingLeft"
-        );
+                    animatedSprite.Play();
+                    return animatedSprite;
+                }, animationTag);
+            }
+        }
+    }
 
-        _container.Register(
-            factory =>
-            {
-                AnimatedSprite animatedSprite = factory.GetInstance<string, AnimatedSprite>("StandingRight");
-                animatedSprite.FlipHorizontally = true;
-                animatedSprite.Play();
-                return animatedSprite;
-            },
-            "StandingLeft");
+    private Dictionary<RadDir, AnimatedSprite> CreatePlayerAnimation(string action)
+    {
+        return new Dictionary<RadDir, AnimatedSprite>
+        {
+            { RadDir.Right, _container.GetInstance<AnimatedSprite>($"{action}Right") },
 
-        _container.Register(
-            factory =>
-            {
-                var walkingUp = factory.GetInstance<string, AnimatedSprite>("WalkingUp");
-                walkingUp.Play();
-                return walkingUp;
-            },
-            "WalkingUp"
-        );
+            // Needs UpRight sprite
+            { RadDir.UpRight, _container.GetInstance<AnimatedSprite>($"{action}Right") },
+            { RadDir.Up, _container.GetInstance<AnimatedSprite>($"{action}Up") },
 
-        _container.Register(
-            factory =>
-            {
-                AnimatedSprite standingUp = factory.GetInstance<string, AnimatedSprite>("StandingUp");
-                standingUp.Play();
-                return standingUp;
-            },
-            "StandingUp");
+            // Needs UpLeft sprite
+            { RadDir.UpLeft, _container.GetInstance<AnimatedSprite>($"{action}Left") },
+            { RadDir.Left, _container.GetInstance<AnimatedSprite>($"{action}Left") },
 
+            // Needs DownLeft sprite
+            { RadDir.DownLeft, _container.GetInstance<AnimatedSprite>($"{action}Left") },
+            { RadDir.Down, _container.GetInstance<AnimatedSprite>($"{action}Down") },
 
-        _container.Register(
-            factory =>
-            {
-                var walkingDown = factory.GetInstance<string, AnimatedSprite>("WalkingDown");
-                walkingDown.Play();
-                return walkingDown;
-            },
-            "WalkingDown"
-        );
-
-        _container.Register(
-            factory =>
-            {
-                var standingDown = factory.GetInstance<string, AnimatedSprite>("StandingDown");
-                standingDown.Play();
-                return standingDown;
-            },
-            "StandingDown"
-        );
+            // Needs DownRight sprite
+            { RadDir.DownRight, _container.GetInstance<AnimatedSprite>($"{action}Right") }
+        };
     }
 
     private void RegisterPlayerStateMachine()
@@ -150,43 +121,8 @@ public class Game : Microsoft.Xna.Framework.Game
             new Player(factory.GetInstance<IMovement>(),
                 factory.GetInstance<IInputScanner>(),
                 factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
-                new Dictionary<RadDir, AnimatedSprite>
-                {
-                    { RadDir.Right, factory.GetInstance<AnimatedSprite>("WalkingRight") },
-
-                    // Needs UpRight sprite
-                    { RadDir.UpRight, factory.GetInstance<AnimatedSprite>("WalkingRight") },
-                    { RadDir.Up, factory.GetInstance<AnimatedSprite>("WalkingUp") },
-
-                    // Needs UpLeft sprite
-                    { RadDir.UpLeft, factory.GetInstance<AnimatedSprite>("WalkingLeft") },
-                    { RadDir.Left, factory.GetInstance<AnimatedSprite>("WalkingLeft") },
-
-                    // Needs DownLeft sprite
-                    { RadDir.DownLeft, factory.GetInstance<AnimatedSprite>("WalkingLeft") },
-                    { RadDir.Down, factory.GetInstance<AnimatedSprite>("WalkingDown") },
-
-                    // Needs DownRight sprite
-                    { RadDir.DownRight, factory.GetInstance<AnimatedSprite>("WalkingRight") }
-                }, new Dictionary<RadDir, AnimatedSprite>
-                {
-                    { RadDir.Right, factory.GetInstance<AnimatedSprite>("StandingRight") },
-
-                    // Needs UpRight sprite
-                    { RadDir.UpRight, factory.GetInstance<AnimatedSprite>("StandingRight") },
-                    { RadDir.Up, factory.GetInstance<AnimatedSprite>("StandingUp") },
-
-                    // Needs UpLeft sprite
-                    { RadDir.UpLeft, factory.GetInstance<AnimatedSprite>("StandingLeft") },
-                    { RadDir.Left, factory.GetInstance<AnimatedSprite>("StandingLeft") },
-
-                    // Needs DownLeft sprite
-                    { RadDir.DownLeft, factory.GetInstance<AnimatedSprite>("StandingLeft") },
-                    { RadDir.Down, factory.GetInstance<AnimatedSprite>("StandingDown") },
-
-                    // Needs DownRight sprite
-                    { RadDir.DownRight, factory.GetInstance<AnimatedSprite>("StandingRight") }
-                }));
+                CreatePlayerAnimation("Walking"),
+                CreatePlayerAnimation("Standing")));
     }
 
     private void ConfigureServices()
@@ -198,28 +134,12 @@ public class Game : Microsoft.Xna.Framework.Game
         RegisterMovementServices();
         RegisterPlayer();
 
-        // example of importing JSON data config
-        // TODO: Configs as a class, so we can call it Configs.Player.<Action>.<Direction> or make a tool for autogen?
-        // string content = File.ReadAllText(Configs.PlayerRunningUp);
-
-        // TODO: dictionary with a key containing png (spritesheet) and a value of JSON data (from aseprite).
-        // Then, this is what a View class should have passing tru
-        // SpriteSheet spriteSheet = SpriteSheet.FromJson(content);
-
-        // Console.WriteLine((content, spriteSheet.ToJson()));
-
         _player = _container.GetInstance<Player>();
     }
 
     protected override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-
-        // if (
-        //     GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
-        //     || Keyboard.GetState().IsKeyDown(Keys.Escape)
-        // )
-        //     Exit();
 
         _player.Update(gameTime);
     }

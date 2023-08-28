@@ -33,6 +33,7 @@ public class Player
     private Vector2 _position;
     private Vector2 _direction;
 
+    // TODO: Move state machine & its config outta here
     public Player(IMovement movement,
         IInputScanner inputScanner,
         StateMachine<PlayerState, PlayerTrigger> stateMachine,
@@ -79,7 +80,6 @@ public class Player
         _stateMachine.Activate();
     }
 
-    // I prefer having update in a single place, but fo' now sum like diz
     public void Update(GameTime gameTime)
     {
         Vector2 direction = _inputScanner.GetDirection();
