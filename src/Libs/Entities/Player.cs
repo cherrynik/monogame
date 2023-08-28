@@ -33,7 +33,7 @@ public class Player
     private Vector2 _position;
     private Vector2 _direction;
 
-    // TODO: Move state machine & its config outta here
+    // TODO: Move state machine & its config outta here?
     public Player(IMovement movement,
         IInputScanner inputScanner,
         StateMachine<PlayerState, PlayerTrigger> stateMachine,
@@ -96,7 +96,6 @@ public class Player
 
             _position = _movement.Move(_position, _direction);
         }
-
 
         _animatedSprite.Update(gameTime);
     }

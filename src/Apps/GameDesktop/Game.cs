@@ -37,8 +37,21 @@ public class Game : Microsoft.Xna.Framework.Game
         ConfigureServices();
     }
 
+    private void ConfigureServices()
+    {
+
+        RegisterSpriteServices();
+
+        RegisterMovementServices();
+        RegisterPlayer();
+
+        _player = _container.GetInstance<Player>();
+    }
+
     private void RegisterSpriteServices()
     {
+        _container.Register(_ => _spriteBatch);
+
         AsepriteFile asepriteFile = AsepriteFile.Load(SpriteSheets.Player);
         _container.Register(_ => SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile));
     }
@@ -123,18 +136,6 @@ public class Game : Microsoft.Xna.Framework.Game
                 factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
                 CreatePlayerAnimation("Walking"),
                 CreatePlayerAnimation("Standing")));
-    }
-
-    private void ConfigureServices()
-    {
-        _container.Register(_ => _spriteBatch);
-
-        RegisterSpriteServices();
-
-        RegisterMovementServices();
-        RegisterPlayer();
-
-        _player = _container.GetInstance<Player>();
     }
 
     protected override void Update(GameTime gameTime)
