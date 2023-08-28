@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services;
+using Stateless;
 
 namespace FrontEnd;
 
@@ -12,42 +13,34 @@ public interface IView
 
 public class PlayerView : IView
 {
-    private readonly IInputScanner _inputScanner;
     private readonly Dictionary<RadDir, AnimatedSprite> _directions;
+    private AnimatedSprite _animatedSprite;
 
     public PlayerView(IInputScanner inputScanner, Dictionary<RadDir, AnimatedSprite> directions)
     {
-        _inputScanner = inputScanner;
         _directions = directions;
+    }
+
+    public void Apply(Vector2 direction)
+    {
+        RadDir radDir = MathUtils.Rad8DirYFlipped(direction);
+        _animatedSprite = _directions[radDir]; // TODO: Persist last state after stopped moving
     }
 
     public void Update(GameTime gameTime)
     {
-        // TODO: sprite animation
-        // TODO: E2E testing for such a lil bit complex logic
-        Vector2 direction = _inputScanner.GetDirection();
-        RadDir radDir = MathUtils.Rad8DirYFlipped(direction);
-        AnimatedSprite value = _directions[radDir]; // TODO: Persist last state after stopped moving
-
-        value.Update(gameTime);
+        _animatedSprite.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 at)
     {
         // TODO: sprite animation
         // TODO: E2E testing for such a lil bit complex logic
-        Vector2 direction = _inputScanner.GetDirection();
-        RadDir radDir = MathUtils.Rad8DirYFlipped(direction);
-        AnimatedSprite value = _directions[radDir]; // TODO: Persist last state after stopped moving
-
-        if (!direction.Equals(Vector2.Zero))
-        {
-            Console.WriteLine((value, direction, at));
-        }
+        // TODO: static data, configs in json, so we could load metadata and any kind of info automatically
 
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        // TODO: static data, configs in json, so we could load metadata and any kind of info automatically
-        value.Draw(spriteBatch, at);
+        _animatedSprite.Draw(spriteBatch, at);
         spriteBatch.End();
     }
 }
+
