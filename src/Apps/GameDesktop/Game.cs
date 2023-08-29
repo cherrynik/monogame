@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Entities;
+using FrontEnd;
 using GameDesktop.Resources;
 using LightInject;
 using Mechanics;
@@ -39,7 +40,6 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private void ConfigureServices()
     {
-
         RegisterSpriteServices();
 
         RegisterMovementServices();
@@ -51,73 +51,12 @@ public class Game : Microsoft.Xna.Framework.Game
     private void RegisterSpriteServices()
     {
         _container.Register(_ => _spriteBatch);
-
-        AsepriteFile asepriteFile = AsepriteFile.Load(SpriteSheets.Player);
-        _container.Register(_ => SpriteSheetProcessor.Process(GraphicsDevice, asepriteFile));
     }
 
     private void RegisterMovementServices()
     {
         _container.Register<IMovement, SimpleMovement>();
         _container.Register<IInputScanner, KeyboardScanner>();
-    }
-
-    private void RegisterPlayerAnimatedSprites()
-    {
-        // TODO: Use in state machine, and switch between: run, walk, etc.
-        _container.Register<string, AnimatedSprite>((factory, s) =>
-            factory.GetInstance<SpriteSheet>().CreateAnimatedSprite(s));
-
-        IReadOnlyList<string> tags = new[] { "Standing", "Walking" };
-        IReadOnlyList<RadDir> dirs = new[] { RadDir.Right, RadDir.Down, RadDir.Left, RadDir.Up };
-
-        // TODO: Simplify
-        foreach (RadDir dir in dirs)
-        {
-            foreach (string tag in tags)
-            {
-                string animationTag = $"{tag}{dir.ToString()}";
-                _container.Register(factory =>
-                {
-                    AnimatedSprite animatedSprite;
-                    if (dir.ToString() == RadDir.Left.ToString())
-                    {
-                        animatedSprite = factory.GetInstance<string, AnimatedSprite>($"{tag}{RadDir.Right}");
-                        animatedSprite.FlipHorizontally = true;
-                    }
-                    else
-                    {
-                        animatedSprite = factory.GetInstance<string, AnimatedSprite>(animationTag);
-                    }
-
-                    animatedSprite.Play();
-                    return animatedSprite;
-                }, animationTag);
-            }
-        }
-    }
-
-    private Dictionary<RadDir, AnimatedSprite> CreatePlayerAnimation(string action)
-    {
-        return new Dictionary<RadDir, AnimatedSprite>
-        {
-            { RadDir.Right, _container.GetInstance<AnimatedSprite>($"{action}Right") },
-
-            // Needs UpRight sprite
-            { RadDir.UpRight, _container.GetInstance<AnimatedSprite>($"{action}Right") },
-            { RadDir.Up, _container.GetInstance<AnimatedSprite>($"{action}Up") },
-
-            // Needs UpLeft sprite
-            { RadDir.UpLeft, _container.GetInstance<AnimatedSprite>($"{action}Left") },
-            { RadDir.Left, _container.GetInstance<AnimatedSprite>($"{action}Left") },
-
-            // Needs DownLeft sprite
-            { RadDir.DownLeft, _container.GetInstance<AnimatedSprite>($"{action}Left") },
-            { RadDir.Down, _container.GetInstance<AnimatedSprite>($"{action}Down") },
-
-            // Needs DownRight sprite
-            { RadDir.DownRight, _container.GetInstance<AnimatedSprite>($"{action}Right") }
-        };
     }
 
     private void RegisterPlayerStateMachine()
@@ -127,15 +66,18 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private void RegisterPlayer()
     {
-        RegisterPlayerAnimatedSprites();
         RegisterPlayerStateMachine();
+
+        // TODO: Use in state machine, and switch between: run, walk, etc.
+        SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
+        AnimatedCharactersFactory animatedCharactersFactory = new();
 
         _container.Register(factory =>
             new Player(factory.GetInstance<IMovement>(),
                 factory.GetInstance<IInputScanner>(),
                 factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
-                CreatePlayerAnimation("Walking"),
-                CreatePlayerAnimation("Standing")));
+                animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking"),
+                animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing")));
     }
 
     protected override void Update(GameTime gameTime)

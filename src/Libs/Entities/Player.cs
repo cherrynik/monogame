@@ -1,4 +1,5 @@
-﻿using Mechanics;
+﻿using FrontEnd;
+using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
@@ -6,20 +7,6 @@ using Services;
 using Stateless;
 
 namespace Entities;
-
-public enum PlayerState
-{
-    Idle,
-    Walking,
-    Running
-}
-
-public enum PlayerTrigger
-{
-    Stop,
-    SpeedUp,
-    SlowDown
-}
 
 public class Player
 {
