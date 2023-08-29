@@ -1,17 +1,14 @@
-﻿# Description
+﻿## Getting Started
 
-A MonoGame-based game.
-
-- MonoGame repository - [Link](https://github.com/MonoGame/MonoGame).
-- Project docs - [Link](https://monogame.youtrack.cloud/articles/MG)
-
-## Wiki
-
-Here - [Link](./docs/TableOfContent.md)
-
-# Getting Started
+- [Wiki](./docs/TableOfContent.md)
+- [MonoGame repository](https://github.com/MonoGame/MonoGame)
+- [Project docs](https://monogame.youtrack.cloud/articles/MG)
+- [Task-tracking board](https://monogame.youtrack.cloud/agiles/147-2)
 
 ## Install Dependencies
+
+> **Warning!** It's only required if you're going to maintain the project.
+> As npm packages installed, you gotta use conventional commits from now on whenever you're using `git`.
 
 1. Using Node.js v20.5.1:
     ```shell

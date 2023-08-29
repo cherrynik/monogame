@@ -1,5 +1,13 @@
 ﻿# Project Workflow
 
+## Table Of Content
+
+- [Importing sprites](#importing-sprites)
+- [Importing special files](#importing-special-files)
+- [Aseprite importing](#aseprite-importing)
+- [Creating global `const`](#creating-global-const)
+- [State Machine](#state-machine)
+
 ## Importing sprites
 
 1. Use Aseprite for exporting sprite sheets, export 'em with a JSON file.
@@ -58,3 +66,9 @@ Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions
 **Explanation**: It's made so as some of them are handled by `Content.Load` of MonoGame, and some
 by `File`, `FileStream`, and the kind of tools, which don't read files starting from the `Content/` folder but from the
 root of the project.
+
+## State Machine
+
+Stateless Docs - [Link](https://github.com/dotnet-state-machine/stateless)
+
+For now, it's used in the `Player` entity.
