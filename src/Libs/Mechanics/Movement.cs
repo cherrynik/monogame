@@ -9,5 +9,5 @@ public interface IMovement
 
 public class SimpleMovement : IMovement
 {
-    public Vector2 Move(Vector2 from, Vector2 by) => from + by;
+    public Vector2 Move(Vector2 from, Vector2 by) => from + Vector2.Normalize(by);
 }

@@ -1,82 +1,97 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Collections.Generic;
+using Entities;
+using FrontEnd;
+using GameDesktop.Resources;
+using LightInject;
 using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
+using MonoGame.Aseprite;
+using MonoGame.Aseprite.Content.Processors;
+using MonoGame.Aseprite.Sprites;
+using Services;
+using Stateless;
+using SpriteSheet = MonoGame.Aseprite.Sprites.SpriteSheet;
 
 namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
-    private const string ContentRootDirectory = "Content";
-    private readonly IMovement _movement;
-    private GraphicsDeviceManager _graphics;
+    private readonly ServiceContainer _container;
     private SpriteBatch _spriteBatch;
-    private Vector2 _position;
+    private Player _player;
 
-    public Game()
+    public Game(ServiceContainer container)
     {
-        _graphics = new GraphicsDeviceManager(this);
-        _movement = new SimpleMovement();
-        _position = new Vector2(0, 0);
-        Content.RootDirectory = ContentRootDirectory;
-        IsMouseVisible = true;
+        _container = container;
     }
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        ConfigureServices();
+    }
 
-        // TODO: use this.Content to load your game content here
+    private void ConfigureServices()
+    {
+        RegisterSpriteServices();
+
+        RegisterMovementServices();
+        RegisterPlayer();
+
+        _player = _container.GetInstance<Player>();
+    }
+
+    private void RegisterSpriteServices()
+    {
+        _container.Register(_ => _spriteBatch);
+    }
+
+    private void RegisterMovementServices()
+    {
+        _container.Register<IMovement, SimpleMovement>();
+        _container.Register<IInputScanner, KeyboardScanner>();
+    }
+
+    private void RegisterPlayerStateMachine()
+    {
+        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
+    }
+
+    private void RegisterPlayer()
+    {
+        RegisterPlayerStateMachine();
+
+        // TODO: Use in state machine, and switch between: run, walk, etc.
+        SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
+        AnimatedCharactersFactory animatedCharactersFactory = new();
+
+        _container.Register(factory =>
+            new Player(factory.GetInstance<IMovement>(),
+                factory.GetInstance<IInputScanner>(),
+                factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
+                animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking"),
+                animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing")));
     }
 
     protected override void Update(GameTime gameTime)
     {
-        if (
-            GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
-            || Keyboard.GetState().IsKeyDown(Keys.Escape)
-        )
-            Exit();
-
-        // TODO: Add your update logic here
-        KeyboardState keyboardState = Keyboard.GetState();
-        float horizontalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Right)) -
-                              Convert.ToSingle(keyboardState.IsKeyDown(Keys.Left));
-
-        float verticalDir = Convert.ToSingle(keyboardState.IsKeyDown(Keys.Down)) -
-                            Convert.ToSingle(keyboardState.IsKeyDown(Keys.Up));
-
-        if (horizontalDir != 0 || verticalDir != 0)
-        {
-            _position = _movement.Move(_position, new Vector2 { X = horizontalDir, Y = verticalDir, });
-            Console.WriteLine(_position.ToString());
-        }
-
         base.Update(gameTime);
+
+        _player.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
-        // Rectangle
-        _spriteBatch.Begin();
-        Rectangle rect = new Rectangle((int)_position.X, (int)_position.Y, 200, 150);
-        Color rectColor = Color.Red;
-        Texture2D pixelTexture = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
-        pixelTexture.SetData(new[] { rectColor });
-        _spriteBatch.Draw(pixelTexture, rect, rectColor);
-        _spriteBatch.End();
+        _player.Draw(_spriteBatch);
 
         base.Draw(gameTime);
     }

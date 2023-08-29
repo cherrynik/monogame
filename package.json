@@ -8,6 +8,7 @@
   },
   "engineStrict": true,
   "scripts": {
+    "graph": "dotnet dependensee . -t html -o ./dependensee.html -p && open-cli ./dependensee.html",
     "start": "dotnet run --project ./src/Apps/GameDesktop/GameDesktop.csproj",
     "editor": "dotnet mgcb-editor",
     "prepare": "husky install"
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
-    "husky": "^8.0.3"
+    "husky": "^8.0.3",
+    "open-cli": "^7.2.0"
   }
 }
