@@ -37,7 +37,6 @@
 
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\Models.Aseprite\Models.Aseprite.csproj" />
     <ProjectReference Include="..\..\Libs\Entities\Entities.csproj" />
     <ProjectReference Include="..\..\Libs\Mechanics\Mechanics.csproj" />
   </ItemGroup>

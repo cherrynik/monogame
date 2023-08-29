@@ -20,7 +20,9 @@ public class Player
     private Vector2 _position;
     private Vector2 _direction;
 
-    // TODO: Move state machine & its config outta here?
+    // TODO: Move state machine &
+    // its config outta here &
+    // sprites with the state machine?
     public Player(IMovement movement,
         IInputScanner inputScanner,
         StateMachine<PlayerState, PlayerTrigger> stateMachine,
@@ -37,6 +39,13 @@ public class Player
 
         _animatedSprite = _idleAnimatedSprites[RadDir.Right];
 
+        ConfigureStateMachine();
+
+        _stateMachine.Activate();
+    }
+
+    private void ConfigureStateMachine()
+    {
         _stateMachine
             .Configure(PlayerState.Idle)
             .OnEntry(() =>
@@ -63,8 +72,6 @@ public class Player
             })
             .PermitReentry(PlayerTrigger.SpeedUp)
             .Permit(PlayerTrigger.Stop, PlayerState.Idle);
-
-        _stateMachine.Activate();
     }
 
     public void Update(GameTime gameTime)

@@ -10,6 +10,7 @@ container.Register(_ =>
     Game game = new(container) { IsMouseVisible = true, Content = { RootDirectory = "Content" } };
 
     // Hack. Resolving cycle dependency issue (fundamental architecture)
+    // Implicitly adds itself in the game services container.
     new GraphicsDeviceManager(game);
 
     return game;
