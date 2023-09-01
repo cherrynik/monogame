@@ -1,14 +1,9 @@
-﻿using System.Collections.Generic;
-using Entities;
-using FrontEnd;
+﻿using Entities;
 using GameDesktop.Resources;
 using LightInject;
 using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Aseprite;
-using MonoGame.Aseprite.Content.Processors;
-using MonoGame.Aseprite.Sprites;
 using Services;
 using Stateless;
 using SpriteSheet = MonoGame.Aseprite.Sprites.SpriteSheet;
@@ -68,16 +63,20 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         RegisterPlayerStateMachine();
 
-        // TODO: Use in state machine, and switch between: run, walk, etc.
         SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
         AnimatedCharactersFactory animatedCharactersFactory = new();
+
+        _container.Register(factory => new PlayerView(
+            factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
+            animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing"),
+            animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking")
+        ));
 
         _container.Register(factory =>
             new Player(factory.GetInstance<IMovement>(),
                 factory.GetInstance<IInputScanner>(),
-                factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
-                animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking"),
-                animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing")));
+                factory.GetInstance<PlayerView>()
+            ));
     }
 
     protected override void Update(GameTime gameTime)
