@@ -23,5 +23,5 @@ container.Register(_ =>
 //         .Services
 //         .GetService<GraphicsDeviceManager>());
 
-using var game = container.GetInstance<Game>();
+using Game game = container.GetInstance<Game>();
 game.Run();

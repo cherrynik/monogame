@@ -54,17 +54,12 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register<IInputScanner, KeyboardScanner>();
     }
 
-    private void RegisterPlayerStateMachine()
-    {
-        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
-    }
-
     private void RegisterPlayer()
     {
-        RegisterPlayerStateMachine();
-
         SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
         AnimatedCharactersFactory animatedCharactersFactory = new();
+
+        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
 
         _container.Register(factory => new PlayerView(
             factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
