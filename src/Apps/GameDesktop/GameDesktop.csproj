@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,6 +7,9 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
     <LangVersion>default</LangVersion>
+    <_TargetFrameworkDirectories>Jenny.Plugins.ReferenceAssemblyPathsPreProcessor</_TargetFrameworkDirectories>
+    <_FullFrameworkReferenceAssemblyPaths>Jenny.Plugins.ReferenceAssemblyPathsPreProcessor</_FullFrameworkReferenceAssemblyPaths>
+    <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -14,6 +18,21 @@
   <ItemGroup>
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Generated/Game/Components/GameGameDesktopHealthComponent.cs" />
+    <Compile Include="Generated/Game/GameComponentsLookup.cs" />
+    <Compile Include="Generated/Input/InputComponentsLookup.cs" />
+    <Compile Include="Generated/Game/GameAttribute.cs" />
+    <Compile Include="Generated/Input/InputAttribute.cs" />
+    <Compile Include="Generated/Game/GameContext.cs" />
+    <Compile Include="Generated/Input/InputContext.cs" />
+    <Compile Include="Generated/Game/GameMatcher.cs" />
+    <Compile Include="Generated/Input/InputMatcher.cs" />
+    <Compile Include="Generated/Contexts.cs" />
+    <Compile Include="Generated/Game/GameEntity.cs" />
+    <Compile Include="Generated/Input/InputEntity.cs" />
+    <Compile Include="Generated/Feature.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -28,13 +47,21 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <!--    <PackageReference Include="Jenny" Version="1.0.3" />-->
+    <!--    <PackageReference Include="Jenny.Generator" Version="1.0.1" />-->
+    <!--    <PackageReference Include="Jenny.Plugins" Version="1.1.1" />-->
+    <!--    <PackageReference Include="Jenny.Plugins.Roslyn" Version="1.0.1" />-->
+    <PackageReference Include="Entitas" Version="1.14.2" />
+    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1" />
+    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2" />
+    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2" />
+    <PackageReference Include="DesperateDevs.CodeGeneration.Plugins" Version="0.1.0" />
     <PackageReference Include="LightInject" Version="6.6.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.7.23375.6" />
     <PackageReference Include="MonoGame.Aseprite" Version="5.1.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="Stateless" Version="5.13.0" />
-
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Entities\Entities.csproj" />

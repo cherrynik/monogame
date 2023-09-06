@@ -1,4 +1,7 @@
-﻿using Entities;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Entities;
 using GameDesktop.Resources;
 using LightInject;
 using Mechanics;
@@ -14,16 +17,27 @@ public class Game : Microsoft.Xna.Framework.Game
 {
     private readonly ServiceContainer _container;
     private SpriteBatch _spriteBatch;
+
     private Player _player;
+    // private IReadOnlyList<ISystem> _systems;
+    // private GameSystems _gameSystems;
 
     public Game(ServiceContainer container)
     {
         _container = container;
+
+        var contexts = Contexts.sharedInstance;
+        var e = contexts.game.CreateEntity();
+        e.AddGameDesktopHealth(100);
+
+        System.Console.WriteLine("e.health.value: " + e.gameDesktopHealth.value);
     }
 
     protected override void Initialize()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        // var e = Contexts.sharedInstance.game.CreateEntity();
+        // e.AddHealth(100);
 
         base.Initialize();
     }
@@ -74,11 +88,26 @@ public class Game : Microsoft.Xna.Framework.Game
             ));
     }
 
+    private void FixedUpdate(GameTime fixedGameTime)
+    {
+        // foreach (var system in _systems)
+        // {
+        //     system.FixedUpdate(fixedGameTime, _systems);
+        // }
+    }
+
     protected override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
+        FixedUpdate(gameTime);
 
+        base.Update(gameTime);
         _player.Update(gameTime);
+
+        LateUpdate(gameTime);
+    }
+
+    private void LateUpdate(GameTime gameTime)
+    {
     }
 
     protected override void Draw(GameTime gameTime)

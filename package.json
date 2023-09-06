@@ -11,7 +11,10 @@
     "graph": "dotnet dependensee . -t html -o ./dependensee.html -p && open-cli ./dependensee.html",
     "start": "dotnet run --project ./src/Apps/GameDesktop/GameDesktop.csproj",
     "editor": "dotnet mgcb-editor",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "jenny": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll",
+    "jenny-server": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll server",
+    "jenny-gen": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll client gen"
   },
   "author": "Nik Cherednik <me@cherrynik.ru>",
   "license": "ISC",
