@@ -20,7 +20,7 @@
     <None Remove="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generated/Game/Components/GameGameDesktopHealthComponent.cs" />
+    <Compile Include="Generated/Game/Components/GameHealthComponent.cs" />
     <Compile Include="Generated/Game/GameComponentsLookup.cs" />
     <Compile Include="Generated/Input/InputComponentsLookup.cs" />
     <Compile Include="Generated/Game/GameAttribute.cs" />

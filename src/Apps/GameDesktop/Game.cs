@@ -28,9 +28,9 @@ public class Game : Microsoft.Xna.Framework.Game
 
         var contexts = Contexts.sharedInstance;
         var e = contexts.game.CreateEntity();
-        e.AddGameDesktopHealth(100);
+        e.AddHealth(100);
 
-        System.Console.WriteLine("e.health.value: " + e.gameDesktopHealth.value);
+        System.Console.WriteLine("e.health.value: " + e.health.value);
     }
 
     protected override void Initialize()
