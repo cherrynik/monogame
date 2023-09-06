@@ -13,8 +13,8 @@
     "editor": "dotnet mgcb-editor",
     "prepare": "husky install",
     "jenny": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll",
-    "jenny-server": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll server",
-    "jenny-gen": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll client gen"
+    "ecs-server": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll server",
+    "ecs-gen": "cd ./src/Apps/GameDesktop/ && dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll client gen"
   },
   "author": "Nik Cherednik <me@cherrynik.ru>",
   "license": "ISC",
