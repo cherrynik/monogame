@@ -2,13 +2,13 @@
 
 ## Movement Math
 
-Vectors should be normalized for movement in diagonal directions.
-
-> MonoGame coordinate system is Y-flipped.
-
-Therefore, you might see something like `-YFlipped` method names in the project.
+Vectors should be normalized for the movement in diagonal directions.
 
 More here - [Link](https://www.youtube.com/watch?v=u70ZpQH1muc)
+
+> MonoGame coordinate system is Y-flipped.
+> 
+> Therefore, you might see something like `-YFlipped` method names in the project.
 
 ## Movement Direction
 

@@ -2,11 +2,22 @@
 
 ## Table Of Content
 
+- [Architecture](#architecture)
 - [Importing sprites](#importing-sprites)
 - [Importing special files](#importing-special-files)
 - [Aseprite importing](#aseprite-importing)
 - [Creating global `const`](#creating-global-const)
 - [State Machine](#state-machine)
+
+## Architecture
+
+The project is based on **ECS** (Entity-Component-System) architecture.
+And for its easy code-management, the ECS-framework is used, Entitas.
+
+Entitas - [Link](https://github.com/sschmid/Entitas)
+
+### Installing Jenny & Code Generation
+[TODO]
 
 ## Importing sprites
 
