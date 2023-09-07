@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Entitas;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services;

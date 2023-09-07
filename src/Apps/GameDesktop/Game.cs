@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Entities;
@@ -25,12 +26,6 @@ public class Game : Microsoft.Xna.Framework.Game
     public Game(ServiceContainer container)
     {
         _container = container;
-
-        var contexts = Contexts.sharedInstance;
-        var e = contexts.game.CreateEntity();
-        e.AddHealth(100);
-
-        System.Console.WriteLine("e.health.value: " + e.health.value);
     }
 
     protected override void Initialize()
@@ -44,7 +39,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
-        ConfigureServices();
+        // ConfigureServices();
     }
 
     private void ConfigureServices()
@@ -101,7 +96,7 @@ public class Game : Microsoft.Xna.Framework.Game
         FixedUpdate(gameTime);
 
         base.Update(gameTime);
-        _player.Update(gameTime);
+        // _player.Update(gameTime);
 
         LateUpdate(gameTime);
     }
@@ -114,7 +109,7 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        _player.Draw(_spriteBatch);
+        // _player.Draw(_spriteBatch);
 
         base.Draw(gameTime);
     }

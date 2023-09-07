@@ -9,6 +9,63 @@
 - [Creating global `const`](#creating-global-const)
 - [State Machine](#state-machine)
 
+## Makefile
+
+If some commands don't run, but the file is correct 99%,
+ensure you didn't set BOM in you file encoding.
+
+## Setup Jenny
+
+The step is required for the first time.
+
+> If you see a `Jenny.properties` file and running generations through `make` succeeds, you should negotiate your
+> actions with your team.
+
+### Run initializer
+
+```shell
+# from project root directory
+cd ./src/<Libs|Apps>/<YourProjectName>
+```
+
+```shell
+# from the last entered directory
+dotnet ../../../external/Jenny/Jenny.Generator.Cli.dll
+```
+
+Then copy an already existing `Jenny.properties` file in the new existing project directory and change it:
+
+```shell
+Jenny.Plugins.ProjectPath = <YourProjectName>.csproj
+
+# Where Health derives from IComponent, the next method will be generated:
+# if false -> Add<YourProjectName>Health 
+# if true -> AddHealth
+Entitas.CodeGeneration.Plugins.IgnoreNamespaces = true
+```
+
+Don't forget to reference in your new project:
+
+```html
+...
+<ItemGroup>
+    <PackageReference Include="Entitas" Version="1.14.2"/>
+    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1"/>
+    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2"/>
+    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2"/>
+</ItemGroup>
+...
+```
+
+To run the target `gen` for all the projects, just use `make`.
+
+For parallel execution, add `-j` flag .
+
+> **Warning!**
+> `Vector2` code-generation doesn't work when `using System.Numerics;`
+>
+> But works if you specify explicitly `System.Numerics.Vector2` or set `using Vector2 = System.Numerics.Vector2;`
+
 ## Architecture
 
 The project is based on **ECS** (Entity-Component-System) architecture.
@@ -17,6 +74,7 @@ And for its easy code-management, the ECS-framework is used, Entitas.
 Entitas - [Link](https://github.com/sschmid/Entitas)
 
 ### Installing Jenny & Code Generation
+
 [TODO]
 
 ## Importing sprites

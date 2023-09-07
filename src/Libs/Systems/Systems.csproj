@@ -4,15 +4,15 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <LangVersion>default</LangVersion>
     <_TargetFrameworkDirectories>Jenny.Plugins.ReferenceAssemblyPathsPreProcessor</_TargetFrameworkDirectories>
     <_FullFrameworkReferenceAssemblyPaths>Jenny.Plugins.ReferenceAssemblyPathsPreProcessor</_FullFrameworkReferenceAssemblyPaths>
     <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FrontEnd\FrontEnd.csproj"/>
-    <ProjectReference Include="..\Mechanics\Mechanics.csproj"/>
-    <ProjectReference Include="..\Services\Services.csproj"/>
+    <PackageReference Include="Entitas" Version="1.14.2"/>
+    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1"/>
+    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2"/>
+    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generated/Game/GameComponentsLookup.cs" />
@@ -27,12 +27,5 @@
     <Compile Include="Generated/Game/GameEntity.cs" />
     <Compile Include="Generated/Input/InputEntity.cs" />
     <Compile Include="Generated/Feature.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Stateless" Version="5.13.0"/>
-    <PackageReference Include="Entitas" Version="1.14.2"/>
-    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1"/>
-    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2"/>
-    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2"/>
   </ItemGroup>
 </Project>

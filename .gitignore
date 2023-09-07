@@ -491,3 +491,6 @@ obj/
 
 # DependenSee
 dependensee.html
+
+# Jenny & CSharp
+*.userproperties
