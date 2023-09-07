@@ -15,20 +15,6 @@
     <ProjectReference Include="..\Services\Services.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generated/Game/GameComponentsLookup.cs" />
-    <Compile Include="Generated/Input/InputComponentsLookup.cs" />
-    <Compile Include="Generated/Game/GameAttribute.cs" />
-    <Compile Include="Generated/Input/InputAttribute.cs" />
-    <Compile Include="Generated/Game/GameContext.cs" />
-    <Compile Include="Generated/Input/InputContext.cs" />
-    <Compile Include="Generated/Game/GameMatcher.cs" />
-    <Compile Include="Generated/Input/InputMatcher.cs" />
-    <Compile Include="Generated/Contexts.cs" />
-    <Compile Include="Generated/Game/GameEntity.cs" />
-    <Compile Include="Generated/Input/InputEntity.cs" />
-    <Compile Include="Generated/Feature.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Stateless" Version="5.13.0"/>
     <PackageReference Include="Entitas" Version="1.14.2"/>
     <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1"/>

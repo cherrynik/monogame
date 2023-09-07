@@ -9,25 +9,10 @@
     <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Entitas" Version="1.14.2" />
-    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1" />
-    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2" />
-    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Generated/Game/Components/GameTransformComponent.cs" />
-    <Compile Include="Generated/Game/GameComponentsLookup.cs" />
-    <Compile Include="Generated/Input/InputComponentsLookup.cs" />
-    <Compile Include="Generated/Game/GameAttribute.cs" />
-    <Compile Include="Generated/Input/InputAttribute.cs" />
-    <Compile Include="Generated/Game/GameContext.cs" />
-    <Compile Include="Generated/Input/InputContext.cs" />
-    <Compile Include="Generated/Game/GameMatcher.cs" />
-    <Compile Include="Generated/Input/InputMatcher.cs" />
-    <Compile Include="Generated/Contexts.cs" />
-    <Compile Include="Generated/Game/GameEntity.cs" />
-    <Compile Include="Generated/Input/InputEntity.cs" />
-    <Compile Include="Generated/Feature.cs" />
+    <PackageReference Include="Entitas" Version="1.14.2"/>
+    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1"/>
+    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2"/>
+    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2"/>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303"/>
   </ItemGroup>
 </Project>

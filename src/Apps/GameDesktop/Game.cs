@@ -19,7 +19,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private readonly ServiceContainer _container;
     private SpriteBatch _spriteBatch;
 
-    private Player _player;
+    // private Player _player;
     // private IReadOnlyList<ISystem> _systems;
     // private GameSystems _gameSystems;
 
@@ -31,8 +31,6 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        // var e = Contexts.sharedInstance.game.CreateEntity();
-        // e.AddHealth(100);
 
         base.Initialize();
     }
@@ -49,7 +47,7 @@ public class Game : Microsoft.Xna.Framework.Game
         RegisterMovementServices();
         RegisterPlayer();
 
-        _player = _container.GetInstance<Player>();
+        // _player = _container.GetInstance<Player>();
     }
 
     private void RegisterSpriteServices()
