@@ -2,7 +2,9 @@
 
 ## Table Of Content
 
+- [Makefile](#makefile)
 - [Architecture](#architecture)
+- [Setup Jenny](#setup-jenny)
 - [Importing sprites](#importing-sprites)
 - [Importing special files](#importing-special-files)
 - [Aseprite importing](#aseprite-importing)
@@ -13,6 +15,14 @@
 
 If some commands don't run, but the file is correct 99%,
 ensure you didn't set BOM in you file encoding.
+
+## Architecture
+
+The project is based on **ECS** (Entity-Component-System) architecture.
+And for its easy code-management, the ECS-framework is used, Entitas.
+
+Entitas - [Link](https://github.com/sschmid/Entitas)
+
 
 ## Setup Jenny
 
@@ -57,7 +67,9 @@ Don't forget to reference in your new project:
 ...
 ```
 
-When you update your ECS files run the Jenny generate target for all the projects, using `make` from the root of the project.
+### Generate ECS Files
+
+When you update your ECS files run the Jenny's generate target for all the projects, using `make` from the project root.
 
 For parallel execution, add `-j` flag:
 
@@ -70,25 +82,11 @@ make -j
 >
 > But works if you specify explicitly `System.Numerics.Vector2` or set `using Vector2 = System.Numerics.Vector2;`
 
-## Architecture
-
-The project is based on **ECS** (Entity-Component-System) architecture.
-And for its easy code-management, the ECS-framework is used, Entitas.
-
-Entitas - [Link](https://github.com/sschmid/Entitas)
-
-### Installing Jenny & Code Generation
-
-[TODO]
-
 ## Importing sprites
 
-1. Use Aseprite for exporting sprite sheets, export 'em with a JSON file.
-    - **How?** - [Link](https://gamebanana.com/tuts/13811)
-    - Buy Aseprite - [Link]()
-2. Use QuickType (for generating types from your JSON) - [Link](https://quicktype.io/)
-3. Add the new type in `Models`.
-4. **Use it!**
+Buy Aseprite - [Link](https://www.aseprite.org/)
+
+Manual (MonoGame Aseprite) - [Link](https://monogameaseprite.net/)
 
 ## Importing special files
 
@@ -116,15 +114,6 @@ File.ReadAllText(Some.Path);
 ```
 
 Here is how - [Link](#creating-global-const);
-
-### Currently supported (and used) formats
-
-- Aseprite: `ase`, `aseprite`
-- Text: `json`, `txt`
-
-## Aseprite importing
-
-Here is how - [Link](https://monogameaseprite.net/)
 
 ## Creating global `const`
 
