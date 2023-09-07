@@ -45,9 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Components\Components.csproj" />
-    <ProjectReference Include="..\..\Libs\Entities\Entities.csproj" />
     <ProjectReference Include="..\..\Libs\Mechanics\Mechanics.csproj" />
-    <ProjectReference Include="..\..\Libs\Systems\Systems.csproj" />
+    <ProjectReference Include="..\..\Libs\Services\Services.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\Configs.Designer.cs">

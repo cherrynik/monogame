@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Entities;
+﻿using Components;
 using GameDesktop.Resources;
 using LightInject;
 using Mechanics;
@@ -21,7 +17,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     // private Player _player;
     // private IReadOnlyList<ISystem> _systems;
-    // private GameSystems _gameSystems;
+    private GameSystems _gameSystems;
 
     public Game(ServiceContainer container)
     {
@@ -38,6 +34,10 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void LoadContent()
     {
         // ConfigureServices();
+
+        Contexts contexts = Contexts.sharedInstance;
+        _gameSystems = new GameSystems(contexts);
+        _gameSystems.Initialize();
     }
 
     private void ConfigureServices()
@@ -45,7 +45,7 @@ public class Game : Microsoft.Xna.Framework.Game
         RegisterSpriteServices();
 
         RegisterMovementServices();
-        RegisterPlayer();
+        // RegisterPlayer();
 
         // _player = _container.GetInstance<Player>();
     }
@@ -61,25 +61,25 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.Register<IInputScanner, KeyboardScanner>();
     }
 
-    private void RegisterPlayer()
-    {
-        SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
-        AnimatedCharactersFactory animatedCharactersFactory = new();
-
-        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
-
-        _container.Register(factory => new PlayerView(
-            factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
-            animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing"),
-            animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking")
-        ));
-
-        _container.Register(factory =>
-            new Player(factory.GetInstance<IMovement>(),
-                factory.GetInstance<IInputScanner>(),
-                factory.GetInstance<PlayerView>()
-            ));
-    }
+    // private void RegisterPlayer()
+    // {
+    //     SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
+    //     AnimatedCharactersFactory animatedCharactersFactory = new();
+    //
+    //     _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
+    //
+    //     _container.Register(factory => new PlayerView(
+    //         factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
+    //         animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing"),
+    //         animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking")
+    //     ));
+    //
+    //     _container.Register(factory =>
+    //         new Player(factory.GetInstance<IMovement>(),
+    //             factory.GetInstance<IInputScanner>(),
+    //             factory.GetInstance<PlayerView>()
+    //         ));
+    // }
 
     private void FixedUpdate(GameTime fixedGameTime)
     {
@@ -94,6 +94,7 @@ public class Game : Microsoft.Xna.Framework.Game
         FixedUpdate(gameTime);
 
         base.Update(gameTime);
+        _gameSystems.Execute();
         // _player.Update(gameTime);
 
         LateUpdate(gameTime);
