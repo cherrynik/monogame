@@ -8,6 +8,6 @@ public class Class1
     {
         var c = Contexts.sharedInstance;
         var e = c.game.CreateEntity();
-        e.AddTransform(new());
+        // e.AddTransform(new());
     }
 }

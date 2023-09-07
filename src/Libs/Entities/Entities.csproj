@@ -10,6 +10,7 @@
     <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Components\Components.csproj" />
     <ProjectReference Include="..\FrontEnd\FrontEnd.csproj"/>
     <ProjectReference Include="..\Mechanics\Mechanics.csproj"/>
     <ProjectReference Include="..\Services\Services.csproj"/>

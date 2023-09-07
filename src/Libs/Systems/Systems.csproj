@@ -14,4 +14,7 @@
     <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2"/>
     <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2"/>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Components\Components.csproj" />
+  </ItemGroup>
 </Project>
