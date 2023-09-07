@@ -57,9 +57,13 @@ Don't forget to reference in your new project:
 ...
 ```
 
-To run the target `gen` for all the projects, just use `make`.
+When you update your ECS files run the Jenny generate target for all the projects, using `make` from the root of the project.
 
-For parallel execution, add `-j` flag .
+For parallel execution, add `-j` flag:
+
+```shell
+make -j
+```
 
 > **Warning!**
 > `Vector2` code-generation doesn't work when `using System.Numerics;`
