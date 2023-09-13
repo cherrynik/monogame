@@ -4,7 +4,7 @@ SYSTEMS_DIR = ./src/Libs/Systems
 
 JENNY = $(realpath ./external/Jenny/Jenny.Generator.Cli.dll)
 
-all: e-gen c-gen s-gen
+all: c-gen
 
 e-gen:
 	cd $(ENTITIES_DIR) && dotnet $(JENNY) gen

@@ -14,6 +14,7 @@
     <ProjectReference Include="..\FrontEnd\FrontEnd.csproj"/>
     <ProjectReference Include="..\Mechanics\Mechanics.csproj"/>
     <ProjectReference Include="..\Services\Services.csproj"/>
+    <ProjectReference Include="..\Systems\Systems.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Stateless" Version="5.13.0"/>
