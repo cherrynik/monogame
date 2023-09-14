@@ -6,10 +6,11 @@ name: .NET
 on: [ push ]
 
 jobs:
-  build:
-
-    runs-on: windows-latest
-
+  os_matrix:
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
