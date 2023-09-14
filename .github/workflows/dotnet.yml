@@ -6,7 +6,7 @@ name: .NET
 on: [ push ]
 
 jobs:
-  os_matrix:
+  Build:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
