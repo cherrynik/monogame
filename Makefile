@@ -1,2 +1,4 @@
+ENTRY_POINT = ./src/Libs/Components
+
 all:
-	+$(MAKE) -C ./src/Libs/Components
+	+$(MAKE) -C $(ENTRY_POINT)

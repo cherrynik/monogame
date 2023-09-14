@@ -13,7 +13,7 @@
 
 ## Makefile
 
-If some commands don't run, but the file is correct 99%,
+If something happens like commands don't run, variables not evaluated, but the file is correct 99%,
 ensure you didn't set BOM in you file encoding.
 
 ## Architecture

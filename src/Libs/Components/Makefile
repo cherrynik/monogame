@@ -1,4 +1,6 @@
-﻿all: gen
+JENNY = ../External/Jenny/Jenny.Generator.Cli.dll
+
+all: gen
 
 gen:
-	dotnet ../External/Jenny/Jenny.Generator.Cli.dll gen
+	dotnet $(JENNY) gen
