@@ -1,6 +1,6 @@
 ﻿using Entitas;
 
-namespace Components;
+namespace Components.World;
 
 public class Movable : IComponent
 {

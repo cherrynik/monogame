@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace Services;
+namespace Services.Input;
 
 public interface IInputScanner
 {

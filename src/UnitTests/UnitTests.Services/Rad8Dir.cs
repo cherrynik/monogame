@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Services;
+using Services.Math;
 
 namespace UnitTests.Services;
 

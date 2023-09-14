@@ -1,5 +1,6 @@
 ﻿using LightInject;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Game = GameDesktop.Game;
 
 // Game Container Start-Up config

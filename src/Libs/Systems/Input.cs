@@ -1,24 +1,22 @@
 ﻿using Entitas;
 using Microsoft.Xna.Framework;
-using Services;
+using Services.Input;
+using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems;
 
-public class InputSystem : IExecuteSystem
+public class Input : IExecuteSystem
 {
-    private readonly Contexts _contexts;
     private readonly IInputScanner _inputScanner;
     private readonly IGroup<GameEntity> _group;
 
-    public InputSystem(Contexts contexts, IInputScanner inputScanner)
+    public Input(IInputScanner inputScanner, IGroup<GameEntity> group)
     {
-        _contexts = contexts;
         _inputScanner = inputScanner;
-
-        _group = _contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Movable, GameMatcher.Transform));
+        _group = group;
     }
 
-    public void Execute()
+    public void Execute(GameTime gameTime)
     {
         Vector2 direction = _inputScanner.GetDirection();
 
@@ -26,7 +24,6 @@ public class InputSystem : IExecuteSystem
         foreach (GameEntity e in entities)
         {
             e.transform.Velocity = direction;
-            Console.WriteLine((e.transform.Position));
         }
     }
 }

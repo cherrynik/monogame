@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Services;
+namespace Services.Math;
 
 public enum RadDir
 {
@@ -18,13 +18,13 @@ public static class MathUtils
 {
     private static double RadDir(float x, float y, int sectors)
     {
-        double radians = Math.Atan2(y, x);
+        double radians = System.Math.Atan2(y, x);
 
         // Normalize the angle to the range [0, 2π)
-        radians %= 2 * Math.PI;
-        if (radians < 0) radians += 2 * Math.PI;
+        radians %= 2 * System.Math.PI;
+        if (radians < 0) radians += 2 * System.Math.PI;
 
-        return Math.Floor(radians / (2 * Math.PI) * sectors);
+        return System.Math.Floor(radians / (2 * System.Math.PI) * sectors);
     }
 
     public static RadDir Rad8Dir(Vector2 dir) => (RadDir)RadDir(dir.X, dir.Y, sectors: 8);

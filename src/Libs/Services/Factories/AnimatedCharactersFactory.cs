@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite;
 using MonoGame.Aseprite.Content.Processors;
 using MonoGame.Aseprite.Sprites;
-using Services;
+using Services.Math;
 
-namespace GameDesktop;
+namespace Services.Factories;
 
 public class AnimatedCharactersFactory
 {

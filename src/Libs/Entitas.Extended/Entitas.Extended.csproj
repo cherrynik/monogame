@@ -7,13 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MonoGame.Aseprite" Version="5.1.0" />
+      <PackageReference Include="Entitas" Version="1.14.2" />
       <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
-      <PackageReference Include="Stateless" Version="5.13.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Services\Services.csproj" />
     </ItemGroup>
 
 </Project>

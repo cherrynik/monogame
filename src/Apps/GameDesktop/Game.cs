@@ -1,11 +1,11 @@
 ﻿using Components;
+using Components.Sprites;
 using Entities;
 using GameDesktop.Resources;
 using LightInject;
-using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Services;
+using Services.Factories;
 using Stateless;
 using SpriteSheet = MonoGame.Aseprite.Sprites.SpriteSheet;
 
@@ -16,9 +16,8 @@ public class Game : Microsoft.Xna.Framework.Game
     private readonly ServiceContainer _container;
     private SpriteBatch _spriteBatch;
 
-    // private Player _player;
-    // private IReadOnlyList<ISystem> _systems;
     private GameSystems _gameSystems;
+    private Contexts _contexts;
 
     public Game(ServiceContainer container)
     {
@@ -34,60 +33,28 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
-        // ConfigureServices();
+        SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
+        AnimatedCharactersFactory animatedCharactersFactory = new();
 
-        Contexts contexts = Contexts.sharedInstance;
-        _gameSystems = new GameSystems(contexts);
+        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
+
+        _container.Register(factory => new MovementAnimatedSprites(
+            factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
+            animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing"),
+            animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking"), _spriteBatch));
+
+        // TODO: DI with ECS?
+        // TODO: Projects management (external in Libs/External?)
+        // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
+        // TODO: Error handling
+        _contexts = Contexts.sharedInstance;
+        _gameSystems = new GameSystems(_contexts, _container.GetInstance<MovementAnimatedSprites>());
         _gameSystems.Initialize();
     }
 
-    private void ConfigureServices()
-    {
-        RegisterSpriteServices();
-
-        RegisterMovementServices();
-        // RegisterPlayer();
-
-        // _player = _container.GetInstance<Player>();
-    }
-
-    private void RegisterSpriteServices()
-    {
-        _container.Register(_ => _spriteBatch);
-    }
-
-    private void RegisterMovementServices()
-    {
-        _container.Register<IMovement, SimpleMovement>();
-        _container.Register<IInputScanner, KeyboardScanner>();
-    }
-
-    // private void RegisterPlayer()
-    // {
-    //     SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
-    //     AnimatedCharactersFactory animatedCharactersFactory = new();
-    //
-    //     _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
-    //
-    //     _container.Register(factory => new PlayerView(
-    //         factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
-    //         animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing"),
-    //         animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking")
-    //     ));
-    //
-    //     _container.Register(factory =>
-    //         new Player(factory.GetInstance<IMovement>(),
-    //             factory.GetInstance<IInputScanner>(),
-    //             factory.GetInstance<PlayerView>()
-    //         ));
-    // }
-
     private void FixedUpdate(GameTime fixedGameTime)
     {
-        // foreach (var system in _systems)
-        // {
-        //     system.FixedUpdate(fixedGameTime, _systems);
-        // }
+        _gameSystems.FixedExecute(fixedGameTime);
     }
 
     protected override void Update(GameTime gameTime)
@@ -95,21 +62,21 @@ public class Game : Microsoft.Xna.Framework.Game
         FixedUpdate(gameTime);
 
         base.Update(gameTime);
-        _gameSystems.Execute();
-        // _player.Update(gameTime);
+        _gameSystems.Execute(gameTime);
 
         LateUpdate(gameTime);
     }
 
     private void LateUpdate(GameTime gameTime)
     {
+        _gameSystems.LateExecute(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // _player.Draw(_spriteBatch);
+        _gameSystems.Draw(gameTime, _spriteBatch);
 
         base.Draw(gameTime);
     }

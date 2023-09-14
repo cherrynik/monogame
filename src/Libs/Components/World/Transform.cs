@@ -1,7 +1,7 @@
 ﻿using Entitas;
 using Microsoft.Xna.Framework;
 
-namespace Components;
+namespace Components.World;
 
 public class Transform : IComponent
 {

@@ -1,76 +1,63 @@
 ﻿using Entitas;
+using Entitas.CodeGeneration.Attributes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services;
+using Services.Math;
 using Stateless;
 
-namespace Entities;
+namespace Components.Sprites;
 
-// TODO: Extract an interface?
-public class PlayerView
+public class MovementAnimatedSprites : IComponent
 {
     private const RadDir DefaultFacing = RadDir.Down;
 
-    private readonly StateMachine<PlayerState, PlayerTrigger> _stateMachine;
+    public StateMachine<PlayerState, PlayerTrigger> StateMachine;
 
-    private readonly StateMachine<PlayerState, PlayerTrigger>.TriggerWithParameters<Vector2>
-        _moveWithParameters;
+    public StateMachine<PlayerState, PlayerTrigger>.TriggerWithParameters<Vector2>
+        MoveWithParameters;
 
     private readonly Dictionary<RadDir, AnimatedSprite> _idleAnimations;
     private readonly Dictionary<RadDir, AnimatedSprite> _walkingAnimations;
+    private readonly SpriteBatch _spriteBatch;
 
     private Vector2 _lastDirection;
-    private AnimatedSprite _playingAnimation;
 
-    public PlayerView(StateMachine<PlayerState, PlayerTrigger> stateMachine,
-        Dictionary<RadDir, AnimatedSprite> idleAnimations,
-        Dictionary<RadDir, AnimatedSprite> walkingAnimations)
+    public AnimatedSprite PlayingAnimation;
+
+    public MovementAnimatedSprites()
     {
-        _stateMachine = stateMachine;
+    }
+
+    public MovementAnimatedSprites(StateMachine<PlayerState, PlayerTrigger> stateMachine,
+        Dictionary<RadDir, AnimatedSprite> idleAnimations,
+        Dictionary<RadDir, AnimatedSprite> walkingAnimations, SpriteBatch spriteBatch)
+    {
+        StateMachine = stateMachine;
+        MoveWithParameters = StateMachine.SetTriggerParameters<Vector2>(PlayerTrigger.Move);
+
         _idleAnimations = idleAnimations;
         _walkingAnimations = walkingAnimations;
-        _playingAnimation = _idleAnimations[DefaultFacing];
-
-        _moveWithParameters = _stateMachine.SetTriggerParameters<Vector2>(PlayerTrigger.Move);
+        _spriteBatch = spriteBatch;
+        PlayingAnimation = _idleAnimations[DefaultFacing];
 
         ConfigureStateMachine();
 
-        _stateMachine.Activate();
-    }
-
-    public void Update(GameTime gameTime, Vector2 direction)
-    {
-        if (direction.Equals(Vector2.Zero))
-        {
-            _stateMachine.Fire(PlayerTrigger.Stop);
-        }
-        else
-        {
-            _stateMachine.Fire(_moveWithParameters, direction);
-        }
-
-        _playingAnimation.Update(gameTime);
-    }
-
-    public void Draw(SpriteBatch spriteBatch, Vector2 at)
-    {
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        _playingAnimation.Draw(spriteBatch, at);
-        spriteBatch.End();
+        StateMachine.Activate();
     }
 
     private void ConfigureStateMachine()
     {
-        _stateMachine
+        StateMachine
             .Configure(PlayerState.Idle)
             .OnEntry(StopFacingTrace)
             .Ignore(PlayerTrigger.Stop)
             .Permit(PlayerTrigger.Move, PlayerState.Moving);
 
-        _stateMachine
+        StateMachine
             .Configure(PlayerState.Moving)
-            .OnEntryFrom(_moveWithParameters, MoveFacingTrace)
+            .OnEntryFrom(MoveWithParameters, MoveFacingTrace)
             .PermitReentry(PlayerTrigger.Move)
             .Permit(PlayerTrigger.Stop, PlayerState.Idle);
     }
@@ -78,8 +65,8 @@ public class PlayerView
     private void StopFacingTrace()
     {
         RadDir radDir = MathUtils.Rad8DirYFlipped(_lastDirection);
-        _playingAnimation = _idleAnimations[radDir];
-        _playingAnimation.SetFrame(0);
+        PlayingAnimation = _idleAnimations[radDir];
+        PlayingAnimation.SetFrame(0);
     }
 
     private void MoveFacingTrace(Vector2 direction)
@@ -87,9 +74,9 @@ public class PlayerView
         RadDir radDir = MathUtils.Rad8DirYFlipped(direction);
         AnimatedSprite walkingAnimation = _walkingAnimations[radDir];
 
-        if (AreDifferentSprites(_playingAnimation, walkingAnimation))
+        if (AreDifferentSprites(PlayingAnimation, walkingAnimation))
         {
-            _playingAnimation = walkingAnimation;
+            PlayingAnimation = walkingAnimation;
         }
 
         _lastDirection = direction;
