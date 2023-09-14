@@ -2,6 +2,6 @@
 
 namespace Components.World;
 
-public class Movable : IComponent
+public class PlayerComponent : IComponent
 {
 }

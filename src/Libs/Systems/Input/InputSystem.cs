@@ -3,14 +3,15 @@ using Microsoft.Xna.Framework;
 using Services.Input;
 using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
-namespace Systems;
+namespace Systems.Input;
 
-public class Input : IExecuteSystem
+[Input]
+public class InputSystem : IExecuteSystem
 {
     private readonly IInputScanner _inputScanner;
     private readonly IGroup<GameEntity> _group;
 
-    public Input(IInputScanner inputScanner, IGroup<GameEntity> group)
+    public InputSystem(IInputScanner inputScanner, IGroup<GameEntity> group)
     {
         _inputScanner = inputScanner;
         _group = group;

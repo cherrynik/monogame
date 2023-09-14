@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace Components.World;
 
-public class Transform : IComponent
+public class TransformComponent : IComponent
 {
     public Vector2 Position;
     public Vector2 Velocity;

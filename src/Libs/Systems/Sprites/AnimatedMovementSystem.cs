@@ -7,11 +7,11 @@ using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems.Sprites;
 
-public class MovementAnimatedSprites : IExecuteSystem, IDrawSystem
+public class AnimatedMovementSystem : IExecuteSystem, IDrawSystem
 {
     private readonly IGroup<GameEntity> _group;
 
-    public MovementAnimatedSprites(IGroup<GameEntity> group)
+    public AnimatedMovementSystem(IGroup<GameEntity> group)
     {
         _group = group;
     }
@@ -22,8 +22,8 @@ public class MovementAnimatedSprites : IExecuteSystem, IDrawSystem
         foreach (GameEntity e in entities)
         {
             Vector2 velocity = e.transform.Velocity;
-            Components.Sprites.MovementAnimatedSprites? movementAnimatedSprites =
-                (Components.Sprites.MovementAnimatedSprites)e.GetComponent(0);
+            AnimatedMovementComponent movementAnimatedSprites =
+                (AnimatedMovementComponent)e.GetComponents().First(component => component is AnimatedMovementComponent);
 
             if (velocity.Equals(Vector2.Zero))
             {
@@ -46,8 +46,8 @@ public class MovementAnimatedSprites : IExecuteSystem, IDrawSystem
         foreach (GameEntity e in entities)
         {
             Vector2 position = e.transform.Position;
-            Components.Sprites.MovementAnimatedSprites? movementAnimatedSprites =
-                (Components.Sprites.MovementAnimatedSprites)e.GetComponent(0);
+            AnimatedMovementComponent? movementAnimatedSprites =
+                (AnimatedMovementComponent)e.GetComponents().First(component => component is AnimatedMovementComponent);
 
             movementAnimatedSprites.PlayingAnimation.Draw(spriteBatch, position);
         }

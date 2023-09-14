@@ -33,22 +33,13 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
-        SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
-        AnimatedCharactersFactory animatedCharactersFactory = new();
-
-        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
-
-        _container.Register(factory => new MovementAnimatedSprites(
-            factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
-            animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing"),
-            animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking"), _spriteBatch));
 
         // TODO: DI with ECS?
         // TODO: Projects management (external in Libs/External?)
         // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
         // TODO: Error handling
         _contexts = Contexts.sharedInstance;
-        _gameSystems = new GameSystems(_contexts, _container.GetInstance<MovementAnimatedSprites>());
+        _gameSystems = new GameSystems(_contexts, GraphicsDevice);
         _gameSystems.Initialize();
     }
 

@@ -1,8 +1,9 @@
-﻿using Entitas.Extended;
-using Services;
+﻿using Entitas;
+using Microsoft.Xna.Framework.Graphics;
 using Services.Input;
 using Services.Movement;
 using Systems;
+using Systems.Input;
 using Systems.Sprites;
 
 namespace Entities;
@@ -10,12 +11,12 @@ namespace Entities;
 public sealed class GameSystems : Entitas.Extended.Feature
 {
     private readonly Contexts _contexts;
-    private readonly Components.Sprites.MovementAnimatedSprites _movementAnimatedSprites;
+    private readonly GraphicsDevice _graphicsDevice;
 
-    public GameSystems(Contexts contexts, Components.Sprites.MovementAnimatedSprites movementAnimatedSprites)
+    public GameSystems(Contexts contexts, GraphicsDevice graphicsDevice)
     {
         _contexts = contexts;
-        _movementAnimatedSprites = movementAnimatedSprites;
+        _graphicsDevice = graphicsDevice;
 
         RegisterSystems();
     }
@@ -28,25 +29,24 @@ public sealed class GameSystems : Entitas.Extended.Feature
 
     private void RegisterEntitySystem()
     {
-        Add(new CreateEntity(_contexts, _movementAnimatedSprites));
+        Add(new CreateEntitySystem(_contexts, _graphicsDevice));
     }
 
     private void RegisterMovementSystem()
     {
-        var movableGroup =
-            _contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Player,
-                GameMatcher.Movable,
-                GameMatcher.Transform));
+        var movableGroup = AllOf(GameMatcher.Player, GameMatcher.Movable, GameMatcher.Transform);
 
         // Input
-        Add(new Input(new KeyboardScanner(), movableGroup));
+        Add(new InputSystem(new KeyboardScanner(), movableGroup));
 
         // Update
-        Add(new Movement(movableGroup, new SimpleMovement()));
+        Add(new MovementSystem(movableGroup, new SimpleMovement()));
 
         // Render
-        var animatedMovementGroup = _contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Movable,
-            GameMatcher.Transform, GameMatcher.MovementAnimatedSprites));
-        Add(new MovementAnimatedSprites(animatedMovementGroup));
+        var animatedMovementGroup = AllOf(GameMatcher.Movable, GameMatcher.Transform, GameMatcher.AnimatedMovement);
+        Add(new AnimatedMovementSystem(animatedMovementGroup));
     }
+
+    private IGroup<GameEntity> AllOf(params IMatcher<GameEntity>[] matchers) =>
+        _contexts.game.GetGroup(GameMatcher.AllOf(matchers));
 }

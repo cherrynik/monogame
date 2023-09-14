@@ -1,15 +1,12 @@
 ﻿using Entitas;
-using Entitas.CodeGeneration.Attributes;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
-using Services;
 using Services.Math;
 using Stateless;
 
 namespace Components.Sprites;
 
-public class MovementAnimatedSprites : IComponent
+public class AnimatedMovementComponent : IComponent
 {
     private const RadDir DefaultFacing = RadDir.Down;
 
@@ -20,26 +17,20 @@ public class MovementAnimatedSprites : IComponent
 
     private readonly Dictionary<RadDir, AnimatedSprite> _idleAnimations;
     private readonly Dictionary<RadDir, AnimatedSprite> _walkingAnimations;
-    private readonly SpriteBatch _spriteBatch;
 
     private Vector2 _lastDirection;
 
     public AnimatedSprite PlayingAnimation;
 
-    public MovementAnimatedSprites()
-    {
-    }
-
-    public MovementAnimatedSprites(StateMachine<PlayerState, PlayerTrigger> stateMachine,
+    public AnimatedMovementComponent(StateMachine<PlayerState, PlayerTrigger> stateMachine,
         Dictionary<RadDir, AnimatedSprite> idleAnimations,
-        Dictionary<RadDir, AnimatedSprite> walkingAnimations, SpriteBatch spriteBatch)
+        Dictionary<RadDir, AnimatedSprite> walkingAnimations)
     {
         StateMachine = stateMachine;
         MoveWithParameters = StateMachine.SetTriggerParameters<Vector2>(PlayerTrigger.Move);
 
         _idleAnimations = idleAnimations;
         _walkingAnimations = walkingAnimations;
-        _spriteBatch = spriteBatch;
         PlayingAnimation = _idleAnimations[DefaultFacing];
 
         ConfigureStateMachine();

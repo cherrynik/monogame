@@ -5,12 +5,12 @@ using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems;
 
-public class Movement : IExecuteSystem
+public class MovementSystem : IExecuteSystem
 {
     private readonly IGroup<GameEntity> _group;
     private readonly ISafeMovement _movement;
 
-    public Movement(IGroup<GameEntity> group, ISafeMovement movement)
+    public MovementSystem(IGroup<GameEntity> group, ISafeMovement movement)
     {
         _group = group;
         _movement = movement;
