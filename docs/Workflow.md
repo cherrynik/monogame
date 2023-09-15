@@ -134,3 +134,13 @@ root of the project.
 Stateless Docs - [Link](https://github.com/dotnet-state-machine/stateless)
 
 For now, it's used in the `Player` entity.
+
+## Errors Logging
+
+Sentry - [Link](https://docs.sentry.io/platforms/dotnet/?original_referrer=https%3A%2F%2Fwww.google.com%2F)
+
+_It doesn't work with banned IP addresses, use VPN._
+
+## General Logging
+
+Microsoft.Extensions.Logging - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging?tabs=command-line)

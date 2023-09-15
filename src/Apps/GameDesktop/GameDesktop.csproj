@@ -38,10 +38,13 @@
     <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2" />
     <PackageReference Include="LightInject" Version="6.6.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0-preview.7.23375.6" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
     <PackageReference Include="MonoGame.Aseprite" Version="5.1.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
     <PackageReference Include="Sentry" Version="3.39.1" />
+    <PackageReference Include="Sentry.Extensions.Logging" Version="3.39.1" />
     <PackageReference Include="Stateless" Version="5.13.0" />
   </ItemGroup>
   <ItemGroup>

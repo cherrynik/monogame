@@ -1,27 +1,33 @@
-﻿using Components;
+﻿using System;
+using Components;
 using Components.Sprites;
 using Entities;
 using GameDesktop.Resources;
 using LightInject;
+using Microsoft.Extensions.Logging;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Sentry;
 using Services.Factories;
 using Stateless;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 using SpriteSheet = MonoGame.Aseprite.Sprites.SpriteSheet;
 
 namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
-    private readonly ServiceContainer _container;
+    private readonly ILogger<Game> _logger;
     private SpriteBatch _spriteBatch;
 
     private GameSystems _gameSystems;
     private Contexts _contexts;
 
-    public Game(ServiceContainer container)
+    public Game(ILogger<Game> logger)
     {
-        _container = container;
+        _logger = logger;
+
+        _logger.LogInformation("ctor");
     }
 
     protected override void Initialize()
@@ -29,11 +35,11 @@ public class Game : Microsoft.Xna.Framework.Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         base.Initialize();
+        _logger.LogInformation("Initialize");
     }
 
     protected override void LoadContent()
     {
-
         // TODO: DI with ECS?
         // TODO: Projects management (external in Libs/External?)
         // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
@@ -53,7 +59,14 @@ public class Game : Microsoft.Xna.Framework.Game
         FixedUpdate(gameTime);
 
         base.Update(gameTime);
-        _gameSystems.Execute(gameTime);
+        try
+        {
+            _gameSystems.Execute(gameTime);
+        }
+        catch (Exception e)
+        {
+            SentrySdk.CaptureException(e);
+        }
 
         LateUpdate(gameTime);
     }

@@ -24,8 +24,6 @@ public sealed class CreateEntitySystem : IInitializeSystem
     public void Initialize()
     {
         CreatePlayer();
-
-        Console.WriteLine("Initialized.");
     }
 
     private void CreatePlayer()
