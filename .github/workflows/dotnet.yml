@@ -21,7 +21,7 @@ jobs:
         run: dotnet restore
         
       - name: Generate ECS files by Jenny
-        run: make -j
+        run: make gen
 
       - name: Build
         run: dotnet build --no-restore

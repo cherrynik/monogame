@@ -43,6 +43,12 @@
       "commands": [
         "DependenSee"
       ]
+    },
+    "husky": {
+      "version": "0.6.1",
+      "commands": [
+        "husky"
+      ]
     }
   }
 }
