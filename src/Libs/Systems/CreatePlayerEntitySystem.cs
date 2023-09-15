@@ -1,32 +1,17 @@
-﻿using Components.Sprites;
-using Entitas;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Aseprite.Sprites;
-using Services;
-using Services.Factories;
-using Stateless;
-using Vector2 = System.Numerics.Vector2;
+﻿using Entitas;
 
 namespace Systems;
 
-public sealed class CreateEntitySystem : IInitializeSystem
+public class CreatePlayerEntitySystem : IInitializeSystem
 {
     private readonly Contexts _contexts;
-    private readonly GraphicsDevice _graphicsDevice;
 
-    public CreateEntitySystem(Contexts contexts, GraphicsDevice graphicsDevice)
+    public CreatePlayerEntitySystem(Contexts contexts)
     {
         _contexts = contexts;
-        _graphicsDevice = graphicsDevice;
     }
 
     public void Initialize()
-    {
-        CreatePlayer();
-    }
-
-    private void CreatePlayer()
     {
         GameEntity? e = _contexts.game.CreateEntity();
 

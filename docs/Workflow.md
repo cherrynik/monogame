@@ -23,7 +23,6 @@ And for its easy code-management, the ECS-framework is used, Entitas.
 
 Entitas - [Link](https://github.com/sschmid/Entitas)
 
-
 ## Setup Jenny
 
 The step is required for the first time.
@@ -133,14 +132,14 @@ root of the project.
 
 Stateless Docs - [Link](https://github.com/dotnet-state-machine/stateless)
 
-For now, it's used in the `Player` entity.
+## Logging
 
-## Errors Logging
+### General
 
-Sentry - [Link](https://docs.sentry.io/platforms/dotnet/?original_referrer=https%3A%2F%2Fwww.google.com%2F)
+Serilog - [Link](https://serilog.net/)
 
-_It doesn't work with banned IP addresses, use VPN._
+### Errors Reporting
 
-## General Logging
+Sentry - [Link](https://docs.sentry.io/platforms/dotnet)
 
-Microsoft.Extensions.Logging - [Link](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging?tabs=command-line)
+_It doesn't work with banned IP addresses, so use VPN if you're located in a banned area._
