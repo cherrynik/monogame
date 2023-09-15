@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -41,6 +41,7 @@
     <PackageReference Include="MonoGame.Aseprite" Version="5.1.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="Sentry" Version="3.39.1" />
     <PackageReference Include="Stateless" Version="5.13.0" />
   </ItemGroup>
   <ItemGroup>
