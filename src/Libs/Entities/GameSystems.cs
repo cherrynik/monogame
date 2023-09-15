@@ -34,13 +34,13 @@ public sealed class GameSystems : Entitas.Extended.Feature
 
     private void RegisterMovementSystem()
     {
-        var movableGroup = AllOf(GameMatcher.Player, GameMatcher.Movable, GameMatcher.Transform);
+        var inputMovableGroup = AllOf(GameMatcher.Player, GameMatcher.Movable, GameMatcher.Transform);
 
         // Input
-        Add(new InputSystem(new KeyboardScanner(), movableGroup));
+        Add(new InputSystem(new KeyboardScanner(), inputMovableGroup));
 
         // Update
-        Add(new MovementSystem(movableGroup, new SimpleMovement()));
+        Add(new MovementSystem(inputMovableGroup, new SimpleMovement()));
 
         // Render
         var animatedMovementGroup = AllOf(GameMatcher.Movable, GameMatcher.Transform, GameMatcher.AnimatedMovement);

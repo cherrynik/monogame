@@ -8,9 +8,9 @@ namespace Systems;
 public class MovementSystem : IExecuteSystem
 {
     private readonly IGroup<GameEntity> _group;
-    private readonly ISafeMovement _movement;
+    private readonly IMovement _movement;
 
-    public MovementSystem(IGroup<GameEntity> group, ISafeMovement movement)
+    public MovementSystem(IGroup<GameEntity> group, IMovement movement)
     {
         _group = group;
         _movement = movement;
@@ -21,7 +21,12 @@ public class MovementSystem : IExecuteSystem
         GameEntity[]? entities = _group.GetEntities();
         foreach (GameEntity e in entities)
         {
-            e.transform.Position = _movement.SafeMove(e.transform.Position, e.transform.Velocity);
+            if (e.transform.Velocity.Equals(Vector2.Zero))
+            {
+                continue;
+            }
+
+            e.transform.Position = _movement.Move(e.transform.Position, e.transform.Velocity);
         }
     }
 }
