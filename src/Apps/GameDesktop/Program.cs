@@ -3,16 +3,20 @@ using GameDesktop;
 using LightInject;
 using Serilog.Core;
 
-ContainerOptions containerOptions =
-    new ContainerOptions { LogFactory = _ => entry => Console.WriteLine($@"LightInject: {entry.Message}") };
-using ServiceContainer container = new(containerOptions);
+using Logger logger = LogFactory.Create();
 
-container.RegisterFrom<LoggingCompositionRoot>();
-using var logger = container.GetInstance<Logger>();
+ContainerOptions containerOptions =
+    new ContainerOptions
+    {
+        LogFactory = _ => entry => logger.ForContext<ServiceContainer>().Verbose("{EntryMessage}", entry.Message)
+    };
+using ServiceContainer container = new(containerOptions);
 
 try
 {
-    container.RegisterFrom<ProgramCompositionRoot>();
+    container.Register(_ => logger, new PerContainerLifetime());
+
+    container.RegisterFrom<GameCompositionRoot>();
 
     using Game game = container.GetInstance<Game>();
     game.Run();

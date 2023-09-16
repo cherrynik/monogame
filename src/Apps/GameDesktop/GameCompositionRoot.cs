@@ -4,7 +4,7 @@ using Serilog.Core;
 
 namespace GameDesktop;
 
-public class ProgramCompositionRoot : ICompositionRoot
+public class GameCompositionRoot : ICompositionRoot
 {
     private const string ContentRootDirectory = "Content";
     private const bool IsMouseVisible = true;
