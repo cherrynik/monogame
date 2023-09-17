@@ -11,6 +11,11 @@ public class GameCompositionRoot : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
+        RegisterGameServices(serviceRegistry);
+    }
+
+    private void RegisterGameServices(IServiceRegistry serviceRegistry)
+    {
         serviceRegistry.Register(_ => Contexts.sharedInstance);
 
         serviceRegistry.Register(factory =>
