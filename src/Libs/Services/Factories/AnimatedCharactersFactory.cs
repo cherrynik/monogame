@@ -6,9 +6,9 @@ using Services.Math;
 
 namespace Services.Factories;
 
-public class AnimatedCharactersFactory
+public static class AnimatedCharactersFactory
 {
-    private readonly IReadOnlyList<RadDir> _directions =
+    private static readonly IReadOnlyList<RadDir> Directions =
         new[] { RadDir.Right, RadDir.Down, RadDir.Left, RadDir.Up };
 
     public static SpriteSheet LoadSpriteSheet(GraphicsDevice graphicsDevice, string path)
@@ -41,10 +41,10 @@ public class AnimatedCharactersFactory
         return animatedSprite;
     }
 
-    public Dictionary<RadDir, AnimatedSprite> CreateAnimations(SpriteSheet spriteSheet, string action)
+    public static Dictionary<RadDir, AnimatedSprite> CreateAnimations(SpriteSheet spriteSheet, string action)
     {
         Dictionary<RadDir, AnimatedSprite> dictionary =
-            _directions.ToDictionary(dir => dir, dir => CreateAnimation(spriteSheet, action, dir));
+            Directions.ToDictionary(dir => dir, dir => CreateAnimation(spriteSheet, action, dir));
 
         // Temp hack
         dictionary.Add(RadDir.DownLeft, dictionary[RadDir.Left]);

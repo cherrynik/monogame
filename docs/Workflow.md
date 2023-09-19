@@ -11,6 +11,10 @@
 - [Creating global `const`](#creating-global-const)
 - [State Machine](#state-machine)
 
+## MonoGame Pipeline
+
+Don't forget to rebuild `.mgcb` file after changing files in it.
+
 ## Makefile
 
 If something happens like commands don't run, variables not evaluated, but the file is correct 99%,

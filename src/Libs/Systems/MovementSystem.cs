@@ -1,5 +1,6 @@
 ﻿using Entitas;
 using Microsoft.Xna.Framework;
+using Serilog;
 using Services;
 using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
@@ -9,24 +10,36 @@ public class MovementSystem : IExecuteSystem
 {
     private readonly IGroup<GameEntity> _group;
     private readonly IMovement _movement;
+    private readonly ILogger _logger;
 
-    public MovementSystem(IGroup<GameEntity> group, IMovement movement)
+    public MovementSystem(IMovement movement, IGroup<GameEntity> group, ILogger logger)
     {
         _group = group;
         _movement = movement;
+        _logger = logger;
     }
 
     public void Execute(GameTime gameTime)
     {
-        GameEntity[]? entities = _group.GetEntities();
-        foreach (GameEntity e in entities)
+        try
         {
-            if (e.transform.Velocity.Equals(Vector2.Zero))
+            GameEntity[]? entities = _group.GetEntities();
+            foreach (GameEntity e in entities)
             {
-                continue;
-            }
+                if (e.transform.Velocity.Equals(Vector2.Zero))
+                {
+                    continue;
+                }
 
-            e.transform.Position = _movement.Move(e.transform.Position, e.transform.Velocity);
+                e.transform.Position = _movement.Move(e.transform.Position, e.transform.Velocity);
+                _logger.ForContext<MovementSystem>().Verbose(e.transform.Position.ToString());
+            }
+        }
+        catch (Exception e)
+        {
+            _logger.ForContext<MovementSystem>().Fatal(e.ToString());
+
+            throw new Exception(e.Message);
         }
     }
 }

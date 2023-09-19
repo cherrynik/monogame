@@ -13,3 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin SpriteSheets/Player.aseprite
+/copy:SpriteSheets/Player.aseprite
+

@@ -1,22 +1,29 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Features;
+using LightInject;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Serilog.Core;
+using Serilog;
 
 namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
-    private readonly Logger _logger;
+    private readonly ILogger _logger;
     private readonly Contexts _contexts;
+    private readonly IServiceContainer _container;
 
-    public SpriteBatch SpriteBatch { get; private set; }
+    private Entitas.Extended.Feature _rootFeature;
+    private SpriteBatch _spriteBatch;
+
 
     public Game(
-        Logger logger,
-        Contexts contexts)
+        ILogger logger,
+        Contexts contexts,
+        IServiceContainer container)
     {
         _logger = logger;
         _contexts = contexts;
+        _container = container;
 
         _logger.ForContext<Game>().Verbose("ctor");
     }
@@ -26,9 +33,10 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
         _logger.ForContext<Game>().Verbose("SpriteBatch initialization...");
 
-        SpriteBatch = new SpriteBatch(GraphicsDevice);
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
+
 
         base.Initialize();
 
@@ -39,11 +47,14 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
-        // TODO: DI with ECS?
-        // TODO: Projects management (external in Libs/External?)
+        _container.Register(_ => _spriteBatch);
+        _container.RegisterFrom<RootFeatureCompositionRoot>();
+
+        _rootFeature = _container.GetInstance<RootFeature>();
+
         // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
         // TODO: Error handling
-        // _gameFeature.Initialize();
+        _rootFeature.Initialize();
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
 
@@ -65,31 +76,25 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose("Ended");
     }
 
-    private void FixedUpdate(GameTime fixedGameTime)
-    {
-        // _gameFeature.FixedExecute(fixedGameTime);
-    }
+    private void FixedUpdate(GameTime fixedGameTime) => _rootFeature.FixedExecute(fixedGameTime);
 
     protected override void Update(GameTime gameTime)
     {
         FixedUpdate(gameTime);
 
         base.Update(gameTime);
-        // _gameFeature.Execute(gameTime);
+        _rootFeature.Execute(gameTime);
 
         LateUpdate(gameTime);
     }
 
-    private void LateUpdate(GameTime gameTime)
-    {
-        // _gameFeature.LateExecute(gameTime);
-    }
+    private void LateUpdate(GameTime gameTime) => _rootFeature.LateExecute(gameTime);
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // _gameFeature.Draw(gameTime, _spriteBatch);
+        _rootFeature.Draw(gameTime, _spriteBatch);
 
         base.Draw(gameTime);
     }

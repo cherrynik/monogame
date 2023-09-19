@@ -2,6 +2,7 @@
 using GameDesktop;
 using LightInject;
 using Microsoft.Extensions.Configuration;
+using Serilog;
 using Serilog.Core;
 
 IConfigurationRoot configuration = ConfigurationFactory.Create();
@@ -18,8 +19,9 @@ try
         };
     using ServiceContainer container = new(containerOptions);
 
-    container.Register(_ => configuration, new PerContainerLifetime());
-    container.Register(_ => logger, new PerContainerLifetime());
+    container.Register<IServiceContainer>(_ => container);
+    container.Register<IConfiguration>(_ => configuration, new PerContainerLifetime());
+    container.Register<ILogger>(_ => logger, new PerContainerLifetime());
 
     container.RegisterFrom<GameCompositionRoot>();
 
@@ -28,5 +30,5 @@ try
 }
 catch (Exception e)
 {
-    logger.Error(e.ToString());
+    logger.ForContext<Program>().Fatal(e.ToString());
 }

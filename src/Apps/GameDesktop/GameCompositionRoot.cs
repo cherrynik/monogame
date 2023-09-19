@@ -1,6 +1,7 @@
-﻿using LightInject;
+﻿using Features;
+using LightInject;
 using Microsoft.Xna.Framework;
-using Serilog.Core;
+using Serilog;
 
 namespace GameDesktop;
 
@@ -18,11 +19,14 @@ public class GameCompositionRoot : ICompositionRoot
     {
         serviceRegistry.Register(_ => Contexts.sharedInstance);
 
+        serviceRegistry.RegisterFrom<RootFeatureCompositionRoot>();
+
         serviceRegistry.Register(factory =>
         {
             Game game = new(
-                factory.GetInstance<Logger>(),
-                factory.GetInstance<Contexts>()
+                factory.GetInstance<ILogger>(),
+                factory.GetInstance<Contexts>(),
+                factory.GetInstance<IServiceContainer>()
             ) { IsMouseVisible = IsMouseVisible, Content = { RootDirectory = ContentRootDirectory, } };
 
             // Hack. Resolving cycle dependency issue (fundamental architecture)

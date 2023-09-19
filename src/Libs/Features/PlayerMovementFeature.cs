@@ -1,9 +1,4 @@
-﻿using Entitas;
-using Services.Input;
-using Services.Movement;
-using Systems;
-using Systems.Input;
-using Systems.Sprites;
+﻿using Systems;
 
 namespace Features;
 
