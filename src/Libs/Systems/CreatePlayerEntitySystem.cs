@@ -1,36 +1,31 @@
-﻿using Components.Sprites;
+﻿using Components;
 using Components.World;
 using Entitas;
-using Microsoft.Xna.Framework;
 
 namespace Systems;
 
-public class CreatePlayerEntitySystem : IInitializeSystem
+public class CreatePlayerEntitySystem : ISystem
 {
     private readonly Contexts _contexts;
-    private readonly AnimatedMovementComponent _animatedMovementComponent;
-    private int _componentsCount = 0;
 
-    public CreatePlayerEntitySystem(Contexts contexts, AnimatedMovementComponent animatedMovementComponent)
+    public CreatePlayerEntitySystem(Contexts contexts,
+        MovementAnimationComponent movementAnimationComponent,
+        TransformComponent transformComponent)
     {
         _contexts = contexts;
-        _animatedMovementComponent = animatedMovementComponent;
+        CreateEntity(movementAnimationComponent, transformComponent);
     }
 
-    public void Initialize()
+    private void CreateEntity(MovementAnimationComponent movementAnimationComponent,
+        TransformComponent transformComponent)
     {
         GameEntity e = _contexts.game.CreateEntity();
 
-        e.AddComponent(_componentsCount++, _animatedMovementComponent);
-        // e.AddComponent(_componentsCount++, new PlayerComponent());
-        // e.AddComponent(_componentsCount++, new MovableComponent());
-        // e.AddComponent(_componentsCount++, new TransformComponent());
-        // e.AddComponent(_componentsCount++, new RectangleCollisionComponent());
-
         e.isPlayer = true;
         e.isMovable = true;
+        e.AddMovementAnimation(movementAnimationComponent);
+        e.AddTransform(transformComponent);
 
-        e.AddTransform(new Vector2(), new Vector2());
-        e.AddRectangleCollision(new Rectangle(0, 0, 16, 16));
+        // e.AddRectangleCollision(new Rectangle(0, 0, 16, 16));
     }
 }

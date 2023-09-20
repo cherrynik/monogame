@@ -1,9 +1,11 @@
-﻿using Components.Sprites;
+﻿using Components;
 using Entitas;
 using Entitas.Extended;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Aseprite.Sprites;
 using Serilog;
+using Services.Math;
 using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems;
@@ -21,23 +23,22 @@ public class AnimatedMovementSystem : IExecuteSystem, IDrawSystem
 
     public void Execute(GameTime gameTime)
     {
-        GameEntity[]? entities = _group.GetEntities();
+        GameEntity[] entities = _group.GetEntities();
         foreach (GameEntity e in entities)
         {
             Vector2 velocity = e.transform.Velocity;
-            AnimatedMovementComponent movementAnimatedSprites = e.animatedMovement;
 
-            // TODO: refactor and put it in service system
+            // TODO: refactor and put it in a service system?
             if (velocity.Equals(Vector2.Zero))
             {
-                movementAnimatedSprites.StateMachine.Fire(PlayerTrigger.Stop);
+                StopFacingTrace(e.movementAnimation);
             }
             else
             {
-                movementAnimatedSprites.StateMachine.Fire(movementAnimatedSprites.MoveWithParameters, velocity);
+                MoveFacingTrace(e.movementAnimation, velocity);
             }
 
-            movementAnimatedSprites.PlayingAnimation.Update(gameTime);
+            e.movementAnimation.PlayingAnimation.Update(gameTime);
         }
     }
 
@@ -49,11 +50,42 @@ public class AnimatedMovementSystem : IExecuteSystem, IDrawSystem
         foreach (GameEntity e in entities)
         {
             Vector2 position = e.transform.Position;
-            AnimatedMovementComponent movementAnimatedSprites = e.animatedMovement;
 
-            movementAnimatedSprites.PlayingAnimation.Draw(spriteBatch, position);
+            e.movementAnimation.PlayingAnimation.Draw(spriteBatch, position);
         }
 
         spriteBatch.End();
     }
+
+    private static void StopFacingTrace(MovementAnimationComponent component)
+    {
+        if (component.HasStopped)
+        {
+            return;
+        }
+
+        Direction direction = MathUtils.Rad8DirYFlipped(component.FacingDirection);
+
+        component.PlayingAnimation = component.IdleAnimations[direction];
+        component.PlayingAnimation.SetFrame(0);
+        component.HasStopped = true;
+    }
+
+    private static void MoveFacingTrace(MovementAnimationComponent component, Vector2 velocity)
+    {
+        Direction direction = MathUtils.Rad8DirYFlipped(velocity);
+        AnimatedSprite walkingAnimation = component.WalkingAnimations[direction];
+
+        if (AreDifferentSprites(component.PlayingAnimation, walkingAnimation))
+        {
+            component.PlayingAnimation = walkingAnimation;
+        }
+
+        component.FacingDirection = velocity;
+        component.HasStopped = false;
+    }
+
+    private static bool AreDifferentSprites(Sprite left, Sprite right) =>
+        left.Name != right.Name ||
+        left.FlipHorizontally != right.FlipHorizontally;
 }

@@ -2,7 +2,7 @@
 
 namespace Services.Math;
 
-public enum RadDir
+public enum Direction
 {
     Right,
     UpRight,
@@ -27,13 +27,13 @@ public static class MathUtils
         return System.Math.Floor(radians / (2 * System.Math.PI) * sectors);
     }
 
-    public static RadDir Rad8Dir(Vector2 dir) => (RadDir)RadDir(dir.X, dir.Y, sectors: 8);
+    public static Direction Rad8Dir(Vector2 dir) => (Direction)RadDir(dir.X, dir.Y, sectors: 8);
 
     // Useful as MonoGame has Y-flipped coordinate system
-    public static RadDir Rad8DirYFlipped(Vector2 dir) => (RadDir)RadDir(dir.X, -dir.Y, sectors: 8);
+    public static Direction Rad8DirYFlipped(Vector2 dir) => (Direction)RadDir(dir.X, -dir.Y, sectors: 8);
 
-    public static RadDir Rad4Dir(Vector2 dir) => (RadDir)RadDir(dir.X, dir.Y, sectors: 4);
+    public static Direction Rad4Dir(Vector2 dir) => (Direction)RadDir(dir.X, dir.Y, sectors: 4);
 
     // Useful as MonoGame has Y-flipped coordinate system
-    public static RadDir Rad4DirYFlipped(Vector2 dir) => (RadDir)RadDir(dir.X, dir.Y, sectors: 4);
+    public static Direction Rad4DirYFlipped(Vector2 dir) => (Direction)RadDir(dir.X, dir.Y, sectors: 4);
 }

@@ -8,8 +8,8 @@ namespace Services.Factories;
 
 public static class AnimatedCharactersFactory
 {
-    private static readonly IReadOnlyList<RadDir> Directions =
-        new[] { RadDir.Right, RadDir.Down, RadDir.Left, RadDir.Up };
+    private static readonly IReadOnlyList<Direction> Directions =
+        new[] { Direction.Right, Direction.Down, Direction.Left, Direction.Up };
 
     public static SpriteSheet LoadSpriteSheet(GraphicsDevice graphicsDevice, string path)
     {
@@ -17,15 +17,15 @@ public static class AnimatedCharactersFactory
         return SpriteSheetProcessor.Process(graphicsDevice, asepriteFile);
     }
 
-    private static string BuildTag(string action, RadDir dir) => $"{action}{dir.ToString()}";
+    private static string BuildTag(string action, Direction dir) => $"{action}{dir.ToString()}";
 
-    private static AnimatedSprite CreateAnimation(SpriteSheet spriteSheet, string action, RadDir direction)
+    private static AnimatedSprite CreateAnimation(SpriteSheet spriteSheet, string action, Direction direction)
     {
         AnimatedSprite animatedSprite;
 
-        if (direction == RadDir.Left)
+        if (direction == Direction.Left)
         {
-            string rightAnimationTag = BuildTag(action, RadDir.Right);
+            string rightAnimationTag = BuildTag(action, Direction.Right);
 
             animatedSprite = spriteSheet.CreateAnimatedSprite(rightAnimationTag);
             animatedSprite.FlipHorizontally = true;
@@ -41,16 +41,16 @@ public static class AnimatedCharactersFactory
         return animatedSprite;
     }
 
-    public static Dictionary<RadDir, AnimatedSprite> CreateAnimations(SpriteSheet spriteSheet, string action)
+    public static Dictionary<Direction, AnimatedSprite> CreateAnimations(SpriteSheet spriteSheet, string action)
     {
-        Dictionary<RadDir, AnimatedSprite> dictionary =
+        Dictionary<Direction, AnimatedSprite> dictionary =
             Directions.ToDictionary(dir => dir, dir => CreateAnimation(spriteSheet, action, dir));
 
         // Temp hack
-        dictionary.Add(RadDir.DownLeft, dictionary[RadDir.Left]);
-        dictionary.Add(RadDir.DownRight, dictionary[RadDir.Right]);
-        dictionary.Add(RadDir.UpLeft, dictionary[RadDir.Left]);
-        dictionary.Add(RadDir.UpRight, dictionary[RadDir.Right]);
+        dictionary.Add(Direction.DownLeft, dictionary[Direction.Left]);
+        dictionary.Add(Direction.DownRight, dictionary[Direction.Right]);
+        dictionary.Add(Direction.UpLeft, dictionary[Direction.Left]);
+        dictionary.Add(Direction.UpRight, dictionary[Direction.Right]);
 
         return dictionary;
     }
