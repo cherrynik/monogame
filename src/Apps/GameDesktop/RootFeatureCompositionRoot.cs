@@ -3,12 +3,14 @@ using Components.World;
 using Entitas;
 using Features;
 using LightInject;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Serilog;
 using Services;
 using Services.Factories;
 using Services.Input;
+using Services.Math;
 using Services.Movement;
 using Systems;
 
@@ -23,6 +25,8 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         RegisterMovementSystem(serviceRegistry);
         RegisterCreatePlayerEntitySystem(serviceRegistry);
         RegisterAnimatedMovementSystem(serviceRegistry);
+        RegisterCameraFollowingSystem(serviceRegistry);
+        RegisterCreateStaticEntitySystem(serviceRegistry);
 
         serviceRegistry.Register<RootFeature>();
     }
@@ -99,5 +103,47 @@ public class RootFeatureCompositionRoot : ICompositionRoot
 
             return new AnimatedMovementSystem(animatedMovableGroup, logger);
         }, new PerContainerLifetime());
+    }
+
+    private static void RegisterCameraFollowingSystem(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.Register(_ => new CameraComponent { Size = new Rectangle(0, 0, 640, 480) });
+
+        serviceRegistry.Register(factory =>
+        {
+            Contexts contexts = factory.GetInstance<Contexts>();
+            IAllOfMatcher<GameEntity> renderMatcher =
+                GameMatcher.AllOf(GameMatcher.Transform, GameMatcher.Sprite);
+            IGroup<GameEntity> renderGroup = contexts.game.GetGroup(renderMatcher);
+
+            GameEntity target = contexts.game.cameraEntity;
+
+            return new CameraFollowingSystem(target, renderGroup);
+        });
+    }
+
+    private void RegisterCreateStaticEntitySystem(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.Register(factory =>
+        {
+            GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
+            SpriteSheet spriteSheet =
+                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, "Content/SpriteSheets/Player.aseprite");
+
+            AnimatedSprite animatedSprite =
+                AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Idle")[Direction.Down];
+            return new SpriteComponent(animatedSprite);
+        });
+
+        serviceRegistry.Register(factory =>
+        {
+            var transform = factory.GetInstance<TransformComponent>();
+            transform.Position = new Vector2(143, 85);
+
+            return new CreateStaticEntitySystem(
+                factory.GetInstance<Contexts>(),
+                transform,
+                factory.GetInstance<SpriteComponent>());
+        });
     }
 }

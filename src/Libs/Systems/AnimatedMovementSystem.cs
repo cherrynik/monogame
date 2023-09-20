@@ -10,7 +10,7 @@ using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems;
 
-public class AnimatedMovementSystem : IExecuteSystem, IDrawSystem
+public class AnimatedMovementSystem : IExecuteSystem // , IDrawSystem
 {
     private readonly IGroup<GameEntity> _group;
     private readonly ILogger _logger;
@@ -42,20 +42,20 @@ public class AnimatedMovementSystem : IExecuteSystem, IDrawSystem
         }
     }
 
-    public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-    {
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-        GameEntity[] entities = _group.GetEntities();
-        foreach (GameEntity e in entities)
-        {
-            Vector2 position = e.transform.Position;
-
-            e.movementAnimation.PlayingAnimation.Draw(spriteBatch, position);
-        }
-
-        spriteBatch.End();
-    }
+    // public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+    // {
+    //     spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+    //
+    //     GameEntity[] entities = _group.GetEntities();
+    //     foreach (GameEntity e in entities)
+    //     {
+    //         Vector2 position = e.transform.Position;
+    //
+    //         e.movementAnimation.PlayingAnimation.Draw(spriteBatch, position);
+    //     }
+    //
+    //     spriteBatch.End();
+    // }
 
     private static void StopFacingTrace(MovementAnimationComponent component)
     {

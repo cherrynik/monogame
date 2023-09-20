@@ -8,6 +8,8 @@ namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
+    public GraphicsDeviceManager GraphicsDeviceManager;
+
     private readonly ILogger _logger;
     private readonly Contexts _contexts;
     private readonly IServiceContainer _container;
@@ -35,8 +37,11 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
+        GraphicsDeviceManager.PreferredBackBufferWidth = 640;
+        GraphicsDeviceManager.PreferredBackBufferHeight = 480;
+        GraphicsDeviceManager.ApplyChanges();
 
+        _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
 
         base.Initialize();
 

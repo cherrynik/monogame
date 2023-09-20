@@ -31,7 +31,7 @@ public class GameCompositionRoot : ICompositionRoot
 
             // Hack. Resolving cycle dependency issue (fundamental architecture)
             // Implicitly adds itself in the game services container.
-            new GraphicsDeviceManager(game);
+            game.GraphicsDeviceManager = new GraphicsDeviceManager(game);
 
             return game;
         });
