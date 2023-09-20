@@ -1,98 +1,110 @@
-﻿using System.Collections.Generic;
-using Entities;
-using FrontEnd;
-using GameDesktop.Resources;
+﻿using Features;
 using LightInject;
-using Mechanics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Aseprite;
-using MonoGame.Aseprite.Content.Processors;
-using MonoGame.Aseprite.Sprites;
-using Services;
-using Stateless;
-using SpriteSheet = MonoGame.Aseprite.Sprites.SpriteSheet;
+using Serilog;
 
 namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
-    private readonly ServiceContainer _container;
-    private SpriteBatch _spriteBatch;
-    private Player _player;
+    private readonly ILogger _logger;
+    private readonly Contexts _contexts;
+    private readonly IServiceContainer _container;
 
-    public Game(ServiceContainer container)
+    private Entitas.Extended.Feature _rootFeature;
+    private SpriteBatch _spriteBatch;
+
+
+    public Game(
+        ILogger logger,
+        Contexts contexts,
+        IServiceContainer container)
     {
+        _logger = logger;
+        _contexts = contexts;
         _container = container;
+
+        _logger.ForContext<Game>().Verbose("ctor");
     }
 
     protected override void Initialize()
     {
+        _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
+        _logger.ForContext<Game>().Verbose("SpriteBatch initialization...");
+
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
+
+
         base.Initialize();
+
+        _logger.ForContext<Game>().Verbose("Initialize(): end");
     }
 
     protected override void LoadContent()
     {
-        ConfigureServices();
-    }
+        _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
-    private void ConfigureServices()
-    {
-        RegisterSpriteServices();
-
-        RegisterMovementServices();
-        RegisterPlayer();
-
-        _player = _container.GetInstance<Player>();
-    }
-
-    private void RegisterSpriteServices()
-    {
         _container.Register(_ => _spriteBatch);
+        _container.RegisterFrom<RootFeatureCompositionRoot>();
+
+        _rootFeature = _container.GetInstance<RootFeature>();
+
+        // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
+        // TODO: Error handling
+        _rootFeature.Initialize();
+        _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
 
-    private void RegisterMovementServices()
+    protected override void BeginRun()
     {
-        _container.Register<IMovement, SimpleMovement>();
-        _container.Register<IInputScanner, KeyboardScanner>();
+        _logger.ForContext<Game>().Verbose("Beginning run...");
+
+        base.BeginRun();
+
+        _logger.ForContext<Game>().Verbose("Running");
     }
 
-    private void RegisterPlayerStateMachine()
+    protected override void EndRun()
     {
-        _container.Register(_ => new StateMachine<PlayerState, PlayerTrigger>(PlayerState.Idle));
+        _logger.ForContext<Game>().Verbose("Ending run...");
+
+        base.EndRun();
+
+        _logger.ForContext<Game>().Verbose("Ended");
     }
 
-    private void RegisterPlayer()
-    {
-        RegisterPlayerStateMachine();
-
-        // TODO: Use in state machine, and switch between: run, walk, etc.
-        SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(GraphicsDevice, SpriteSheets.Player);
-        AnimatedCharactersFactory animatedCharactersFactory = new();
-
-        _container.Register(factory =>
-            new Player(factory.GetInstance<IMovement>(),
-                factory.GetInstance<IInputScanner>(),
-                factory.GetInstance<StateMachine<PlayerState, PlayerTrigger>>(),
-                animatedCharactersFactory.CreateAnimations(spriteSheet, "Walking"),
-                animatedCharactersFactory.CreateAnimations(spriteSheet, "Standing")));
-    }
+    private void FixedUpdate(GameTime fixedGameTime) => _rootFeature.FixedExecute(fixedGameTime);
 
     protected override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
+        FixedUpdate(gameTime);
 
-        _player.Update(gameTime);
+        base.Update(gameTime);
+        _rootFeature.Execute(gameTime);
+
+        LateUpdate(gameTime);
     }
+
+    private void LateUpdate(GameTime gameTime) => _rootFeature.LateExecute(gameTime);
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        _player.Draw(_spriteBatch);
+        _rootFeature.Draw(gameTime, _spriteBatch);
 
         base.Draw(gameTime);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        _logger.ForContext<Game>().Verbose("Disposing...");
+
+        base.Dispose(disposing);
+
+        _logger.ForContext<Game>().Verbose("Disposed");
     }
 }

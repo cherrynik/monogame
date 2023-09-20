@@ -1,27 +1,34 @@
-﻿using LightInject;
-using Microsoft.Xna.Framework;
-using Game = GameDesktop.Game;
+﻿using System;
+using GameDesktop;
+using LightInject;
+using Microsoft.Extensions.Configuration;
+using Serilog;
+using Serilog.Core;
 
-// Game Container Start-Up config
-using ServiceContainer container = new();
+IConfigurationRoot configuration = ConfigurationFactory.Create();
+using Logger logger = LogFactory.Create(configuration);
 
-container.Register(_ =>
+logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) initialized");
+
+try
 {
-    Game game = new(container) { IsMouseVisible = true, Content = { RootDirectory = "Content" } };
+    ContainerOptions containerOptions =
+        new ContainerOptions
+        {
+            LogFactory = _ => entry => logger.ForContext<ServiceContainer>().Verbose($"{entry.Message}")
+        };
+    using ServiceContainer container = new(containerOptions);
 
-    // Hack. Resolving cycle dependency issue (fundamental architecture)
-    // Implicitly adds itself in the game services container.
-    new GraphicsDeviceManager(game);
+    container.Register<IServiceContainer>(_ => container);
+    container.Register<IConfiguration>(_ => configuration, new PerContainerLifetime());
+    container.Register<ILogger>(_ => logger, new PerContainerLifetime());
 
-    return game;
-});
+    container.RegisterFrom<GameCompositionRoot>();
 
-// Maybe not needed,
-// as we have the GraphicsDevice field in the Game class
-// container.Register(factory =>
-//     factory.GetInstance<Game>()
-//         .Services
-//         .GetService<GraphicsDeviceManager>());
-
-using var game = container.GetInstance<Game>();
-game.Run();
+    using Game game = container.GetInstance<Game>();
+    game.Run();
+}
+catch (Exception e)
+{
+    logger.ForContext<Program>().Fatal(e.ToString());
+}

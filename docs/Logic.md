@@ -2,13 +2,13 @@
 
 ## Movement Math
 
-Vectors should be normalized for movement in diagonal directions.
-
-> MonoGame coordinate system is Y-flipped.
-
-Therefore, you might see something like `-YFlipped` method names in the project.
+Vectors should be normalized for the movement in diagonal directions.
 
 More here - [Link](https://www.youtube.com/watch?v=u70ZpQH1muc)
+
+> MonoGame coordinate system is Y-flipped.
+> 
+> Therefore, you might see something like `-YFlipped` method names in the project.
 
 ## Movement Direction
 
@@ -17,7 +17,7 @@ More here - [Link](https://www.youtube.com/watch?v=u70ZpQH1muc)
 3. Associate it with the enum named in 8 directions
 4. Use the enum for different purposes: SpriteSheets, etc.
 
-> Remember about this - [Link](#movement-math)
+> Remember about movement math - [Link](#movement-math)
 
 <img src="https://wumbo.net/concepts/unit-circle-chart-degrees/unit-circle-chart-degrees-12-650-650.svg" width="400px" alt="Radian Circle"/>
 
