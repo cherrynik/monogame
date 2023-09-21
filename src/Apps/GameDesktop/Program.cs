@@ -31,4 +31,5 @@ try
 catch (Exception e)
 {
     logger.ForContext<Program>().Fatal(e.ToString());
+    Environment.Exit(1);
 }

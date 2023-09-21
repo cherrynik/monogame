@@ -1,4 +1,5 @@
 ﻿using Entitas;
+using Entitas.Extended;
 using Microsoft.Xna.Framework;
 using Serilog;
 using Services;
@@ -6,7 +7,8 @@ using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems;
 
-public class MovementSystem : IExecuteSystem
+// TODO: correct fixed execution in the game loop
+public class MovementSystem : IFixedExecuteSystem
 {
     private readonly IGroup<GameEntity> _group;
     private readonly IMovement _movement;
@@ -19,11 +21,11 @@ public class MovementSystem : IExecuteSystem
         _logger = logger;
     }
 
-    public void Execute(GameTime gameTime)
+    public void FixedExecute(GameTime fixedGameTime)
     {
         try
         {
-            GameEntity[]? entities = _group.GetEntities();
+            GameEntity[] entities = _group.GetEntities();
             foreach (GameEntity e in entities)
             {
                 if (e.transform.Velocity.Equals(Vector2.Zero))

@@ -19,7 +19,7 @@ jobs:
           dotnet-version: 7.0.x
       - name: Restore dependencies
         run: dotnet restore
-        
+
       - name: Generate ECS files by Jenny
         run: make gen
 
@@ -30,3 +30,6 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build --verbosity normal
+
+      - name: Run
+        run: dotnet run --project ./src/Apps/GameDesktop/GameDesktop.csproj

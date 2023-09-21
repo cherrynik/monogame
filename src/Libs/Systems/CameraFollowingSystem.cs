@@ -20,13 +20,13 @@ public class CameraFollowingSystem : IDrawSystem
     {
         GameEntity[] entities = _group.GetEntities();
 
-        spriteBatch.Begin();
+        spriteBatch.Begin(samplerState: SamplerState.PointWrap);
         foreach (GameEntity e in entities)
         {
             Vector2 targetAt =
                 new Vector2(_target.camera.Size.Width / 2 - _target.movementAnimation.PlayingAnimation.Width / 2,
                     _target.camera.Size.Height / 2 - _target.movementAnimation.PlayingAnimation.Height / 2);
-
+            
             Vector2 otherAt = e.transform.Position - _target.transform.Position;
             if (e.hasSprite)
             {
