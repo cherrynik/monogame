@@ -1,4 +1,6 @@
-﻿using Components;
+﻿using System;
+using System.IO;
+using Components;
 using Components.World;
 using Entitas;
 using Features;
@@ -18,6 +20,9 @@ namespace GameDesktop;
 
 public class RootFeatureCompositionRoot : ICompositionRoot
 {
+    private static readonly string Path = System.IO.Path.Join(Directory.GetParent(AppContext.BaseDirectory)!.FullName,
+        "Content/SpriteSheets/Player.aseprite");
+
     public void Compose(IServiceRegistry serviceRegistry)
     {
         RegisterServices(serviceRegistry);
@@ -76,8 +81,9 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.Register(factory =>
         {
             GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
+            Console.WriteLine(Path);
             SpriteSheet spriteSheet =
-                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, "Content/SpriteSheets/Player.aseprite");
+                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, Path);
 
             var idleAnimations = AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Idle");
             var walkingAnimations = AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Walking");
@@ -128,7 +134,7 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         {
             GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
             SpriteSheet spriteSheet =
-                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, "Content/SpriteSheets/Player.aseprite");
+                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, Path);
 
             AnimatedSprite animatedSprite =
                 AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Idle")[Direction.Down];
