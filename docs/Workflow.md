@@ -1,7 +1,9 @@
-﻿# Project Workflow
+﻿# Workflow
 
 ## Table Of Content
 
+- [GitHub Actions](#github-actions)
+- [MonoGame Pipeline](#monogame-pipeline)
 - [Makefile](#makefile)
 - [Architecture](#architecture)
 - [Setup Jenny](#setup-jenny)
@@ -10,6 +12,17 @@
 - [Aseprite importing](#aseprite-importing)
 - [Creating global `const`](#creating-global-const)
 - [State Machine](#state-machine)
+- [Logging](#logging)
+
+## GitHub Actions
+
+As GitHub runners don't have graphics devices, it's impossible to create the `Game` instance, as it'll throw
+the `Failed to create graphics device!` error on the runners, what is not but successful way to exit the program **on the CI
+machine**.
+As all the dependencies are resolved before the game is ran, in the pipeline, we test DI Container to
+resolve all the dependencies correctly, and it has to exit only with the error, which on the CI machine will be interpreted as a successful exit code.
+
+We have windows and linux runners 'cuz of OS-related issues, like different paths, etc. (means I don't know others yet but it's a best practice), and need to ensure that (almost) everything is handled correctly.
 
 ## MonoGame Pipeline
 

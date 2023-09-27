@@ -1,4 +1,5 @@
 ﻿using Features;
+using GameDesktop.CompositionRoots;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

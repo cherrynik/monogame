@@ -32,4 +32,4 @@ jobs:
         run: dotnet test --no-build --verbosity normal
 
       - name: Run
-        run: dotnet run --project ./src/Apps/GameDesktop/GameDesktop.csproj
+        run: dotnet run --project ./src/Apps/GameDesktop/GameDesktop.csproj -c Release -p:DefineConstants=IS_CI

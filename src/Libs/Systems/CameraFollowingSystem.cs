@@ -16,6 +16,11 @@ public class CameraFollowingSystem : IDrawSystem
         _group = group;
     }
 
+    // todo: smooth diagonal movement
+    private Vector2 GetTargetPosition() => new(
+        (float)_target.camera.Size.Width / 2 - (float)_target.movementAnimation.PlayingAnimation.Width / 2,
+        (float)_target.camera.Size.Height / 2 - (float)_target.movementAnimation.PlayingAnimation.Height / 2);
+
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
         GameEntity[] entities = _group.GetEntities();
@@ -23,17 +28,14 @@ public class CameraFollowingSystem : IDrawSystem
         spriteBatch.Begin(samplerState: SamplerState.PointWrap);
         foreach (GameEntity e in entities)
         {
-            Vector2 targetAt =
-                new Vector2(_target.camera.Size.Width / 2 - _target.movementAnimation.PlayingAnimation.Width / 2,
-                    _target.camera.Size.Height / 2 - _target.movementAnimation.PlayingAnimation.Height / 2);
-            
             Vector2 otherAt = e.transform.Position - _target.transform.Position;
             if (e.hasSprite)
             {
                 e.sprite.Sprite.Draw(spriteBatch, otherAt);
+                // todo: drawing complex entities' sprite/animated components
             }
 
-            _target.movementAnimation.PlayingAnimation.Draw(spriteBatch, targetAt);
+            _target.movementAnimation.PlayingAnimation.Draw(spriteBatch, GetTargetPosition());
         }
 
         spriteBatch.End();

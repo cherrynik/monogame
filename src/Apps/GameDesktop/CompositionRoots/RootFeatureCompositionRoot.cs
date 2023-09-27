@@ -1,9 +1,9 @@
 ﻿using System;
-using System.IO;
 using Components;
 using Components.World;
 using Entitas;
 using Features;
+using GameDesktop.Resources;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,12 +16,13 @@ using Services.Math;
 using Services.Movement;
 using Systems;
 
-namespace GameDesktop;
+namespace GameDesktop.CompositionRoots;
 
 public class RootFeatureCompositionRoot : ICompositionRoot
 {
-    private static readonly string Path = System.IO.Path.Join(Directory.GetParent(AppContext.BaseDirectory)!.FullName,
-        "Content/SpriteSheets/Player.aseprite");
+    private static readonly string Path = System.IO.Path.Join(
+        Environment.GetEnvironmentVariable(EnvironmentVariables.AppBaseDirectory),
+        SpriteSheets.Player);
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
@@ -81,7 +82,6 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.Register(factory =>
         {
             GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
-            Console.WriteLine(Path);
             SpriteSheet spriteSheet =
                 AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, Path);
 
