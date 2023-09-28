@@ -5,5 +5,5 @@ namespace Components.World;
 
 public class RectangleCollisionComponent : IComponent
 {
-    public Rectangle Rectangle;
+    public Rectangle Size;
 }

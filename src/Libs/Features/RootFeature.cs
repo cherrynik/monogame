@@ -7,12 +7,16 @@ public sealed class RootFeature : Entitas.Extended.Feature
     public RootFeature(InputSystem inputSystem,
         MovementSystem movementSystem,
         CreatePlayerEntitySystem createPlayerEntitySystem,
-        AnimatedMovementSystem animatedMovementSystem
+        AnimatedMovementSystem animatedMovementSystem,
+        CameraFollowingSystem cameraFollowingSystem,
+        CreateStaticEntitySystem createStaticEntitySystem
     )
     {
         Add(inputSystem);
         Add(movementSystem);
         Add(createPlayerEntitySystem);
         Add(animatedMovementSystem);
+        Add(cameraFollowingSystem);
+        Add(createStaticEntitySystem);
     }
 }

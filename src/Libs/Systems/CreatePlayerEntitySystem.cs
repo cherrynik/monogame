@@ -10,14 +10,17 @@ public class CreatePlayerEntitySystem : ISystem
 
     public CreatePlayerEntitySystem(Contexts contexts,
         MovementAnimationComponent movementAnimationComponent,
-        TransformComponent transformComponent)
+        TransformComponent transformComponent,
+        CameraComponent cameraComponent)
     {
         _contexts = contexts;
-        CreateEntity(movementAnimationComponent, transformComponent);
+
+        CreateEntity(movementAnimationComponent, transformComponent, cameraComponent);
     }
 
     private void CreateEntity(MovementAnimationComponent movementAnimationComponent,
-        TransformComponent transformComponent)
+        TransformComponent transformComponent,
+        CameraComponent cameraComponent)
     {
         GameEntity e = _contexts.game.CreateEntity();
 
@@ -25,6 +28,7 @@ public class CreatePlayerEntitySystem : ISystem
         e.isMovable = true;
         e.AddMovementAnimation(movementAnimationComponent);
         e.AddTransform(transformComponent);
+        e.AddCamera(cameraComponent);
 
         // e.AddRectangleCollision(new Rectangle(0, 0, 16, 16));
     }

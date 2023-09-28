@@ -1,5 +1,6 @@
 ﻿using Components;
 using Components.World;
+using Microsoft.Xna.Framework;
 
 public partial class GameEntity
 {
@@ -13,4 +14,8 @@ public partial class GameEntity
 
     public void AddTransform(TransformComponent component) =>
         AddTransform(newPosition: component.Position, newVelocity: component.Velocity);
+
+    public void AddCamera(CameraComponent component) => AddCamera(newSize: component.Size);
+
+    public void AddSprite(SpriteComponent component) => AddSprite(newSprite: component.Sprite);
 }
