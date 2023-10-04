@@ -24,8 +24,18 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         Environment.GetEnvironmentVariable(EnvironmentVariables.AppBaseDirectory),
         SpriteSheets.Player);
 
+    private const string AllOf = "AllOf";
+    private const string AnyOf = "AnyOf";
+
     public void Compose(IServiceRegistry serviceRegistry)
     {
+        serviceRegistry.Register<IMatcher<GameEntity>[], IGroup<GameEntity>>((factory, matchers) =>
+        {
+            IAllOfMatcher<GameEntity> groupMatcher = GameMatcher.AllOf(matchers);
+            var contexts = factory.GetInstance<Contexts>();
+            return contexts.game.GetGroup(groupMatcher);
+        }, AllOf);
+
         RegisterServices(serviceRegistry);
         RegisterInputSystem(serviceRegistry);
         RegisterMovementSystem(serviceRegistry);
@@ -48,16 +58,14 @@ public class RootFeatureCompositionRoot : ICompositionRoot
     {
         serviceRegistry.Register(factory =>
         {
-            Contexts contexts = factory.GetInstance<Contexts>();
-            IAllOfMatcher<GameEntity> inputMovableMatcher = GameMatcher.AllOf(GameMatcher.Transform,
-                GameMatcher.Movable,
-                GameMatcher.Player);
-            IGroup<GameEntity> inputMovableGroup = contexts.game.GetGroup(inputMovableMatcher);
+            IGroup<GameEntity> inputMovableGroup =
+                factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>()(new[]
+                {
+                    GameMatcher.Transform, GameMatcher.Movable, GameMatcher.Player
+                });
 
-            var inputScanner = factory.GetInstance<IInputScanner>();
-            var logger = factory.GetInstance<ILogger>();
-
-            return new InputSystem(inputScanner, inputMovableGroup, logger);
+            return new InputSystem(factory.GetInstance<IInputScanner>(), inputMovableGroup,
+                factory.GetInstance<ILogger>());
         }, new PerContainerLifetime());
     }
 
