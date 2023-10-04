@@ -34,7 +34,7 @@ public class MovementSystem : IFixedExecuteSystem
                 }
 
                 e.transform.Position = _movement.Move(e.transform.Position, e.transform.Velocity);
-                _logger.ForContext<MovementSystem>().Verbose(e.transform.Position.ToString());
+                _logger.ForContext<MovementSystem>().Verbose(e.transform.Position.ToString()!);
             }
         }
         catch (Exception e)

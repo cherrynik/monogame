@@ -3,6 +3,7 @@ using Components;
 using Components.World;
 using Entitas;
 using Features;
+using Features.Factories;
 using GameDesktop.Resources;
 using LightInject;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,6 @@ using Serilog;
 using Services;
 using Services.Factories;
 using Services.Input;
-using Services.Math;
 using Services.Movement;
 using Systems;
 
@@ -24,65 +24,31 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         Environment.GetEnvironmentVariable(EnvironmentVariables.AppBaseDirectory),
         SpriteSheets.Player);
 
-    private const string AllOf = "AllOf";
-    private const string AnyOf = "AnyOf";
-
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.Register<IMatcher<GameEntity>[], IGroup<GameEntity>>((factory, matchers) =>
-        {
-            IAllOfMatcher<GameEntity> groupMatcher = GameMatcher.AllOf(matchers);
-            var contexts = factory.GetInstance<Contexts>();
-            return contexts.game.GetGroup(groupMatcher);
-        }, AllOf);
+        // Layered registration architecture (horizontally & vertically)
+        // Hence, it allows async/multi-threaded registration
 
-        RegisterServices(serviceRegistry);
-        RegisterInputSystem(serviceRegistry);
-        RegisterMovementSystem(serviceRegistry);
+        // If it's split with space-line, then it's the end of a group.
+        // A group (of registering lines) can be multi-threaded.
+        // At the end of a group, the whole group has to be resolved successfully,
+        // before going further.
+        serviceRegistry.RegisterFrom<FundamentalCompositionRoot>();
+
+        serviceRegistry.RegisterFrom<InputFeatureCompositionRoot>();
         RegisterCreatePlayerEntitySystem(serviceRegistry);
         RegisterAnimatedMovementSystem(serviceRegistry);
         RegisterCameraFollowingSystem(serviceRegistry);
-        RegisterCreateStaticEntitySystem(serviceRegistry);
+        serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
 
+        // serviceRegistry.RegisterFrom<PlayerEntityCompositionRoot>();
+        serviceRegistry.RegisterFrom<StaticEntityCompositionRoot>();
+
+        serviceRegistry.RegisterSingleton(typeof(AbstractFactory<>));
+        serviceRegistry.RegisterSingleton<WorldInitializeFeature>();
+
+        // Main entry point
         serviceRegistry.Register<RootFeature>();
-    }
-
-    private static void RegisterServices(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register<IInputScanner, KeyboardScanner>(new PerContainerLifetime());
-
-        serviceRegistry.Register<IMovement, SimpleMovement>(new PerContainerLifetime());
-    }
-
-    private static void RegisterInputSystem(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register(factory =>
-        {
-            IGroup<GameEntity> inputMovableGroup =
-                factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>()(new[]
-                {
-                    GameMatcher.Transform, GameMatcher.Movable, GameMatcher.Player
-                });
-
-            return new InputSystem(factory.GetInstance<IInputScanner>(), inputMovableGroup,
-                factory.GetInstance<ILogger>());
-        }, new PerContainerLifetime());
-    }
-
-    private static void RegisterMovementSystem(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register(factory =>
-        {
-            Contexts contexts = factory.GetInstance<Contexts>();
-            IAllOfMatcher<GameEntity> movableMatcher = GameMatcher.AllOf(GameMatcher.Transform,
-                GameMatcher.Movable);
-            IGroup<GameEntity> movableGroup = contexts.game.GetGroup(movableMatcher);
-
-            var movement = factory.GetInstance<IMovement>();
-            var logger = factory.GetInstance<ILogger>();
-
-            return new MovementSystem(movement, movableGroup, logger);
-        }, new PerContainerLifetime());
     }
 
     private static void RegisterCreatePlayerEntitySystem(IServiceRegistry serviceRegistry)
@@ -99,7 +65,6 @@ public class RootFeatureCompositionRoot : ICompositionRoot
             return new MovementAnimationComponent(idleAnimations, walkingAnimations);
         });
 
-        serviceRegistry.Register<TransformComponent>();
 
         serviceRegistry.Register<CreatePlayerEntitySystem>(new PerContainerLifetime());
     }
@@ -133,31 +98,6 @@ public class RootFeatureCompositionRoot : ICompositionRoot
             GameEntity target = contexts.game.cameraEntity;
 
             return new CameraFollowingSystem(target, renderGroup);
-        });
-    }
-
-    private void RegisterCreateStaticEntitySystem(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register(factory =>
-        {
-            GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
-            SpriteSheet spriteSheet =
-                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, Path);
-
-            AnimatedSprite animatedSprite =
-                AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Idle")[Direction.Down];
-            return new SpriteComponent(animatedSprite);
-        });
-
-        serviceRegistry.Register(factory =>
-        {
-            var transform = factory.GetInstance<TransformComponent>();
-            transform.Position = new Vector2(143, 85);
-
-            return new CreateStaticEntitySystem(
-                factory.GetInstance<Contexts>(),
-                transform,
-                factory.GetInstance<SpriteComponent>());
         });
     }
 }

@@ -6,10 +6,10 @@ namespace Entitas.Extended;
 // Entitas Extended Systems is compatible with methods linked to MonoGame Framework.
 public class Systems : Entitas.Systems, IFixedExecuteSystem, IExecuteSystem, ILateExecuteSystem, IDrawSystem
 {
-    private readonly List<IFixedExecuteSystem> _fixedExecuteSystems = new();
-    private readonly List<ILateExecuteSystem> _lateExecuteSystems = new();
-    private new readonly List<IExecuteSystem> _executeSystems = new();
-    private readonly List<IDrawSystem> _drawSystems = new();
+    protected readonly List<IFixedExecuteSystem> _fixedExecuteSystems = new();
+    protected readonly List<ILateExecuteSystem> _lateExecuteSystems = new();
+    protected new readonly List<IExecuteSystem> _executeSystems = new();
+    protected readonly List<IDrawSystem> _drawSystems = new();
 
     public override Entitas.Systems Add(ISystem system)
     {

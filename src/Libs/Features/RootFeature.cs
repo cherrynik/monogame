@@ -1,22 +1,30 @@
-﻿using Systems;
+﻿using Components;
+using Components.World;
+using Features.Factories;
+using Systems;
 
 namespace Features;
 
 public sealed class RootFeature : Entitas.Extended.Feature
 {
-    public RootFeature(InputSystem inputSystem,
-        MovementSystem movementSystem,
+    public RootFeature(
+        WorldInitializeFeature worldInitializeFeature,
+        InputFeature inputFeature,
+        MovementFeature movementFeature,
         CreatePlayerEntitySystem createPlayerEntitySystem,
+        // CreateStaticEntitySystem createStaticEntitySystem
+        // MovementSystem movementSystem,
         AnimatedMovementSystem animatedMovementSystem,
-        CameraFollowingSystem cameraFollowingSystem,
-        CreateStaticEntitySystem createStaticEntitySystem
+        CameraFollowingSystem cameraFollowingSystem
     )
     {
-        Add(inputSystem);
-        Add(movementSystem);
-        Add(createPlayerEntitySystem);
-        Add(animatedMovementSystem);
+        // Add(createStaticEntitySystem);
+        Add(worldInitializeFeature);
         Add(cameraFollowingSystem);
-        Add(createStaticEntitySystem);
+        Add(createPlayerEntitySystem);
+        Add(inputFeature);
+        Add(movementFeature);
+
+        // Add(animatedMovementSystem);
     }
 }

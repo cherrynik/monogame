@@ -16,15 +16,10 @@ public class GameCompositionRoot : ICompositionRoot
 
     private void RegisterGameServices(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.Register(_ => Contexts.sharedInstance);
-
-        serviceRegistry.RegisterFrom<RootFeatureCompositionRoot>();
-
         serviceRegistry.Register(factory =>
         {
             Game game = new(
                 factory.GetInstance<ILogger>(),
-                factory.GetInstance<Contexts>(),
                 factory.GetInstance<IServiceContainer>()
             ) { IsMouseVisible = IsMouseVisible, Content = { RootDirectory = AppVariables.ContentRootDirectory, } };
 

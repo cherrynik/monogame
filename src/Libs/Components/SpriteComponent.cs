@@ -5,7 +5,7 @@ namespace Components;
 
 public class SpriteComponent : IComponent
 {
-    public Sprite Sprite;
+    public Sprite? Sprite;
 
     public SpriteComponent()
     {

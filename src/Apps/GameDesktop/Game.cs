@@ -12,7 +12,6 @@ public class Game : Microsoft.Xna.Framework.Game
     public GraphicsDeviceManager GraphicsDeviceManager;
 
     private readonly ILogger _logger;
-    private readonly Contexts _contexts;
     private readonly IServiceContainer _container;
 
     private Entitas.Extended.Feature _rootFeature;
@@ -21,11 +20,9 @@ public class Game : Microsoft.Xna.Framework.Game
 
     public Game(
         ILogger logger,
-        Contexts contexts,
         IServiceContainer container)
     {
         _logger = logger;
-        _contexts = contexts;
         _container = container;
 
         _logger.ForContext<Game>().Verbose("ctor");
@@ -53,7 +50,7 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
-        _container.Register(_ => _spriteBatch);
+        _container.RegisterInstance(_spriteBatch);
         _container.RegisterFrom<RootFeatureCompositionRoot>();
 
         _rootFeature = _container.GetInstance<RootFeature>();

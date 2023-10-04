@@ -7,9 +7,6 @@ using LightInject;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
-#if IS_CI
-using GameDesktop.Resources;
-#endif
 
 IConfigurationRoot configuration = ConfigurationFactory.Create();
 Environment.SetEnvironmentVariable(EnvironmentVariables.AppBaseDirectory,
