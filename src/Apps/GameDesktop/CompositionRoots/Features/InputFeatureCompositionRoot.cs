@@ -6,7 +6,7 @@ using Serilog;
 using Services.Input;
 using Systems;
 
-namespace GameDesktop.CompositionRoots;
+namespace GameDesktop.CompositionRoots.Features;
 
 public class InputFeatureCompositionRoot : ICompositionRoot
 {

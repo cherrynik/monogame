@@ -18,9 +18,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private SpriteBatch _spriteBatch;
 
 
-    public Game(
-        ILogger logger,
-        IServiceContainer container)
+    public Game(ILogger logger, IServiceContainer container)
     {
         _logger = logger;
         _container = container;
@@ -33,11 +31,11 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
         _logger.ForContext<Game>().Verbose("SpriteBatch initialization...");
 
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        GraphicsDeviceManager.PreferredBackBufferWidth = 640;
-        GraphicsDeviceManager.PreferredBackBufferHeight = 480;
-        GraphicsDeviceManager.ApplyChanges();
+        _container.RegisterSingleton(_ => new SpriteBatch(GraphicsDevice));
+        _spriteBatch = _container.GetInstance<SpriteBatch>();
+        // GraphicsDeviceManager.PreferredBackBufferWidth = 640;
+        // GraphicsDeviceManager.PreferredBackBufferHeight = 480;
+        // GraphicsDeviceManager.ApplyChanges();
 
         _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
 
@@ -50,7 +48,6 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
-        _container.RegisterInstance(_spriteBatch);
         _container.RegisterFrom<RootFeatureCompositionRoot>();
 
         _rootFeature = _container.GetInstance<RootFeature>();

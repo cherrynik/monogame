@@ -1,7 +1,7 @@
 ﻿using Components;
 using Components.World;
 
-namespace Features.Factories;
+namespace Entities;
 
 public class StaticEntity
 {
