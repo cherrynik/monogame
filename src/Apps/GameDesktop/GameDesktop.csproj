@@ -27,7 +27,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
-    <EmbeddedResource Update="Resources\SpriteSheets.resx">
+    <EmbeddedResource Update="Resources\SpriteSheet.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SpriteSheets.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -71,10 +71,10 @@
     <ProjectReference Include="..\..\Libs\Services\Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Resources\SpriteSheets.Designer.cs">
+    <Compile Update="Resources\SpriteSheet.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>SpriteSheets.resx</DependentUpon>
+      <DependentUpon>SpriteSheet.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\Internal\Matcher.Designer.cs">
       <DesignTime>True</DesignTime>

@@ -1,5 +1,5 @@
 ﻿using Features;
-using GameDesktop.CompositionRoots;
+using GameDesktop.CompositionRoots.Features;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,8 +9,6 @@ namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
-    public GraphicsDeviceManager GraphicsDeviceManager;
-
     private readonly ILogger _logger;
     private readonly IServiceContainer _container;
 
@@ -53,6 +51,7 @@ public class Game : Microsoft.Xna.Framework.Game
         _rootFeature = _container.GetInstance<RootFeature>();
 
         // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
+        // todo: pass tru logger & log places
         // TODO: Error handling
         _rootFeature.Initialize();
         _logger.ForContext<Game>().Verbose("LoadContent(): end");

@@ -21,6 +21,7 @@ public class AnimatedMovementSystem : IExecuteSystem
         _logger = logger;
     }
 
+    // todo: null-checking everywhere
     public void Execute(GameTime gameTime)
     {
         GameEntity[] entities = _group.GetEntities();

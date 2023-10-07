@@ -1,6 +1,5 @@
 ﻿using System;
 using Entitas;
-using Entitas.Extended;
 using Features;
 using GameDesktop.Resources.Internal;
 using LightInject;

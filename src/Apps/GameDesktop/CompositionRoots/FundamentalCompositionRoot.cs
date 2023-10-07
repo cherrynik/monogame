@@ -1,11 +1,7 @@
-﻿using System;
-using Components;
-using Components.World;
+﻿using System.Collections.Generic;
 using Entitas;
-using GameDesktop.Resources;
 using GameDesktop.Resources.Internal;
 using LightInject;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services.Factories;
@@ -15,30 +11,17 @@ namespace GameDesktop.CompositionRoots;
 
 public class FundamentalCompositionRoot : ICompositionRoot
 {
-    private static readonly string Path = System.IO.Path.Join(
-        Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
-        SpriteSheets.Player);
-
     public void Compose(IServiceRegistry serviceRegistry)
     {
         RegisterContexts(serviceRegistry);
         RegisterAllOfMatcher(serviceRegistry);
         RegisterAnyOfMatcher(serviceRegistry);
-        RegisterComponents(serviceRegistry);
+        RegisterAnimationsFactory(serviceRegistry);
+        serviceRegistry.RegisterSingleton(typeof(AbstractFactory<>));
     }
 
     private static void RegisterContexts(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterInstance(Contexts.sharedInstance);
-
-    private void RegisterAnyOfMatcher(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register<IMatcher<GameEntity>[], IGroup<GameEntity>>((factory, matchers) =>
-        {
-            IAnyOfMatcher<GameEntity> groupMatcher = GameMatcher.AnyOf(matchers);
-            var contexts = factory.GetInstance<Contexts>();
-            return contexts.game.GetGroup(groupMatcher);
-        }, Matcher.AnyOf);
-    }
 
     private static void RegisterAllOfMatcher(IServiceRegistry serviceRegistry)
     {
@@ -50,37 +33,28 @@ public class FundamentalCompositionRoot : ICompositionRoot
         }, Matcher.AllOf);
     }
 
-    private static void RegisterComponents(IServiceRegistry serviceRegistry)
+    private static void RegisterAnyOfMatcher(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.Register(factory =>
+        serviceRegistry.Register<IMatcher<GameEntity>[], IGroup<GameEntity>>((factory, matchers) =>
+        {
+            IAnyOfMatcher<GameEntity> groupMatcher = GameMatcher.AnyOf(matchers);
+            var contexts = factory.GetInstance<Contexts>();
+            return contexts.game.GetGroup(groupMatcher);
+        }, Matcher.AnyOf);
+    }
+
+    private static void RegisterAnimationsFactory(IServiceRegistry serviceRegistry)
+    {
+        // Warning: binding to <string, T> where T is any type, is dangerous and you should have a different
+        // binding off of implementation overloading, if you wanna pass through a string as an arg.
+        // So, such resolving won't work either: Func<string, T>, as it'll get it as your string argument is a
+        // service name. Thus, I use 3 type args here.
+        serviceRegistry.Register<string, string, Dictionary<Direction, AnimatedSprite>>((factory, path, action) =>
         {
             GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
-            // TODO: Refactor into func<>
-            SpriteSheet spriteSheet =
-                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, Path);
+            SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, path);
 
-            AnimatedSprite animatedSprite =
-                AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Idle")[Direction.Down];
-            return new SpriteComponent(animatedSprite);
-        });
-
-        serviceRegistry.RegisterTransient(_ => new TransformComponent
-        {
-            Position = new Vector2(new Random().Next(0, 100), new Random().Next(0, 100))
-        });
-
-        serviceRegistry.RegisterSingleton(_ => new CameraComponent { Size = new Rectangle(0, 0, 640, 480) });
-
-        serviceRegistry.RegisterTransient(factory =>
-        {
-            GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
-            SpriteSheet spriteSheet =
-                AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, Path);
-
-            var idleAnimations = AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Idle");
-            var walkingAnimations = AnimatedCharactersFactory.CreateAnimations(spriteSheet, "Walking");
-
-            return new MovementAnimationComponent(idleAnimations, walkingAnimations);
-        });
+            return AnimatedCharactersFactory.CreateAnimations(spriteSheet, action);
+        }, "Character");
     }
 }

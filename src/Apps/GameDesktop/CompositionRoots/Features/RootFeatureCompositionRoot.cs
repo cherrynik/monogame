@@ -1,24 +1,9 @@
-﻿using System;
-using Components;
-using Components.World;
-using Entitas;
-using Features;
-using Features.Factories;
+﻿using Features;
+using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
-using GameDesktop.CompositionRoots.Features;
-using GameDesktop.Resources.Internal;
 using LightInject;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Aseprite.Sprites;
-using Serilog;
-using Services;
-using Services.Factories;
-using Services.Input;
-using Services.Movement;
-using Systems;
 
-namespace GameDesktop.CompositionRoots;
+namespace GameDesktop.CompositionRoots.Features;
 
 public class RootFeatureCompositionRoot : ICompositionRoot
 {
@@ -31,19 +16,38 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         // A group (of registering lines) can be multi-threaded.
         // At the end of a group, the whole group has to be resolved successfully,
         // before going further.
-        serviceRegistry.RegisterFrom<FundamentalCompositionRoot>();
+        RegisterFundamental(serviceRegistry);
 
+        RegisterComponents(serviceRegistry);
+        RegisterEntities(serviceRegistry);
+
+        RegisterFeatures(serviceRegistry);
+
+        // Main entry point
+        serviceRegistry.RegisterSingleton<RootFeature>();
+    }
+
+    private static void RegisterFundamental(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterFrom<FundamentalCompositionRoot>();
+    }
+
+    private static void RegisterComponents(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterFrom<ComponentsCompositionRoot>();
+    }
+
+    private static void RegisterEntities(IServiceRegistry serviceRegistry)
+    {
         serviceRegistry.RegisterFrom<PlayerEntityCompositionRoot>();
         serviceRegistry.RegisterFrom<StaticEntityCompositionRoot>();
+    }
 
-        serviceRegistry.RegisterSingleton(typeof(AbstractFactory<>));
-        serviceRegistry.RegisterSingleton<WorldInitializeFeature>();
-
+    private static void RegisterFeatures(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterFrom<WorldInitializeFeatureCompositionRoot>();
         serviceRegistry.RegisterFrom<InputFeatureCompositionRoot>();
         serviceRegistry.RegisterFrom<CameraFeatureCompositionRoot>();
         serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
-
-        // Main entry point
-        serviceRegistry.Register<RootFeature>();
     }
 }

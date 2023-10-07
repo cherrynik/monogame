@@ -26,9 +26,9 @@ try
         };
     using ServiceContainer container = new(containerOptions);
 
-    container.Register<IServiceContainer>(_ => container);
-    container.Register<IConfiguration>(_ => configuration, new PerContainerLifetime());
-    container.Register<ILogger>(_ => logger, new PerContainerLifetime());
+    container.RegisterInstance<IServiceContainer>(container);
+    container.RegisterInstance<IConfiguration>(configuration);
+    container.RegisterInstance<ILogger>(logger);
 
     container.RegisterFrom<GameCompositionRoot>();
 

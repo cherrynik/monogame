@@ -2,7 +2,7 @@
 using Serilog;
 using Serilog.Core;
 
-namespace GameDesktop;
+namespace GameDesktop.Factories;
 
 internal static class LogFactory
 {

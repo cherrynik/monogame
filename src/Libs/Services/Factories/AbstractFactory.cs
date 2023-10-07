@@ -1,4 +1,4 @@
-﻿namespace Features.Factories;
+﻿namespace Services.Factories;
 
 public class AbstractFactory<T>
 {
