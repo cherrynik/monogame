@@ -1,6 +1,8 @@
 ﻿using System;
 using Entitas;
+using Entitas.Extended;
 using Features;
+using GameDesktop.Resources.Internal;
 using LightInject;
 using Serilog;
 using Services;
@@ -34,7 +36,7 @@ public class MovementFeatureCompositionRoot : ICompositionRoot
         {
             var movement = factory.GetInstance<IMovement>();
 
-            var getGroup = factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>();
+            var getGroup = factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>(Matcher.AllOf);
             IGroup<GameEntity> group = getGroup(MovableMatchers);
 
             var logger = factory.GetInstance<ILogger>();
@@ -44,7 +46,7 @@ public class MovementFeatureCompositionRoot : ICompositionRoot
 
         serviceRegistry.RegisterSingleton(factory =>
         {
-            var getGroup = factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>();
+            var getGroup = factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>(Matcher.AllOf);
             IGroup<GameEntity> group = getGroup(AnimatedMovableMatchers);
 
             var logger = factory.GetInstance<ILogger>();

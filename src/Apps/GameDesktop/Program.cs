@@ -2,14 +2,15 @@
 using System.IO;
 using GameDesktop;
 using GameDesktop.CompositionRoots;
-using GameDesktop.Resources;
+using GameDesktop.Factories;
+using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
 
 IConfigurationRoot configuration = ConfigurationFactory.Create();
-Environment.SetEnvironmentVariable(EnvironmentVariables.AppBaseDirectory,
+Environment.SetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory,
     Directory.GetParent(AppContext.BaseDirectory)!.FullName);
 
 using Logger logger = LogFactory.Create(configuration);
@@ -37,7 +38,7 @@ try
 catch (Exception e)
 {
 #if IS_CI
-    if (e.Message.Contains(Errors.FailedToCreateGraphicsDevice))
+    if (e.Message.Contains(Error.FailedToCreateGraphicsDevice))
     {
         Environment.Exit(0);
     }

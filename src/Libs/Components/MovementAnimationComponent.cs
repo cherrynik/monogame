@@ -5,7 +5,7 @@ using Services.Math;
 
 namespace Components;
 
-public class MovementAnimationComponent : IComponent
+public class MovementAnimationComponent : DrawableComponent
 {
     private const Direction DefaultFacing = Direction.Down;
 

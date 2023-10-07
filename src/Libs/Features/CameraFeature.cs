@@ -4,8 +4,8 @@ namespace Features;
 
 public sealed class CameraFeature : Entitas.Extended.Feature
 {
-    public CameraFeature(IDrawSystem cameraFollowingSystem)
+    public CameraFeature(IDrawSystem drawSystem)
     {
-        Add(cameraFollowingSystem);
+        Add(drawSystem);
     }
 }

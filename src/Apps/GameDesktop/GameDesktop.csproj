@@ -31,17 +31,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SpriteSheets.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Errors.resx">
+    <EmbeddedResource Update="Resources\Internal\AppVariable.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>AppVariable.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\AppVariables.resx">
+    <EmbeddedResource Update="Resources\Internal\EnvironmentVariable.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Env.Designer.cs</LastGenOutput>
+      <LastGenOutput>EnvironmentVariable.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\EnvironmentVariables.resx">
+    <EmbeddedResource Update="Resources\Internal\Matcher.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EnvironmentVariables.Designer.cs</LastGenOutput>
+      <LastGenOutput>Matcher.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -76,20 +76,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SpriteSheets.resx</DependentUpon>
     </Compile>
-    <Compile Update="Resources\Errors.Designer.cs">
+    <Compile Update="Resources\Internal\Matcher.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Errors.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\AppVariables.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AppVariables.resx</DependentUpon>
-    </Compile>
-    <Compile Update="Resources\EnvironmentVariables.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EnvironmentVariables.resx</DependentUpon>
+      <DependentUpon>Matcher.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">

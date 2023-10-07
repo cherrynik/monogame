@@ -7,28 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace GameDesktop.Resources {
+namespace GameDesktop.Resources.Internal {
     using System;
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class EnvironmentVariables {
+    internal class Matcher {
         
         private static System.Resources.ResourceManager resourceMan;
         
         private static System.Globalization.CultureInfo resourceCulture;
         
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal EnvironmentVariables() {
+        internal Matcher() {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         internal static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("GameDesktop.Resources.EnvironmentVariables", typeof(EnvironmentVariables).Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("GameDesktop.Resources.Internal.Matcher", typeof(Matcher).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -45,15 +45,15 @@ namespace GameDesktop.Resources {
             }
         }
         
-        internal static string AppBaseDirectory {
+        internal static string AllOf {
             get {
-                return ResourceManager.GetString("AppBaseDirectory", resourceCulture);
+                return ResourceManager.GetString("AllOf", resourceCulture);
             }
         }
         
-        internal static string DotNetEnvironment {
+        internal static string AnyOf {
             get {
-                return ResourceManager.GetString("DotNetEnvironment", resourceCulture);
+                return ResourceManager.GetString("AnyOf", resourceCulture);
             }
         }
     }

@@ -6,7 +6,7 @@ using Features;
 using Features.Factories;
 using GameDesktop.CompositionRoots.Entities;
 using GameDesktop.CompositionRoots.Features;
-using GameDesktop.Resources;
+using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

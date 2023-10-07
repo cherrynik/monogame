@@ -1,6 +1,8 @@
 ﻿using System;
 using Entitas;
+using Entitas.Extended;
 using Features;
+using GameDesktop.Resources.Internal;
 using LightInject;
 using Serilog;
 using Services.Input;
@@ -31,7 +33,7 @@ public class InputFeatureCompositionRoot : ICompositionRoot
         {
             var inputScanner = factory.GetInstance<IInputScanner>();
 
-            var getGroup = factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>();
+            var getGroup = factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>(Matcher.AllOf);
             IGroup<GameEntity> group = getGroup(Matchers);
 
             var logger = factory.GetInstance<ILogger>();

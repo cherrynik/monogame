@@ -3,6 +3,7 @@ using Components;
 using Components.World;
 using Entitas;
 using GameDesktop.Resources;
+using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,21 +16,29 @@ namespace GameDesktop.CompositionRoots;
 public class FundamentalCompositionRoot : ICompositionRoot
 {
     private static readonly string Path = System.IO.Path.Join(
-        Environment.GetEnvironmentVariable(EnvironmentVariables.AppBaseDirectory),
+        Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
         SpriteSheets.Player);
-
-    private const string AllOf = "AllOf";
-    private const string AnyOf = "AnyOf";
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
         RegisterContexts(serviceRegistry);
         RegisterAllOfMatcher(serviceRegistry);
+        RegisterAnyOfMatcher(serviceRegistry);
         RegisterComponents(serviceRegistry);
     }
 
     private static void RegisterContexts(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterInstance(Contexts.sharedInstance);
+
+    private void RegisterAnyOfMatcher(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.Register<IMatcher<GameEntity>[], IGroup<GameEntity>>((factory, matchers) =>
+        {
+            IAnyOfMatcher<GameEntity> groupMatcher = GameMatcher.AnyOf(matchers);
+            var contexts = factory.GetInstance<Contexts>();
+            return contexts.game.GetGroup(groupMatcher);
+        }, Matcher.AnyOf);
+    }
 
     private static void RegisterAllOfMatcher(IServiceRegistry serviceRegistry)
     {
@@ -38,7 +47,7 @@ public class FundamentalCompositionRoot : ICompositionRoot
             IAllOfMatcher<GameEntity> groupMatcher = GameMatcher.AllOf(matchers);
             var contexts = factory.GetInstance<Contexts>();
             return contexts.game.GetGroup(groupMatcher);
-        }, AllOf);
+        }, Matcher.AllOf);
     }
 
     private static void RegisterComponents(IServiceRegistry serviceRegistry)

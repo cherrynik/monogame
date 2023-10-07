@@ -1,6 +1,8 @@
 ﻿using System;
 using Entitas;
+using Entitas.Extended;
 using Features;
+using GameDesktop.Resources.Internal;
 using LightInject;
 using Systems;
 
@@ -8,7 +10,7 @@ namespace GameDesktop.CompositionRoots.Features;
 
 public class CameraFeatureCompositionRoot : ICompositionRoot
 {
-    private static readonly IMatcher<GameEntity>[] Matchers = { GameMatcher.Transform, GameMatcher.Sprite };
+    private static readonly IMatcher<GameEntity>[] Matchers = { GameMatcher.Transform, GameMatcher.Drawable };
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
@@ -20,12 +22,12 @@ public class CameraFeatureCompositionRoot : ICompositionRoot
     {
         serviceRegistry.RegisterFallback((type, s) => true, request =>
         {
-            var getGroup = request.ServiceFactory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>();
+            var getGroup =
+                request.ServiceFactory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>(Matcher.AllOf);
             IGroup<GameEntity> group = getGroup(Matchers);
 
-            Contexts contexts = request.ServiceFactory.GetInstance<Contexts>();
-            
-            return new CameraFollowingSystem(contexts, group);
+            // return new CameraFollowingSystem(request.ServiceFactory.GetInstance<Contexts>(), group);
+            return new DefaultDrawSystem(group);
         }, new PerContainerLifetime());
     }
 
