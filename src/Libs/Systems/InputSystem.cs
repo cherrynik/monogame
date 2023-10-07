@@ -26,6 +26,11 @@ public class InputSystem : IExecuteSystem
         {
             Vector2 direction = _inputScanner.GetDirection();
 
+            if (direction.Equals(Vector2.Zero) is false)
+            {
+                _logger.ForContext<InputSystem>().Verbose(direction.ToString()!);
+            }
+
             GameEntity[] entities = _group.GetEntities();
             foreach (GameEntity e in entities)
             {

@@ -3,9 +3,9 @@ using MonoGame.Aseprite.Sprites;
 
 namespace Components;
 
-public class SpriteComponent : IComponent
+public class SpriteComponent : DrawableComponent
 {
-    public Sprite Sprite;
+    public Sprite? Sprite;
 
     public SpriteComponent()
     {

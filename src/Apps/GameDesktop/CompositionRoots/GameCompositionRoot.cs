@@ -1,4 +1,4 @@
-﻿using GameDesktop.Resources;
+﻿using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Serilog;
@@ -11,26 +11,16 @@ public class GameCompositionRoot : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        RegisterGameServices(serviceRegistry);
-    }
-
-    private void RegisterGameServices(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register(_ => Contexts.sharedInstance);
-
-        serviceRegistry.RegisterFrom<RootFeatureCompositionRoot>();
-
         serviceRegistry.Register(factory =>
         {
-            Game game = new(
-                factory.GetInstance<ILogger>(),
-                factory.GetInstance<Contexts>(),
-                factory.GetInstance<IServiceContainer>()
-            ) { IsMouseVisible = IsMouseVisible, Content = { RootDirectory = AppVariables.ContentRootDirectory, } };
+            Game game = new(factory.GetInstance<ILogger>(), factory.GetInstance<IServiceContainer>())
+            {
+                IsMouseVisible = IsMouseVisible, Content = { RootDirectory = AppVariable.ContentRootDirectory, }
+            };
 
             // Hack. Resolving cycle dependency issue (fundamental architecture)
             // Implicitly adds itself in the game services container.
-            game.GraphicsDeviceManager = new GraphicsDeviceManager(game);
+            new GraphicsDeviceManager(game);
 
             return game;
         });
