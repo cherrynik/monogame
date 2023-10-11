@@ -38,4 +38,8 @@ public class DefaultDrawSystem : IDrawSystem
 
         spriteBatch.End();
     }
+    // TODO: When camera following feature is enabled,
+    // Make it working with other drawing systems, e.g. debug drawing.
+    // Thus, draw relatively to camera.
+    // Share rendering results with other systems (sorting, etc)
 }

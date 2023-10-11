@@ -24,21 +24,18 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
         RegisterFeatures(serviceRegistry);
 
-        // Extra pre-entry point for debugging, might be safely excluded
+#if DEBUG
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
+#endif
 
         RegisterEntryPoint(serviceRegistry);
     }
 
-    private static void RegisterFundamental(IServiceRegistry serviceRegistry)
-    {
+    private static void RegisterFundamental(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterFrom<FundamentalCompositionRoot>();
-    }
 
-    private static void RegisterComponents(IServiceRegistry serviceRegistry)
-    {
+    private static void RegisterComponents(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterFrom<ComponentsCompositionRoot>();
-    }
 
     private static void RegisterEntities(IServiceRegistry serviceRegistry)
     {
@@ -54,8 +51,6 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
     }
 
-    private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
-    {
+    private static void RegisterEntryPoint(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterSingleton<RootFeature>();
-    }
 }
