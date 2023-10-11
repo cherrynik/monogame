@@ -16,7 +16,8 @@ public class DefaultDrawSystem : IDrawSystem
 
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        GameEntity[] entities = _group.GetEntities();
+        // todo: refactor, put it in an impl and use the impl as a dep
+        GameEntity[] entities = _group.GetEntities().OrderBy(x => x.transform.Position.Y).ToArray();
 
         spriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
