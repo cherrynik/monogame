@@ -7,18 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Entities\Entities.csproj" />
       <ProjectReference Include="..\External\Entitas.Extended\Entitas.Extended.csproj" />
-      <ProjectReference Include="..\Features.Debugging\Features.Debugging.csproj" />
-      <ProjectReference Include="..\Systems\Systems.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="LightInject" Version="6.6.4" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Debug\" />
+      <PackageReference Include="Serilog" Version="2.12.0" />
     </ItemGroup>
 
 </Project>

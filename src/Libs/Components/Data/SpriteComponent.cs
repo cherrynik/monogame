@@ -1,7 +1,7 @@
-﻿using Entitas;
+﻿using Components.Tags;
 using MonoGame.Aseprite.Sprites;
 
-namespace Components;
+namespace Components.Data;
 
 public class SpriteComponent : DrawableComponent
 {

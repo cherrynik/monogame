@@ -2,7 +2,7 @@
 using Entitas.CodeGeneration.Attributes;
 using Microsoft.Xna.Framework;
 
-namespace Components;
+namespace Components.Data;
 
 [Unique]
 public class CameraComponent : IComponent

@@ -3,7 +3,7 @@ using LightInject;
 
 namespace GameDesktop.CompositionRoots.Entities;
 
-public class StaticEntityCompositionRoot : ICompositionRoot
+internal class StaticEntityCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {

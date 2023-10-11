@@ -1,6 +1,6 @@
 ﻿using Entitas;
 
-namespace Components;
+namespace Components.Tags;
 
 public class DrawableComponent : IComponent
 {

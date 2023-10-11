@@ -10,7 +10,7 @@ using Systems;
 
 namespace GameDesktop.CompositionRoots.Features;
 
-public class MovementFeatureCompositionRoot : ICompositionRoot
+internal class MovementFeatureCompositionRoot : ICompositionRoot
 {
     private static readonly IMatcher<GameEntity>[] MovableMatchers = { GameMatcher.Transform, GameMatcher.Movable };
 

@@ -5,7 +5,7 @@ using Serilog;
 
 namespace GameDesktop.CompositionRoots;
 
-public class GameCompositionRoot : ICompositionRoot
+internal class GameCompositionRoot : ICompositionRoot
 {
     private const bool IsMouseVisible = true;
 

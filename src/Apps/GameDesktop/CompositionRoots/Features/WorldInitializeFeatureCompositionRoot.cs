@@ -3,7 +3,7 @@ using LightInject;
 
 namespace GameDesktop.CompositionRoots.Features;
 
-public class WorldInitializeFeatureCompositionRoot : ICompositionRoot
+internal class WorldInitializeFeatureCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
