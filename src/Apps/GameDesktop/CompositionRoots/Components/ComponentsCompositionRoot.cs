@@ -56,11 +56,19 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterTransformComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterTransient<TransformComponent>();
+        serviceRegistry.RegisterSingleton(_ =>
+        {
+            return new TransformComponent { Position = new(16, 20) };
+        }, "Player");
+
+        serviceRegistry.RegisterSingleton(_ =>
+        {
+            return new TransformComponent { Position = new(0, 0) };
+        }, "StaticEntity");
     }
 
     private static void RegisterRectangleCollisionComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterTransient(_ => new RectangleCollisionComponent { Size = new Rectangle(0, 0, 8, 8)});
+        serviceRegistry.RegisterTransient(_ => new RectangleCollisionComponent { Size = new Rectangle(0, 0, 8, 8) });
     }
 }
