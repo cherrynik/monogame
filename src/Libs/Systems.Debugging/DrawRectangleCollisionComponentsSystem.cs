@@ -20,58 +20,31 @@ public class DrawRectangleCollisionComponentsSystem : IDrawSystem
     }
 
     // TODO: Move the logic in the release features
-    // TODO: Make sloped collision
+    // TODO: Pivot & anchors system
+    // TODO: Make circle colliders & relative system (sloped collision)
     public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
     {
-        GameEntity[] entities = _group.GetEntities().OrderBy(x => x.transform.Position.Y).ToArray();
+        GameEntity[] entities = _group.GetEntities();
 
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        // temp start
         Color[] colors = { Color.Black, Color.White };
         int k = 0;
-        // temp end
 
-        for (int i = 0; i < entities.Length; ++i)
+        foreach (GameEntity e in entities)
         {
-            GameEntity first = entities[i];
-
-            for (int j = i + 1; j < entities.Length; ++j)
-            {
-                GameEntity second = entities[j];
-                if (AreIntersecting(first, second))
-                {
-                    first.transform.Velocity = Vector2.Zero;
-                    second.transform.Velocity = Vector2.Zero;
-                }
-            }
-
-            // temp start
             var texture = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
             texture.SetData(new[] { colors[k] });
-            ++k;
-            if (k is 2)
-                k = 0;
-            // temp end
 
-            spriteBatch.Draw(texture, first.transform.Position, sourceRectangle: first.rectangleCollision.Size,
+            ++k;
+            if (k == colors.Length)
+                k = 0;
+
+            spriteBatch.Draw(texture, e.transform.Position, sourceRectangle: e.rectangleCollision.Size,
                 Color.White);
         }
 
         spriteBatch.End();
     }
 
-    private bool AreIntersecting(GameEntity first, GameEntity second)
-    {
-        Func<GameEntity, Rectangle> buildRectangle = new(x =>
-            new((int)(x.transform.Position.X + x.transform.Velocity.X),
-                (int)(x.transform.Position.Y + x.transform.Velocity.Y),
-                x.rectangleCollision.Size.Width,
-                x.rectangleCollision.Size.Height));
-
-        Rectangle firstRectangle = buildRectangle(first);
-        Rectangle secondRectangle = buildRectangle(second);
-
-        return Rectangle.Intersect(firstRectangle, secondRectangle).IsEmpty is false;
-    }
 }

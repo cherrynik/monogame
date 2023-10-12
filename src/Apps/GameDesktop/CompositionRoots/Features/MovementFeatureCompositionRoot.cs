@@ -12,6 +12,11 @@ namespace GameDesktop.CompositionRoots.Features;
 
 internal class MovementFeatureCompositionRoot : ICompositionRoot
 {
+    private static readonly IMatcher<GameEntity>[] CollisionMatchers =
+    {
+        GameMatcher.RectangleCollision, GameMatcher.Transform
+    };
+
     private static readonly IMatcher<GameEntity>[] MovableMatchers = { GameMatcher.Transform, GameMatcher.Movable };
 
     private static readonly IMatcher<GameEntity>[] AnimatedMovableMatchers =
@@ -31,6 +36,16 @@ internal class MovementFeatureCompositionRoot : ICompositionRoot
 
     private static void RegisterSystems(IServiceRegistry serviceRegistry)
     {
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            var getGroup = factory.GetInstance<Func<IMatcher<GameEntity>[], IGroup<GameEntity>>>(Matcher.AllOf);
+            IGroup<GameEntity> group = getGroup(CollisionMatchers);
+
+            var logger = factory.GetInstance<ILogger>();
+
+            return new CollisionSystem(group, logger);
+        });
+
         serviceRegistry.RegisterSingleton(factory =>
         {
             var movement = factory.GetInstance<IMovement>();
