@@ -7,13 +7,16 @@ namespace GameDesktop.CompositionRoots;
 
 internal class GameCompositionRoot : ICompositionRoot
 {
+    private const float TargetFramesPerSecond = 120.0f;
     private const bool IsMouseVisible = true;
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.Register(factory =>
         {
-            Game game = new(factory.GetInstance<ILogger>(), factory.GetInstance<IServiceContainer>())
+            Game game = new(factory.GetInstance<ILogger>(),
+                factory.GetInstance<IServiceContainer>(),
+                TargetFramesPerSecond)
             {
                 IsMouseVisible = IsMouseVisible, Content = { RootDirectory = AppVariable.ContentRootDirectory, }
             };

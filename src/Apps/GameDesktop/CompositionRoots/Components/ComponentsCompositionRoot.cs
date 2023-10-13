@@ -58,7 +58,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     {
         serviceRegistry.RegisterSingleton(_ =>
         {
-            return new TransformComponent { Position = new(16, 20) };
+            return new TransformComponent { Position = new(16, 6) };
         }, "Player");
 
         serviceRegistry.RegisterSingleton(_ =>

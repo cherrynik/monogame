@@ -5,6 +5,8 @@ using Serilog;
 
 namespace Systems;
 
+// Input & Collision systems both have to be fixed execute systems,
+// otherwise it'll lead to the desynchronized behaviour.
 public class CollisionSystem : IFixedExecuteSystem
 {
     private readonly IGroup<GameEntity> _group;
