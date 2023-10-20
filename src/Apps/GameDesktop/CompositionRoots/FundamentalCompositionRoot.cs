@@ -9,7 +9,7 @@ using Services.Math;
 
 namespace GameDesktop.CompositionRoots;
 
-public class FundamentalCompositionRoot : ICompositionRoot
+internal class FundamentalCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {

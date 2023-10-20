@@ -1,5 +1,5 @@
 ﻿using Components;
-using Components.World;
+using Components.Data;
 using Microsoft.Xna.Framework;
 
 public partial class GameEntity
@@ -24,5 +24,10 @@ public partial class GameEntity
     {
         isDrawable = true;
         AddSprite(newSprite: component.Sprite);
+    }
+
+    public void AddRectangleCollision(RectangleCollisionComponent component)
+    {
+        AddRectangleCollision(newSize: component.Size);
     }
 }

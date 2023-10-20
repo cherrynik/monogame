@@ -1,4 +1,5 @@
 ﻿using Components;
+using Components.Data;
 using Entitas;
 using Entitas.Extended;
 using Microsoft.Xna.Framework;

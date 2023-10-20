@@ -1,5 +1,5 @@
 ﻿using Components;
-using Components.World;
+using Components.Data;
 
 namespace Entities;
 
@@ -8,7 +8,8 @@ public class PlayerEntity
     public PlayerEntity(Contexts contexts,
         MovementAnimationComponent movementAnimationComponent,
         TransformComponent transformComponent,
-        CameraComponent cameraComponent)
+        CameraComponent cameraComponent,
+        RectangleCollisionComponent rectangleCollisionComponent)
     {
         GameEntity entity = contexts.game.CreateEntity();
 
@@ -17,6 +18,6 @@ public class PlayerEntity
         entity.AddMovementAnimation(movementAnimationComponent);
         entity.AddTransform(transformComponent);
         entity.AddCamera(cameraComponent);
-        // e.AddRectangleCollision(new Rectangle(0, 0, 16, 16));
+        entity.AddRectangleCollision(rectangleCollisionComponent);
     }
 }

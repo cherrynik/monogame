@@ -7,8 +7,7 @@ using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems;
 
-// TODO: correct fixed execution in the game loop
-public class MovementSystem : IFixedExecuteSystem
+public class MovementSystem : IExecuteSystem
 {
     private readonly IGroup<GameEntity> _group;
     private readonly IMovement _movement;
@@ -21,7 +20,7 @@ public class MovementSystem : IFixedExecuteSystem
         _logger = logger;
     }
 
-    public void FixedExecute(GameTime fixedGameTime)
+    public void Execute(GameTime fixedGameTime)
     {
         try
         {

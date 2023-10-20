@@ -7,14 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Entities\Entities.csproj" />
       <ProjectReference Include="..\External\Entitas.Extended\Entitas.Extended.csproj" />
-      <ProjectReference Include="..\Features.Debugging\Features.Debugging.csproj" />
-      <ProjectReference Include="..\Systems\Systems.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="LightInject" Version="6.6.4" />
+      <ProjectReference Include="..\Systems.Debugging\Systems.Debugging.csproj" />
     </ItemGroup>
 
 </Project>

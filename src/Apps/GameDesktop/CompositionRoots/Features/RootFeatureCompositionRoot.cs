@@ -1,11 +1,12 @@
 ﻿using Features;
 using GameDesktop.CompositionRoots.Components;
+using GameDesktop.CompositionRoots.DebugFeatures;
 using GameDesktop.CompositionRoots.Entities;
 using LightInject;
 
 namespace GameDesktop.CompositionRoots.Features;
 
-public class RootFeatureCompositionRoot : ICompositionRoot
+internal class RootFeatureCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
@@ -23,19 +24,18 @@ public class RootFeatureCompositionRoot : ICompositionRoot
 
         RegisterFeatures(serviceRegistry);
 
-        // Main entry point
-        serviceRegistry.RegisterSingleton<RootFeature>();
+#if DEBUG
+        serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
+#endif
+
+        RegisterEntryPoint(serviceRegistry);
     }
 
-    private static void RegisterFundamental(IServiceRegistry serviceRegistry)
-    {
+    private static void RegisterFundamental(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterFrom<FundamentalCompositionRoot>();
-    }
 
-    private static void RegisterComponents(IServiceRegistry serviceRegistry)
-    {
+    private static void RegisterComponents(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterFrom<ComponentsCompositionRoot>();
-    }
 
     private static void RegisterEntities(IServiceRegistry serviceRegistry)
     {
@@ -50,4 +50,7 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterFrom<CameraFeatureCompositionRoot>();
         serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
     }
+
+    private static void RegisterEntryPoint(IServiceRegistry serviceRegistry) =>
+        serviceRegistry.RegisterSingleton<RootFeature>();
 }

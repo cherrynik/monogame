@@ -9,7 +9,7 @@ using Systems;
 
 namespace GameDesktop.CompositionRoots.Features;
 
-public class InputFeatureCompositionRoot : ICompositionRoot
+internal class InputFeatureCompositionRoot : ICompositionRoot
 {
     private static readonly IMatcher<GameEntity>[] Matchers =
     {

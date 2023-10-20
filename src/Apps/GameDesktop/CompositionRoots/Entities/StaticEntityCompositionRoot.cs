@@ -1,9 +1,10 @@
-﻿using Entities;
+﻿using Components.Data;
+using Entities;
 using LightInject;
 
 namespace GameDesktop.CompositionRoots.Entities;
 
-public class StaticEntityCompositionRoot : ICompositionRoot
+internal class StaticEntityCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
@@ -12,5 +13,8 @@ public class StaticEntityCompositionRoot : ICompositionRoot
 
 
     private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
-        serviceRegistry.RegisterTransient<StaticEntity>();
+        serviceRegistry.RegisterTransient(factory => new StaticEntity(factory.GetInstance<Contexts>(),
+            factory.GetInstance<TransformComponent>("StaticEntity"),
+            factory.GetInstance<SpriteComponent>(),
+            factory.GetInstance<RectangleCollisionComponent>()));
 }

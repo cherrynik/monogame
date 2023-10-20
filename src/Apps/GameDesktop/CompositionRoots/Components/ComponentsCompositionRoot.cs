@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Components;
-using Components.World;
+using Components.Data;
 using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
@@ -10,7 +10,7 @@ using Services.Math;
 
 namespace GameDesktop.CompositionRoots.Components;
 
-public class ComponentsCompositionRoot : ICompositionRoot
+internal class ComponentsCompositionRoot : ICompositionRoot
 {
     private static readonly string PlayerSpriteSheetPath = System.IO.Path.Join(
         Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
@@ -22,6 +22,7 @@ public class ComponentsCompositionRoot : ICompositionRoot
         RegisterMovementAnimationComponent(serviceRegistry);
         RegisterCameraComponent(serviceRegistry);
         RegisterTransformComponent(serviceRegistry);
+        RegisterRectangleCollisionComponent(serviceRegistry);
     }
 
     private static void RegisterSpriteComponent(IServiceRegistry serviceRegistry)
@@ -55,6 +56,19 @@ public class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterTransformComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterTransient<TransformComponent>();
+        serviceRegistry.RegisterSingleton(_ =>
+        {
+            return new TransformComponent { Position = new(316, 116) };
+        }, "Player");
+
+        serviceRegistry.RegisterSingleton(_ =>
+        {
+            return new TransformComponent { Position = new(300, 100) };
+        }, "StaticEntity");
+    }
+
+    private static void RegisterRectangleCollisionComponent(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterTransient(_ => new RectangleCollisionComponent { Size = new Rectangle(0, 0, 8, 8) });
     }
 }

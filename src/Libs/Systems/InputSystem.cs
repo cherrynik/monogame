@@ -1,13 +1,15 @@
 ﻿using Entitas;
+using Entitas.Extended;
 using Microsoft.Xna.Framework;
 using Serilog;
 using Services.Input;
-using IExecuteSystem = Entitas.Extended.IExecuteSystem;
 
 namespace Systems;
 
+// Input & Collision systems both have to be fixed execute systems,
+// otherwise it'll lead to the desynchronized behaviour.
 [Input]
-public class InputSystem : IExecuteSystem
+public class InputSystem : IFixedExecuteSystem
 {
     private readonly IInputScanner _inputScanner;
     private readonly IGroup<GameEntity> _group;
@@ -20,7 +22,7 @@ public class InputSystem : IExecuteSystem
         _logger = logger;
     }
 
-    public void Execute(GameTime gameTime)
+    public void FixedExecute(GameTime gameTime)
     {
         try
         {

@@ -1,9 +1,9 @@
-﻿using Entitas;
+﻿using Components.Tags;
 using Microsoft.Xna.Framework;
 using MonoGame.Aseprite.Sprites;
 using Services.Math;
 
-namespace Components;
+namespace Components.Data;
 
 public class MovementAnimationComponent : DrawableComponent
 {

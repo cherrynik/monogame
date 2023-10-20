@@ -1,4 +1,5 @@
-﻿using Features;
+﻿using System;
+using Features;
 using GameDesktop.CompositionRoots.Features;
 using LightInject;
 using Microsoft.Xna.Framework;
@@ -9,17 +10,21 @@ namespace GameDesktop;
 
 public class Game : Microsoft.Xna.Framework.Game
 {
+    private readonly float _targetTimeStep;
+
     private readonly ILogger _logger;
     private readonly IServiceContainer _container;
 
     private Entitas.Extended.Feature _rootFeature;
     private SpriteBatch _spriteBatch;
+    private float _accumulatedTime;
 
 
-    public Game(ILogger logger, IServiceContainer container)
+    public Game(ILogger logger, IServiceContainer container, float targetFramesPerSecond)
     {
         _logger = logger;
         _container = container;
+        _targetTimeStep = 1 / targetFramesPerSecond;
 
         _logger.ForContext<Game>().Verbose("ctor");
     }
@@ -75,11 +80,19 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose("Ended");
     }
 
-    private void FixedUpdate(GameTime fixedGameTime) => _rootFeature.FixedExecute(fixedGameTime);
+    // maybe fixed update is incorrect. needs review in the future
+    private void FixedUpdate(GameTime gameTime) => _rootFeature.FixedExecute(gameTime);
 
     protected override void Update(GameTime gameTime)
     {
-        FixedUpdate(gameTime);
+        _accumulatedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        while (_accumulatedTime >= _targetTimeStep)
+        {
+            FixedUpdate(gameTime);
+
+            _accumulatedTime -= _targetTimeStep;
+        }
 
         base.Update(gameTime);
         _rootFeature.Execute(gameTime);
