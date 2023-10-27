@@ -37,7 +37,7 @@ internal class InputFeatureCompositionRoot : ICompositionRoot
 
             var logger = factory.GetInstance<ILogger>();
 
-            return new InputSystem(inputScanner, group, logger);
+            return new Systems.InputSystem(inputScanner, group, logger);
         });
     }
 

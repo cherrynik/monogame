@@ -1,30 +1,81 @@
 ﻿using System;
-using Features;
 using GameDesktop.CompositionRoots.Features;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Scellecs.Morpeh;
 using Serilog;
 
 namespace GameDesktop;
 
+public struct MyTransformComponent : IComponent
+{
+    public Vector2 Position;
+    public Vector2 Velocity;
+}
+
+public static class MyPlayerEntity
+{
+    public static Entity Create(World @in)
+    {
+        Entity e = @in.CreateEntity();
+        e.AddComponent<MyTransformComponent>();
+        return e;
+    }
+}
+
+// public interface IMovement
+// {
+// public void Move(Vector2 at);
+// }
+
+public class InputSystem : ISystem
+{
+    public World World { get; set; }
+
+    private readonly Filter _filter;
+
+    public InputSystem(World world /*, IMovement movement */)
+    {
+        World = world;
+        _filter = world.Filter.With<MyTransformComponent>().Build();
+    }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnAwake()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnUpdate(float deltaTime)
+    {
+        foreach (Entity e in _filter)
+        {
+            var c = e.GetComponent<MyTransformComponent>();
+            c.Position += c.Velocity;
+        }
+    }
+}
+
 public class Game : Microsoft.Xna.Framework.Game
 {
-    private readonly float _targetTimeStep;
-
     private readonly ILogger _logger;
     private readonly IServiceContainer _container;
 
-    private Entitas.Extended.Feature _rootFeature;
     private SpriteBatch _spriteBatch;
-    private float _accumulatedTime;
+
+    // https://gafferongames.com/post/fix_your_timestep/
+    // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
 
 
-    public Game(ILogger logger, IServiceContainer container, float targetFramesPerSecond)
+    public Game(ILogger logger, IServiceContainer container)
     {
         _logger = logger;
         _container = container;
-        _targetTimeStep = 1 / targetFramesPerSecond;
 
         _logger.ForContext<Game>().Verbose("ctor");
     }
@@ -36,9 +87,6 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _container.RegisterSingleton(_ => new SpriteBatch(GraphicsDevice));
         _spriteBatch = _container.GetInstance<SpriteBatch>();
-        // GraphicsDeviceManager.PreferredBackBufferWidth = 640;
-        // GraphicsDeviceManager.PreferredBackBufferHeight = 480;
-        // GraphicsDeviceManager.ApplyChanges();
 
         _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
 
@@ -49,16 +97,21 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void LoadContent()
     {
+        // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
+        // todo: pass tru logger & log places
+        // TODO: Error handling
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
         _container.RegisterFrom<RootFeatureCompositionRoot>();
 
-        _rootFeature = _container.GetInstance<RootFeature>();
+        World world = World.Create();
+        var e = world.CreateEntity();
+        // var e = MyPlayerEntity.Create(@in: world);
+        // var e2 = MyPlayerEntity.Create(@in: world);
 
-        // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
-        // todo: pass tru logger & log places
-        // TODO: Error handling
-        _rootFeature.Initialize();
+        // _logger.ForContext<Game>().Verbose(e.ToString()!);
+        // _logger.ForContext<Game>().Verbose(e2.ToString()!);
+
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
 
@@ -80,33 +133,26 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose("Ended");
     }
 
-    // maybe fixed update is incorrect. needs review in the future
-    private void FixedUpdate(GameTime gameTime) => _rootFeature.FixedExecute(gameTime);
+    private void FixedUpdate(GameTime gameTime)
+    {
+    }
 
     protected override void Update(GameTime gameTime)
     {
-        _accumulatedTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-        while (_accumulatedTime >= _targetTimeStep)
-        {
-            FixedUpdate(gameTime);
-
-            _accumulatedTime -= _targetTimeStep;
-        }
+        FixedUpdate(gameTime);
 
         base.Update(gameTime);
-        _rootFeature.Execute(gameTime);
 
         LateUpdate(gameTime);
     }
 
-    private void LateUpdate(GameTime gameTime) => _rootFeature.LateExecute(gameTime);
+    private void LateUpdate(GameTime gameTime)
+    {
+    }
 
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        _rootFeature.Draw(gameTime, _spriteBatch);
 
         base.Draw(gameTime);
     }

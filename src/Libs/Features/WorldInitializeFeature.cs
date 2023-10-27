@@ -1,14 +1,14 @@
-﻿using Entities;
+﻿using Entitas.Entities;
 using Services.Factories;
 
 namespace Features;
 
 public class WorldInitializeFeature : Entitas.Extended.Feature
 {
-    private readonly AbstractFactory<PlayerEntity> _playerFactory;
+    private readonly AbstractFactory<Player> _playerFactory;
     private readonly AbstractFactory<StaticEntity> _staticEntityFactory;
 
-    public WorldInitializeFeature(AbstractFactory<PlayerEntity> playerFactory,
+    public WorldInitializeFeature(AbstractFactory<Player> playerFactory,
         AbstractFactory<StaticEntity> staticEntityFactory)
     {
         _playerFactory = playerFactory;

@@ -1,11 +1,11 @@
-﻿using Components;
-using Components.Data;
+﻿using Entitas.Components;
+using Entitas.Components.Data;
 
-namespace Entities;
+namespace Entitas.Entities;
 
-public class PlayerEntity
+public class Player
 {
-    public PlayerEntity(Contexts contexts,
+    public Player(Contexts contexts,
         MovementAnimationComponent movementAnimationComponent,
         TransformComponent transformComponent,
         CameraComponent cameraComponent,

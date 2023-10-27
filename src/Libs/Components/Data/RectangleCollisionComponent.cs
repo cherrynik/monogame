@@ -1,9 +1,20 @@
-﻿using Entitas;
-using Microsoft.Xna.Framework;
-
-namespace Components.Data;
-
-public class RectangleCollisionComponent : IComponent
+﻿namespace Entitas.Components.Data
 {
-    public Rectangle Size;
+    using Microsoft.Xna.Framework;
+
+    public class RectangleCollisionComponent : IComponent
+    {
+        public Rectangle Size;
+    }
+}
+
+namespace Components.Data
+{
+    using Scellecs.Morpeh;
+    using System.Drawing;
+
+    public struct RectangleCollisionComponent : IComponent
+    {
+        public Rectangle Rectangle;
+    }
 }

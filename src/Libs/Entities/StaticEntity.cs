@@ -1,8 +1,8 @@
-﻿using Components;
-using Components.Data;
+﻿using Entitas.Components;
+using Entitas.Components.Data;
 using Microsoft.Xna.Framework;
 
-namespace Entities;
+namespace Entitas.Entities;
 
 public class StaticEntity
 {

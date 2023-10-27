@@ -57,16 +57,15 @@
     <PackageReference Include="MonoGame.Aseprite" Version="5.1.0" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
+    <PackageReference Include="Scellecs.Morpeh" Version="2023.1.0" />
     <PackageReference Include="Sentry" Version="3.39.1" />
     <PackageReference Include="Sentry.Serilog" Version="3.39.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="7.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="Stateless" Version="5.13.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Components\Components.csproj" />
-    <ProjectReference Include="..\..\Libs\External\Entitas.Extended\Entitas.Extended.csproj" />
     <ProjectReference Include="..\..\Libs\Features\Features.csproj" />
     <ProjectReference Include="..\..\Libs\Services\Services.csproj" />
   </ItemGroup>

@@ -15,8 +15,7 @@ internal class GameCompositionRoot : ICompositionRoot
         serviceRegistry.Register(factory =>
         {
             Game game = new(factory.GetInstance<ILogger>(),
-                factory.GetInstance<IServiceContainer>(),
-                TargetFramesPerSecond)
+                factory.GetInstance<IServiceContainer>())
             {
                 IsMouseVisible = IsMouseVisible, Content = { RootDirectory = AppVariable.ContentRootDirectory, }
             };

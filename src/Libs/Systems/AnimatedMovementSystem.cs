@@ -1,9 +1,6 @@
-﻿using Components;
-using Components.Data;
+﻿using Entitas.Components.Data;
 using Entitas;
-using Entitas.Extended;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Serilog;
 using Services.Math;

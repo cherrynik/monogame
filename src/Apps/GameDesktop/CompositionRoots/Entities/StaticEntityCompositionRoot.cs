@@ -1,5 +1,5 @@
-﻿using Components.Data;
-using Entities;
+﻿using Entitas.Components.Data;
+using Entitas.Entities;
 using LightInject;
 
 namespace GameDesktop.CompositionRoots.Entities;

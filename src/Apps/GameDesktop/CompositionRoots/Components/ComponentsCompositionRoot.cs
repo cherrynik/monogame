@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Components;
-using Components.Data;
+using Entitas.Components.Data;
 using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
