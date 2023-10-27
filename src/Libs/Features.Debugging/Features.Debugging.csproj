@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\External\Entitas.Extended\Entitas.Extended.csproj" />
       <ProjectReference Include="..\Systems.Debugging\Systems.Debugging.csproj" />
     </ItemGroup>
 

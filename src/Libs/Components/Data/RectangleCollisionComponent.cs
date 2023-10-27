@@ -1,12 +1,12 @@
-﻿namespace Entitas.Components.Data
-{
-    using Microsoft.Xna.Framework;
-
-    public class RectangleCollisionComponent : IComponent
-    {
-        public Rectangle Size;
-    }
-}
+﻿// namespace Entitas.Components.Data
+// {
+//     using Microsoft.Xna.Framework;
+//
+//     public class RectangleCollisionComponent : IComponent
+//     {
+//         public Rectangle Size;
+//     }
+// }
 
 namespace Components.Data
 {

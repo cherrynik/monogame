@@ -1,5 +1,9 @@
 ﻿using System;
-using GameDesktop.CompositionRoots.Features;
+using Components.Data;
+using Components.Render.Animation;
+using Components.Render.Static;
+using Components.Tags;
+using Entities;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -102,12 +106,21 @@ public class Game : Microsoft.Xna.Framework.Game
         // TODO: Error handling
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
-        _container.RegisterFrom<RootFeatureCompositionRoot>();
+        // _container.RegisterFrom<RootFeatureCompositionRoot>();
 
         World world = World.Create();
-        var e = world.CreateEntity();
-        // var e = MyPlayerEntity.Create(@in: world);
-        // var e2 = MyPlayerEntity.Create(@in: world);
+        var player = new PlayerEntity(new PlayerComponent(),
+            new MovableComponent(),
+            new TransformComponent(),
+            new RectangleCollisionComponent(),
+            new MovementAnimationsComponent(),
+            new CharacterAnimatorComponent());
+        player.Create(@in: world);
+
+        var dummy = new DummyEntity(new TransformComponent(),
+            new SpriteComponent(),
+            new RectangleCollisionComponent());
+        dummy.Create(@in: world);
 
         // _logger.ForContext<Game>().Verbose(e.ToString()!);
         // _logger.ForContext<Game>().Verbose(e2.ToString()!);

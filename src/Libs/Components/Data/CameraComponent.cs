@@ -1,14 +1,10 @@
-﻿using Entitas;
-using Entitas.CodeGeneration.Attributes;
-using Microsoft.Xna.Framework;
-
-namespace Entitas.Components.Data;
-
-[Unique]
-public class CameraComponent : IComponent
-{
-    public Rectangle Size;
-}
+﻿// namespace Entitas.Components.Data;
+//
+// [Unique]
+// public class CameraComponent : IComponent
+// {
+//     public Rectangle Size;
+// }
 
 // Camera is a system but a component,
 // So, the system would have a target as a dependency,

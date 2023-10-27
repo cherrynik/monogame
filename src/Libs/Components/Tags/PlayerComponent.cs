@@ -1,9 +1,9 @@
-﻿namespace Entitas.Components.Tags
-{
-    public class PlayerComponent : IComponent
-    {
-    }
-}
+﻿// namespace Entitas.Components.Tags
+// {
+//     public class PlayerComponent : IComponent
+//     {
+//     }
+// }
 
 namespace Components.Tags
 {
