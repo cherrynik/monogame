@@ -1,15 +1,7 @@
-﻿// namespace Entitas.Components.Tags
-// {
-//     public class MovableComponent : IComponent
-//     {
-//     }
-// }
+﻿using Scellecs.Morpeh;
 
-namespace Components.Tags
+namespace Components.Tags;
+
+public struct MovableComponent : IComponent
 {
-    using Scellecs.Morpeh;
-
-    public struct MovableComponent : IComponent
-    {
-    }
 }

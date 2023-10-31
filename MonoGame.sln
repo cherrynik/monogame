@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Features.Debugging", "src\L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scellecs.Morpeh.Extended", "src\Libs\External\Scellecs.Morpeh.Extended\Scellecs.Morpeh.Extended.csproj", "{5D45D0B2-6B53-4487-B9C2-3F685B2EC1E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests.Entities", "src\UnitTests\UnitTests.Entities\UnitTests.Entities.csproj", "{57F0A75A-5AD6-4187-9DC6-3CBA44333061}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +84,10 @@ Global
 		{5D45D0B2-6B53-4487-B9C2-3F685B2EC1E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D45D0B2-6B53-4487-B9C2-3F685B2EC1E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D45D0B2-6B53-4487-B9C2-3F685B2EC1E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57F0A75A-5AD6-4187-9DC6-3CBA44333061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F0A75A-5AD6-4187-9DC6-3CBA44333061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F0A75A-5AD6-4187-9DC6-3CBA44333061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F0A75A-5AD6-4187-9DC6-3CBA44333061}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5E3B6238-A92E-4703-8527-1C2410D7906A} = {F5258F7E-B0BA-466D-8CF8-4DAB84722BE3}
@@ -98,5 +104,6 @@ Global
 		{7AD01EBF-370B-4F35-9AEC-172A889D643F} = {7AE4DC46-59EB-4F69-9240-C7363F0778AA}
 		{8E6812DB-F7B8-411D-BD15-4BCFA2BF6C28} = {7AE4DC46-59EB-4F69-9240-C7363F0778AA}
 		{5D45D0B2-6B53-4487-B9C2-3F685B2EC1E4} = {FE9CE932-6F98-4455-A80F-2A0CDB6DB46E}
+		{57F0A75A-5AD6-4187-9DC6-3CBA44333061} = {FC0D63F3-9B01-46BD-9435-A7E26C905825}
 	EndGlobalSection
 EndGlobal

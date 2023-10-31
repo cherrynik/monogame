@@ -1,15 +1,7 @@
-﻿// namespace Entitas.Components.Tags
-// {
-//     public class PlayerComponent : IComponent
-//     {
-//     }
-// }
+﻿using Scellecs.Morpeh;
 
-namespace Components.Tags
+namespace Components.Tags;
+
+public struct PlayerComponent : IComponent
 {
-    using Scellecs.Morpeh;
-
-    public struct PlayerComponent : IComponent
-    {
-    }
 }
