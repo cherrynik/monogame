@@ -6,7 +6,7 @@ namespace Systems.Debugging;
 
 public class EntitiesList : ISystem
 {
-    public World World { get; set; }
+    public World World { set; get; }
 
     public EntitiesList(World world)
     {

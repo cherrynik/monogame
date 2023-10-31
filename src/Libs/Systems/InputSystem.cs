@@ -11,8 +11,9 @@ public class InputSystem : ISystem
     private readonly IInputScanner _inputScanner;
     public World World { get; set; }
 
-    public InputSystem(IInputScanner inputScanner)
+    public InputSystem(World world, IInputScanner inputScanner)
     {
+        World = world;
         _inputScanner = inputScanner;
     }
 
@@ -36,6 +37,5 @@ public class InputSystem : ISystem
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 }

@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Serilog;
+using Services.Movement;
 using Systems;
 using Systems.Debugging;
 using Systems.Render;
@@ -80,8 +81,8 @@ public class Game : Microsoft.Xna.Framework.Game
         dummy.Create(@in: world);
 
         _systemsGroup = world.CreateSystemsGroup();
-        _systemsGroup.AddSystem(new InputSystem(new KeyboardInput()));
-        _systemsGroup.AddSystem(new MovementSystem());
+        _systemsGroup.AddSystem(new InputSystem(world, new KeyboardInput()));
+        _systemsGroup.AddSystem(new MovementSystem(world, new SimpleMovement()));
 
         _renderSystemsGroup = world.CreateSystemsGroup();
         _renderSystemsGroup.AddSystem(new RenderCharacterMovementSystem(world, _spriteBatch));

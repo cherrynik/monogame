@@ -78,7 +78,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
             return new MovementAnimationsComponent(getAnimations(PlayerSpriteSheetPath, "Idle"),
                 getAnimations(PlayerSpriteSheetPath, "Walking"));
-        });
+        }, "PlayerEntity");
     }
 
 
@@ -102,6 +102,12 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterCharacterAnimatorComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new CharacterAnimatorComponent(), "PlayerEntity");
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            var movementAnimations = factory.GetInstance<MovementAnimationsComponent>("PlayerEntity");
+            const Direction facing = Direction.Right;
+
+            return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing]);
+        }, "PlayerEntity");
     }
 }

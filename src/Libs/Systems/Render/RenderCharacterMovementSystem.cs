@@ -16,7 +16,6 @@ public class RenderCharacterMovementSystem : ISystem
     public RenderCharacterMovementSystem(World world, SpriteBatch spriteBatch)
     {
         _spriteBatch = spriteBatch;
-        World = world;
     }
 
     public void OnAwake()
@@ -36,8 +35,8 @@ public class RenderCharacterMovementSystem : ISystem
             ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
             ref var transform = ref e.GetComponent<TransformComponent>();
 
-            animator.Animation?.Draw(_spriteBatch, transform.Position);
-            animator.Animation?.Update(deltaTime);
+            animator.Animation.Draw(_spriteBatch, transform.Position);
+            animator.Animation.Update(deltaTime);
 
             AnimatedSprite animation;
 

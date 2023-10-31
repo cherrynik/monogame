@@ -3,18 +3,25 @@ using Components;
 using Components.Data;
 using Components.Tags;
 using Scellecs.Morpeh;
+using Services;
+using Services.Movement;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Systems;
 
 public class MovementSystem : ISystem
 {
+    private readonly IMovement _movement;
     public World World { get; set; }
 
+    public MovementSystem(World world, IMovement movement)
+    {
+        World = world;
+        _movement = movement;
+    }
 
     public void OnAwake()
     {
-        Console.WriteLine((nameof(MovementSystem), "OnAwake"));
     }
 
     public void OnUpdate(float deltaTime)
@@ -28,15 +35,7 @@ public class MovementSystem : ISystem
         {
             ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
 
-            // Might be moved up too, but too simple for now
-            if (transform.Velocity.Equals(Vector2.Zero))
-            {
-                continue;
-            }
-
-            transform.Position += Vector2.Normalize(transform.Velocity);
-
-            // Console.WriteLine((nameof(MovementSystem), "OnUpdate", deltaTime, transform.Position));
+            transform.Position = _movement.Move(from: transform.Position, by: transform.Velocity);
         }
     }
 
