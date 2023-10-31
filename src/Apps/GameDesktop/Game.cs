@@ -1,9 +1,9 @@
-﻿using System;
-using Components.Data;
+﻿using Components.Data;
 using Components.Render.Animation;
 using Components.Render.Static;
 using Components.Tags;
 using Entities;
+using GameDesktop.CompositionRoots.Features;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,59 +12,6 @@ using Serilog;
 
 namespace GameDesktop;
 
-public struct MyTransformComponent : IComponent
-{
-    public Vector2 Position;
-    public Vector2 Velocity;
-}
-
-public static class MyPlayerEntity
-{
-    public static Entity Create(World @in)
-    {
-        Entity e = @in.CreateEntity();
-        e.AddComponent<MyTransformComponent>();
-        return e;
-    }
-}
-
-// public interface IMovement
-// {
-// public void Move(Vector2 at);
-// }
-
-public class InputSystem : ISystem
-{
-    public World World { get; set; }
-
-    private readonly Filter _filter;
-
-    public InputSystem(World world /*, IMovement movement */)
-    {
-        World = world;
-        _filter = world.Filter.With<MyTransformComponent>().Build();
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnAwake()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void OnUpdate(float deltaTime)
-    {
-        foreach (Entity e in _filter)
-        {
-            var c = e.GetComponent<MyTransformComponent>();
-            c.Position += c.Velocity;
-        }
-    }
-}
-
 public class Game : Microsoft.Xna.Framework.Game
 {
     private readonly ILogger _logger;
@@ -72,9 +19,11 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private SpriteBatch _spriteBatch;
 
+    // TODO: Frames updating
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
 
+    // TODO: Nez has cool physics & other projects to use in the project as deps
 
     public Game(ILogger logger, IServiceContainer container)
     {
@@ -106,20 +55,13 @@ public class Game : Microsoft.Xna.Framework.Game
         // TODO: Error handling
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
-        // _container.RegisterFrom<RootFeatureCompositionRoot>();
+        _container.RegisterFrom<RootFeatureCompositionRoot>();
 
         World world = World.Create();
-        var player = new PlayerEntity(new PlayerComponent(),
-            new MovableComponent(),
-            new TransformComponent(),
-            new RectangleCollisionComponent(),
-            new MovementAnimationsComponent(),
-            new CharacterAnimatorComponent());
+        var player = _container.GetInstance<PlayerEntity>();
         player.Create(@in: world);
 
-        var dummy = new DummyEntity(new TransformComponent(),
-            new SpriteComponent(),
-            new RectangleCollisionComponent());
+        var dummy = _container.GetInstance<DummyEntity>();
         dummy.Create(@in: world);
 
         // _logger.ForContext<Game>().Verbose(e.ToString()!);
