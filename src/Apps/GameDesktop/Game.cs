@@ -4,6 +4,8 @@ using Components.Render.Static;
 using Components.Tags;
 using Entities;
 using GameDesktop.CompositionRoots.Features;
+using ImGuiNET;
+using MonoGame.ImGuiNet;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,9 +19,11 @@ public class Game : Microsoft.Xna.Framework.Game
     private readonly ILogger _logger;
     private readonly IServiceContainer _container;
 
+    private ImGuiRenderer _guiRenderer;
     private SpriteBatch _spriteBatch;
 
     // TODO: Frames updating
+
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
 
@@ -64,9 +68,6 @@ public class Game : Microsoft.Xna.Framework.Game
         var dummy = _container.GetInstance<DummyEntity>();
         dummy.Create(@in: world);
 
-        // _logger.ForContext<Game>().Verbose(e.ToString()!);
-        // _logger.ForContext<Game>().Verbose(e2.ToString()!);
-
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
 
@@ -110,6 +111,14 @@ public class Game : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         base.Draw(gameTime);
+
+#if DEBUG
+        _guiRenderer.BeginLayout(gameTime);
+
+        ImGui.Text("Hi!");
+
+        _guiRenderer.EndLayout();
+#endif
     }
 
     protected override void Dispose(bool disposing)

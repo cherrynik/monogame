@@ -1,6 +1,7 @@
 ﻿using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
+using MonoGame.ImGuiNet;
 using Serilog;
 
 namespace GameDesktop.CompositionRoots;
