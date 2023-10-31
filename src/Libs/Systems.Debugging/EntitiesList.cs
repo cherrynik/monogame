@@ -1,7 +1,7 @@
 ﻿using Components.Data;
 using Scellecs.Morpeh;
 
-namespace Features.Debugging;
+namespace Systems.Debugging;
 
 public class EntitiesList : ISystem
 {
