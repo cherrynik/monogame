@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Serilog;
+using Systems.Debugging;
 
 namespace GameDesktop;
 
@@ -21,6 +22,8 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private ImGuiRenderer _guiRenderer;
     private SpriteBatch _spriteBatch;
+
+    private SystemsGroup _debugSystemsGroup;
 
     // TODO: Frames updating
 
@@ -45,6 +48,9 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.RegisterSingleton(_ => new SpriteBatch(GraphicsDevice));
         _spriteBatch = _container.GetInstance<SpriteBatch>();
 
+        _guiRenderer = new(this);
+        _guiRenderer.RebuildFontAtlas();
+
         _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
 
         base.Initialize();
@@ -67,6 +73,11 @@ public class Game : Microsoft.Xna.Framework.Game
 
         var dummy = _container.GetInstance<DummyEntity>();
         dummy.Create(@in: world);
+
+#if DEBUG
+        _debugSystemsGroup = world.CreateSystemsGroup();
+        _debugSystemsGroup.AddSystem(new EntitiesList(world));
+#endif
 
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
@@ -108,6 +119,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void Draw(GameTime gameTime)
     {
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         base.Draw(gameTime);
@@ -115,7 +127,7 @@ public class Game : Microsoft.Xna.Framework.Game
 #if DEBUG
         _guiRenderer.BeginLayout(gameTime);
 
-        ImGui.Text("Hi!");
+        _debugSystemsGroup.Update(deltaTime);
 
         _guiRenderer.EndLayout();
 #endif

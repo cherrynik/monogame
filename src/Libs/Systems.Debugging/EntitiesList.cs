@@ -23,6 +23,7 @@ public class EntitiesList : ISystem
 
         foreach (Entity e in filter)
         {
+            ImGui.Text(e.ToString());
         }
     }
 
