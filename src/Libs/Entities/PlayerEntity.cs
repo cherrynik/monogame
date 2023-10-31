@@ -38,21 +38,21 @@ namespace Entities
     // For now, Imma keep it as it is.
     public class PlayerEntity
     {
-        private readonly PlayerComponent _player;
+        private readonly InputMovableComponent _inputMovable;
         private readonly MovableComponent _movable;
         private readonly TransformComponent _transform;
         private readonly RectangleCollisionComponent _rectangleCollision;
         private readonly MovementAnimationsComponent _movementAnimations;
         private readonly CharacterAnimatorComponent _characterAnimator;
 
-        public PlayerEntity(PlayerComponent player,
+        public PlayerEntity(InputMovableComponent inputMovable,
             MovableComponent movable,
             TransformComponent transform,
             RectangleCollisionComponent rectangleCollision,
             MovementAnimationsComponent movementAnimations,
             CharacterAnimatorComponent characterAnimator)
         {
-            _player = player;
+            _inputMovable = inputMovable;
             _movable = movable;
             _transform = transform;
             _rectangleCollision = rectangleCollision;
@@ -73,7 +73,7 @@ namespace Entities
 
         private void AddTags(Entity e)
         {
-            e.AddComponent(_player);
+            e.AddComponent(_inputMovable);
             e.AddComponent(_movable);
         }
 

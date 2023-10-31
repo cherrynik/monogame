@@ -2,6 +2,6 @@
 
 namespace Components.Tags;
 
-public struct PlayerComponent : IComponent
+public struct InputMovableComponent : IComponent
 {
 }

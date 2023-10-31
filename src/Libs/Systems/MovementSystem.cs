@@ -1,46 +1,46 @@
-﻿// using Entitas;
-// using Entitas.Extended;
-// using Microsoft.Xna.Framework;
-// using Serilog;
-// using Services;
-// using IExecuteSystem = Entitas.Extended.IExecuteSystem;
-//
-// namespace Systems;
-//
-// public class MovementSystem : IExecuteSystem
-// {
-//     private readonly IGroup<GameEntity> _group;
-//     private readonly IMovement _movement;
-//     private readonly ILogger _logger;
-//
-//     public MovementSystem(IMovement movement, IGroup<GameEntity> group, ILogger logger)
-//     {
-//         _group = group;
-//         _movement = movement;
-//         _logger = logger;
-//     }
-//
-//     public void Execute(GameTime fixedGameTime)
-//     {
-//         try
-//         {
-//             GameEntity[] entities = _group.GetEntities();
-//             foreach (GameEntity e in entities)
-//             {
-//                 if (e.transform.Velocity.Equals(Vector2.Zero))
-//                 {
-//                     continue;
-//                 }
-//
-//                 e.transform.Position = _movement.Move(e.transform.Position, e.transform.Velocity);
-//                 _logger.ForContext<MovementSystem>().Verbose(e.transform.Position.ToString()!);
-//             }
-//         }
-//         catch (Exception e)
-//         {
-//             _logger.ForContext<MovementSystem>().Fatal(e.ToString());
-//
-//             throw new Exception(e.Message);
-//         }
-//     }
-// }
+using System.Numerics;
+using Components;
+using Components.Data;
+using Components.Tags;
+using Scellecs.Morpeh;
+using Vector2 = System.Numerics.Vector2;
+
+namespace Systems;
+
+public class MovementSystem : ISystem
+{
+    public World World { get; set; }
+
+
+    public void OnAwake()
+    {
+        Console.WriteLine((nameof(MovementSystem), "OnAwake"));
+    }
+
+    public void OnUpdate(float deltaTime)
+    {
+        Filter filter = World.Filter
+            .With<InputMovableComponent>()
+            .With<TransformComponent>()
+            .Build();
+
+        foreach (Entity e in filter)
+        {
+            ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
+
+            // Might be moved up too, but too simple for now
+            if (transform.Velocity.Equals(Vector2.Zero))
+            {
+                continue;
+            }
+
+            transform.Position += Vector2.Normalize(transform.Velocity);
+
+            // Console.WriteLine((nameof(MovementSystem), "OnUpdate", deltaTime, transform.Position));
+        }
+    }
+
+    public void Dispose()
+    {
+    }
+}

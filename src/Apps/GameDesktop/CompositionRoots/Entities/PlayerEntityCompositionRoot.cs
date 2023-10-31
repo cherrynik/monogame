@@ -15,7 +15,7 @@ internal class PlayerEntityCompositionRoot : ICompositionRoot
 
     private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterTransient(factory => new PlayerEntity(
-            factory.GetInstance<PlayerComponent>(),
+            factory.GetInstance<InputMovableComponent>(),
             factory.GetInstance<MovableComponent>(),
             factory.GetInstance<TransformComponent>("PlayerEntity"),
             factory.GetInstance<RectangleCollisionComponent>(),

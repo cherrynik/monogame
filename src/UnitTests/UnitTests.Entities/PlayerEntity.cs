@@ -27,7 +27,7 @@ public class Tests
     public void PlayerEntity_IsCreatedInTheWorld()
     {
         // TODO: Use mocks for deps
-        Entity playerEntity = new PlayerEntity(new PlayerComponent(),
+        Entity playerEntity = new PlayerEntity(new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new RectangleCollisionComponent(),
@@ -45,7 +45,7 @@ public class Tests
     [Test]
     public void PlayerEntity_HasComponents()
     {
-        Entity playerEntity = new PlayerEntity(new PlayerComponent(),
+        Entity playerEntity = new PlayerEntity(new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new RectangleCollisionComponent(),
@@ -56,7 +56,7 @@ public class Tests
         {
             _world.TryGetEntity(playerEntity.ID, out Entity result);
 
-            Assert.That(result.Has<PlayerComponent>(), Is.True);
+            Assert.That(result.Has<InputMovableComponent>(), Is.True);
             Assert.That(result.Has<MovableComponent>(), Is.True);
             // ...
         }

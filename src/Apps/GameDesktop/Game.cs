@@ -5,13 +5,16 @@ using Components.Tags;
 using Entities;
 using GameDesktop.CompositionRoots.Features;
 using ImGuiNET;
+using Implementations;
 using MonoGame.ImGuiNet;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Serilog;
+using Systems;
 using Systems.Debugging;
+using Systems.Render;
 
 namespace GameDesktop;
 
@@ -23,6 +26,8 @@ public class Game : Microsoft.Xna.Framework.Game
     private ImGuiRenderer _guiRenderer;
     private SpriteBatch _spriteBatch;
 
+    private SystemsGroup _systemsGroup;
+    private SystemsGroup _renderSystemsGroup;
     private SystemsGroup _debugSystemsGroup;
 
     // TODO: Frames updating
@@ -30,7 +35,7 @@ public class Game : Microsoft.Xna.Framework.Game
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
 
-    // TODO: Nez has cool physics & other projects to use in the project as deps
+    // TODO: Nez has cool physics & other projects libs to use as deps
 
     public Game(ILogger logger, IServiceContainer container)
     {
@@ -74,6 +79,13 @@ public class Game : Microsoft.Xna.Framework.Game
         var dummy = _container.GetInstance<DummyEntity>();
         dummy.Create(@in: world);
 
+        _systemsGroup = world.CreateSystemsGroup();
+        _systemsGroup.AddSystem(new InputSystem(new KeyboardInput()));
+        _systemsGroup.AddSystem(new MovementSystem());
+
+        _renderSystemsGroup = world.CreateSystemsGroup();
+        _renderSystemsGroup.AddSystem(new RenderCharacterMovementSystem(world, _spriteBatch));
+
 #if DEBUG
         _debugSystemsGroup = world.CreateSystemsGroup();
         _debugSystemsGroup.AddSystem(new EntitiesList(world));
@@ -100,21 +112,14 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose("Ended");
     }
 
-    private void FixedUpdate(GameTime gameTime)
-    {
-    }
-
     protected override void Update(GameTime gameTime)
     {
-        FixedUpdate(gameTime);
+        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _systemsGroup.FixedUpdate(deltaTime);
 
-        base.Update(gameTime);
+        _systemsGroup.Update(deltaTime);
 
-        LateUpdate(gameTime);
-    }
-
-    private void LateUpdate(GameTime gameTime)
-    {
+        _systemsGroup.LateUpdate(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime)
@@ -122,13 +127,13 @@ public class Game : Microsoft.Xna.Framework.Game
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        base.Draw(gameTime);
+        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _renderSystemsGroup.Update(deltaTime);
+        _spriteBatch.End();
 
 #if DEBUG
         _guiRenderer.BeginLayout(gameTime);
-
         _debugSystemsGroup.Update(deltaTime);
-
         _guiRenderer.EndLayout();
 #endif
     }

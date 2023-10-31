@@ -1,5 +1,6 @@
 using MonoGame.Aseprite.Sprites;
 using Scellecs.Morpeh;
+using Services.Math;
 
 namespace Components.Render.Animation;
 
@@ -7,5 +8,6 @@ namespace Components.Render.Animation;
 // So does an animation
 public struct CharacterAnimatorComponent : IComponent
 {
+    public Direction Facing;
     public AnimatedSprite Animation;
 }

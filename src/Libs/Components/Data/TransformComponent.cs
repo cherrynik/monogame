@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Numerics;
 using Scellecs.Morpeh;
 
 namespace Components.Data;

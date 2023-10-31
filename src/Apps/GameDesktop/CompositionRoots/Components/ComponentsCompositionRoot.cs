@@ -51,7 +51,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterPlayerMovementComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new PlayerComponent());
+        serviceRegistry.RegisterSingleton(_ => new InputMovableComponent());
         serviceRegistry.RegisterSingleton(_ => new MovableComponent());
     }
 
