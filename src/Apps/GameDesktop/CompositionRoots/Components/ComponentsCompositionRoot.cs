@@ -35,6 +35,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterTagComponents(IServiceRegistry serviceRegistry)
     {
+        RegisterCameraComponent(serviceRegistry);
         RegisterPlayerMovementComponent(serviceRegistry);
     }
 
@@ -47,6 +48,11 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     {
         RegisterMovementAnimationsComponent(serviceRegistry);
         RegisterCharacterAnimatorComponent(serviceRegistry);
+    }
+
+    private static void RegisterCameraComponent(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterSingleton(_ => new CameraComponent());
     }
 
     private static void RegisterPlayerMovementComponent(IServiceRegistry serviceRegistry)

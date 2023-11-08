@@ -41,6 +41,7 @@ namespace Entities
         private readonly InputMovableComponent _inputMovable;
         private readonly MovableComponent _movable;
         private readonly TransformComponent _transform;
+        private readonly CameraComponent _cameraComponent;
         private readonly RectangleCollisionComponent _rectangleCollision;
         private readonly MovementAnimationsComponent _movementAnimations;
         private readonly CharacterAnimatorComponent _characterAnimator;
@@ -48,6 +49,7 @@ namespace Entities
         public PlayerEntity(InputMovableComponent inputMovable,
             MovableComponent movable,
             TransformComponent transform,
+            CameraComponent cameraComponent,
             RectangleCollisionComponent rectangleCollision,
             MovementAnimationsComponent movementAnimations,
             CharacterAnimatorComponent characterAnimator)
@@ -55,6 +57,7 @@ namespace Entities
             _inputMovable = inputMovable;
             _movable = movable;
             _transform = transform;
+            _cameraComponent = cameraComponent;
             _rectangleCollision = rectangleCollision;
             _movementAnimations = movementAnimations;
             _characterAnimator = characterAnimator;
@@ -73,6 +76,7 @@ namespace Entities
 
         private void AddTags(Entity e)
         {
+            e.AddComponent(_cameraComponent);
             e.AddComponent(_inputMovable);
             e.AddComponent(_movable);
         }

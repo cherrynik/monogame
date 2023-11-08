@@ -28,6 +28,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private SpriteBatch _spriteBatch;
 
     private SystemsGroup _systemsGroup;
+    private SystemsGroup _preRenderSystemsGroup;
     private SystemsGroup _renderSystemsGroup;
     private SystemsGroup _debugSystemsGroup;
 
@@ -84,8 +85,12 @@ public class Game : Microsoft.Xna.Framework.Game
         _systemsGroup.AddSystem(new InputSystem(world, new KeyboardInput()));
         _systemsGroup.AddSystem(new MovementSystem(world, new SimpleMovement()));
 
+        _preRenderSystemsGroup = world.CreateSystemsGroup();
+        _preRenderSystemsGroup.AddSystem(new RenderCharacterMovementSystem(world, _spriteBatch));
+
         _renderSystemsGroup = world.CreateSystemsGroup();
-        _renderSystemsGroup.AddSystem(new RenderCharacterMovementSystem(world, _spriteBatch));
+        _renderSystemsGroup.AddSystem(new CameraSystem(world,
+            new FollowingCamera(_spriteBatch, new Viewport(0, 0, 800, 480))));
 
 #if DEBUG
         _debugSystemsGroup = world.CreateSystemsGroup();
@@ -129,6 +134,8 @@ public class Game : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        // I guess, pre-render, pre-ui systems would go in update, to avoid frames skipping
+        _preRenderSystemsGroup.Update(deltaTime);
         _renderSystemsGroup.Update(deltaTime);
         _spriteBatch.End();
 

@@ -30,6 +30,7 @@ public class Tests
         Entity playerEntity = new PlayerEntity(new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
+                new CameraComponent(),
                 new RectangleCollisionComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent())
@@ -48,17 +49,19 @@ public class Tests
         Entity playerEntity = new PlayerEntity(new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
+                new CameraComponent(),
                 new RectangleCollisionComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent())
             .Create(@in: _world);
-
         {
             _world.TryGetEntity(playerEntity.ID, out Entity result);
 
-            Assert.That(result.Has<InputMovableComponent>(), Is.True);
-            Assert.That(result.Has<MovableComponent>(), Is.True);
-            // ...
+            Assert.Multiple(() =>
+            {
+                Assert.That(result.Has<InputMovableComponent>(), Is.True);
+                Assert.That(result.Has<MovableComponent>(), Is.True);
+            });
         }
     }
 }

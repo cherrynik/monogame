@@ -15,6 +15,7 @@ public class RenderCharacterMovementSystem : ISystem
 
     public RenderCharacterMovementSystem(World world, SpriteBatch spriteBatch)
     {
+        World = world;
         _spriteBatch = spriteBatch;
     }
 
@@ -35,28 +36,37 @@ public class RenderCharacterMovementSystem : ISystem
             ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
             ref var transform = ref e.GetComponent<TransformComponent>();
 
-            animator.Animation.Draw(_spriteBatch, transform.Position);
+            // 2. And this one could be in the draw state
+            // animator.Animation.Draw(_spriteBatch, transform.Position);
+
+            // 1. Actually, all of this could be put in the pre-draw
             animator.Animation.Update(deltaTime);
 
-            AnimatedSprite animation;
+            AnimatedSprite animation = GetAnimation(transform, animations, animator);
+            animator.Facing = GetDirection(transform, animator);
 
-            if (transform.Velocity.Equals(Vector2.Zero))
+            if (animator.Animation == animation)
             {
-                animation = animations.IdleAnimations[animator.Facing];
-            }
-            else
-            {
-                animator.Facing = MathUtils.Rad8DirYFlipped(transform.Velocity);
-                animation = animations.WalkingAnimations[animator.Facing];
+                continue;
             }
 
-            if (animator.Animation != animation)
-            {
-                animator.Animation = animation;
-                animator.Animation.Play();
-            }
+            animator.Animation = animation;
+            // .Play() is called in the AnimatedCharactersFactory (on the step of creation),
+            // otherwise, you'd call it manually here.
         }
     }
+
+    private static AnimatedSprite GetAnimation(TransformComponent transform,
+        MovementAnimationsComponent animations,
+        CharacterAnimatorComponent animator) =>
+        transform.Velocity.Equals(Vector2.Zero)
+            ? animations.IdleAnimations[animator.Facing]
+            : animations.WalkingAnimations[animator.Facing];
+
+    private static Direction GetDirection(TransformComponent transform, CharacterAnimatorComponent animator) =>
+        transform.Velocity.Equals(Vector2.Zero)
+            ? animator.Facing
+            : MathUtils.Rad8DirYFlipped(transform.Velocity);
 
     public void Dispose()
     {
