@@ -6,6 +6,7 @@ using Components.Render.Static;
 using Components.Tags;
 using GameDesktop.Resources.Internal;
 using LightInject;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services.Math;
 
@@ -39,6 +40,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         RegisterPlayerMovementComponent(serviceRegistry);
     }
 
+
     private static void RegisterStaticRenderComponents(IServiceRegistry serviceRegistry)
     {
         RegisterSpriteComponent(serviceRegistry);
@@ -52,7 +54,9 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterCameraComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new CameraComponent());
+        serviceRegistry.RegisterSingleton(_ => new Viewport(0, 0, 800, 480), "CameraComponent");
+        serviceRegistry.RegisterSingleton(factory =>
+            new CameraComponent(factory.GetInstance<Viewport>("CameraComponent")));
     }
 
     private static void RegisterPlayerMovementComponent(IServiceRegistry serviceRegistry)

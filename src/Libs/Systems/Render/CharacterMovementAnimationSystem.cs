@@ -1,22 +1,19 @@
 ﻿using System.Numerics;
 using Components.Data;
 using Components.Render.Animation;
-using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Scellecs.Morpeh;
 using Services.Math;
 
 namespace Systems.Render;
 
-public class RenderCharacterMovementSystem : ISystem
+public class CharacterMovementAnimationSystem : ISystem
 {
-    private readonly SpriteBatch _spriteBatch;
     public World World { get; set; }
 
-    public RenderCharacterMovementSystem(World world, SpriteBatch spriteBatch)
+    public CharacterMovementAnimationSystem(World world)
     {
         World = world;
-        _spriteBatch = spriteBatch;
     }
 
     public void OnAwake()

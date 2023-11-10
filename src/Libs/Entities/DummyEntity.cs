@@ -1,66 +1,48 @@
-﻿// namespace Entitas.Entities;
+﻿namespace Entities;
 
-// public class StaticEntity
-// {
-//     public StaticEntity(Contexts contexts,
-//         TransformComponent transformComponent,
-//         SpriteComponent spriteComponent,
-//         RectangleCollisionComponent rectangleCollision)
-//     {
-//         GameEntity e = contexts.game.CreateEntity();
-//
-//         e.AddTransform(transformComponent);
-//         e.AddSprite(spriteComponent);
-//         e.AddRectangleCollision(rectangleCollision);
-//     }
-// }
+using Components.Data;
+using Components.Render.Static;
+using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 
-namespace Entities
+public class DummyEntity
 {
-    using Components.Data;
-    using Components.Render.Static;
-    using Scellecs.Morpeh;
-    using Scellecs.Morpeh.Extended;
+    private readonly TransformComponent _transform;
+    private readonly SpriteComponent _sprite;
+    private readonly RectangleCollisionComponent _rectangleCollision;
 
-    public class DummyEntity
+    public DummyEntity(TransformComponent transform,
+        SpriteComponent sprite,
+        RectangleCollisionComponent rectangleCollision)
     {
-        private readonly TransformComponent _transform;
-        private readonly SpriteComponent _sprite;
-        private readonly RectangleCollisionComponent _rectangleCollision;
+        _transform = transform;
+        _sprite = sprite;
+        _rectangleCollision = rectangleCollision;
+    }
 
-        public DummyEntity(TransformComponent transform,
-            SpriteComponent sprite,
-            RectangleCollisionComponent rectangleCollision)
-        {
-            _transform = transform;
-            _sprite = sprite;
-            _rectangleCollision = rectangleCollision;
-        }
+    public Entity Create(World @in)
+    {
+        Entity e = @in.CreateEntity();
 
-        public Entity Create(World @in)
-        {
-            Entity e = @in.CreateEntity();
+        AddTags(e);
+        AddData(e);
+        AddRender(e);
 
-            AddTags(e);
-            AddData(e);
-            AddRender(e);
+        return e;
+    }
 
-            return e;
-        }
+    private void AddTags(Entity e)
+    {
+    }
 
-        private void AddTags(Entity e)
-        {
-        }
+    private void AddData(Entity e)
+    {
+        e.AddComponent(_transform);
+        e.AddComponent(_rectangleCollision);
+    }
 
-        private void AddData(Entity e)
-        {
-            e.AddComponent(_transform);
-            e.AddComponent(_rectangleCollision);
-        }
-
-        private void AddRender(Entity e)
-        {
-            e.AddComponent(_sprite);
-        }
+    private void AddRender(Entity e)
+    {
+        e.AddComponent(_sprite);
     }
 }

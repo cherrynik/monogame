@@ -18,6 +18,7 @@ internal class GameCompositionRoot : ICompositionRoot
                 factory.GetInstance<IServiceContainer>())
             {
                 IsMouseVisible = IsMouseVisible,
+                IsFixedTimeStep = false,
                 Content = { RootDirectory = AppVariable.ContentRootDirectory, },
             };
 
