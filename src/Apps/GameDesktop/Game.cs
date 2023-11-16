@@ -1,6 +1,5 @@
 ﻿using Components.Data;
 using Entities;
-using FontStashSharp;
 using GameDesktop.CompositionRoots.Features;
 using Implementations;
 using MonoGame.ImGuiNet;
@@ -18,9 +17,111 @@ using Myra.Graphics2D;
 using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.Styles;
+using Scellecs.Morpeh.Extended;
 using Systems.Debugging.Render;
 
 namespace GameDesktop;
+
+public class WorldInitializer : IInitializer
+{
+    public World World { get; set; }
+    private readonly WorldEntity _worldEntity;
+    private readonly PlayerEntity _playerEntity;
+    private readonly DummyEntity _dummyEntity;
+
+    public WorldInitializer(World world,
+        WorldEntity worldEntity,
+        PlayerEntity playerEntity,
+        DummyEntity dummyEntity)
+    {
+        World = world;
+        _worldEntity = worldEntity;
+        _playerEntity = playerEntity;
+        _dummyEntity = dummyEntity;
+    }
+
+    public void OnAwake()
+    {
+        _worldEntity.Create(@in: World);
+        _playerEntity.Create(@in: World);
+        _dummyEntity.Create(@in: World);
+    }
+
+    public void Dispose()
+    {
+    }
+}
+
+public class RenderFeature : Feature
+{
+    public RenderFeature(World world,
+        RenderCharacterMovementAnimationSystem renderCharacterMovementAnimationSystem) :
+        base(world)
+    {
+        Add(renderCharacterMovementAnimationSystem);
+    }
+}
+
+public class PreRenderFeature : Feature
+{
+    public PreRenderFeature(World world,
+        CharacterMovementAnimationSystem characterMovementAnimationSystem,
+        CameraFollowingSystem cameraFollowingSystem) : base(world)
+    {
+        Add(characterMovementAnimationSystem);
+        Add(cameraFollowingSystem);
+    }
+}
+
+public class MovementFeature : Feature
+{
+    public MovementFeature(World world, InputSystem inputSystem, MovementSystem movementSystem) : base(world)
+    {
+        Add(inputSystem);
+        Add(movementSystem);
+    }
+}
+
+public class RootFeature : Feature
+{
+    public RootFeature(World world,
+        WorldInitializer worldInitializer,
+        MovementFeature movementFeature,
+        PreRenderFeature preRenderFeature,
+        RenderFeature renderFeature) : base(world)
+    {
+        Add(worldInitializer);
+        Add(movementFeature);
+        Add(preRenderFeature);
+        // Add(renderFeature);
+    }
+}
+
+public static class MainWorld
+{
+    public static SystemsGroup AddSystems(World @in, InputSystem inputSystem, MovementSystem movementSystem)
+    {
+        SystemsGroup systemsGroup = @in.CreateSystemsGroup();
+
+        // TODO: sort systems if they're on the fixed, regular, or late update
+        // TODO: add visible in viewport in some cache for the future calculations
+
+#if DEBUG
+        systemsGroup.AddSystem(new FrameCounter(@in));
+#endif
+
+        return systemsGroup;
+    }
+
+    public static SystemsGroup AddRenderSystems(World @in, SpriteBatch spriteBatch)
+    {
+        SystemsGroup renderSystemsGroup = @in.CreateSystemsGroup();
+
+        renderSystemsGroup.AddSystem(new RenderCharacterMovementAnimationSystem(@in, spriteBatch));
+
+        return renderSystemsGroup;
+    }
+}
 
 public class Game : Microsoft.Xna.Framework.Game
 {
@@ -31,11 +132,13 @@ public class Game : Microsoft.Xna.Framework.Game
     private SpriteBatch _spriteBatch;
     private Desktop _desktop;
 
-    private SystemsGroup _systemsGroup;
-    private SystemsGroup _renderSystemsGroup;
-    private SystemsGroup _debugSystemsGroup;
+    // private SystemsGroup _systemsGroup;
+    // private SystemsGroup _renderSystemsGroup;
+    // private SystemsGroup _debugSystemsGroup;
+    private RootFeature _rootFeature;
 
     // TODO: Frames updating
+    // TODO: Player position & other things debug showing, input, etc
 
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
@@ -132,39 +235,26 @@ public class Game : Microsoft.Xna.Framework.Game
         // ------
 
         World world = World.Create();
-        var worldEntity = new WorldEntity(new WorldComponent());
-        worldEntity.Create(@in: world);
 
-        var player = _container.GetInstance<PlayerEntity>();
-        player.Create(@in: world);
+        _rootFeature = new RootFeature(world, new WorldInitializer(world,
+                new WorldEntity(new WorldComponent()),
+                _container.GetInstance<PlayerEntity>(),
+                _container.GetInstance<DummyEntity>()),
+            new MovementFeature(world, new InputSystem(world, new KeyboardInput()),
+                new MovementSystem(world, new SimpleMovement())),
+            new PreRenderFeature(world, new CharacterMovementAnimationSystem(world), new CameraFollowingSystem(world)),
+            new RenderFeature(world, new RenderCharacterMovementAnimationSystem(world, _spriteBatch)));
 
-        var dummy = _container.GetInstance<DummyEntity>();
-        dummy.Create(@in: world);
+        _rootFeature.OnAwake();
 
-        _systemsGroup = world.CreateSystemsGroup();
-
-        // TODO: sort if it's on the fixed update, the regular one, or the late one
-        _systemsGroup.AddSystem(new InputSystem(world, new KeyboardInput()));
-        _systemsGroup.AddSystem(new MovementSystem(world, new SimpleMovement()));
-        // TODO: add visible in viewport in some cache for the future calculations
-
-        _systemsGroup.AddSystem(new CharacterMovementAnimationSystem(world));
-        _systemsGroup.AddSystem(new CameraFollowingSystem(world
-            // new FollowingCamera(_spriteBatch, new Viewport(0, 0, 800, 480))
-        ));
-#if DEBUG
-        _systemsGroup.AddSystem(new FrameCounter(world));
-#endif
-
-        // _preRenderSystemsGroup = world.CreateSystemsGroup();
-
-        _renderSystemsGroup = world.CreateSystemsGroup();
-        _renderSystemsGroup.AddSystem(new RenderCharacterMovementAnimationSystem(world, _spriteBatch));
+        // _systemsGroup = MainWorld.AddSystems(@in: world);
+        // _renderSystemsGroup = MainWorld.AddRenderSystems(@in: world, _spriteBatch);
 
 #if DEBUG
-        _debugSystemsGroup = world.CreateSystemsGroup();
-        _debugSystemsGroup.AddSystem(new EntitiesList(world));
-        _debugSystemsGroup.AddSystem(new RenderFramesPerSec(world));
+        // _debugSystemsGroup = world.CreateSystemsGroup();
+        // _debugSystemsGroup.AddSystem(new EntitiesList(world));
+        // _debugSystemsGroup.AddSystem(new RenderFramesPerSec(world));
+
         // _debugSystemsGroup.AddSystem(new FrameCounter(world));
 
         // var pixel = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
@@ -197,11 +287,14 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        _systemsGroup.FixedUpdate(deltaTime);
+        // _systemsGroup.FixedUpdate(deltaTime);
+        _rootFeature.OnFixedUpdate(deltaTime);
 
-        _systemsGroup.Update(deltaTime);
+        // _systemsGroup.Update(deltaTime);
+        _rootFeature.OnUpdate(deltaTime);
 
-        _systemsGroup.LateUpdate(deltaTime);
+        // _systemsGroup.LateUpdate(deltaTime);
+        _rootFeature.OnLateUpdate(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime)
@@ -210,9 +303,12 @@ public class Game : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        // _rootFeature.OnRender(deltaTime, _spriteBatch);
+
         // I guess, pre-render, pre-ui systems would go in update, to avoid frames skipping
         // _preRenderSystemsGroup.Update(deltaTime);
-        _renderSystemsGroup.Update(deltaTime);
+        // _renderSystemsGroup.Update(deltaTime);
         _spriteBatch.End();
 
         // after everything, so, it's drawn on top
@@ -220,7 +316,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
 #if DEBUG
         _guiRenderer.BeginLayout(gameTime);
-        _debugSystemsGroup.Update(deltaTime);
+        // _debugSystemsGroup.Update(deltaTime);
         _guiRenderer.EndLayout();
 #endif
     }

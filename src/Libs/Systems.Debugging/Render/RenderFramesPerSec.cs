@@ -33,3 +33,10 @@ public class RenderFramesPerSec : ISystem
         throw new NotImplementedException();
     }
 }
+
+// TODO: Tiles, save system, understand the fps logic
+// UI Debug: entities inspector, memory graph, fps setter/limiter
+// Testing ECS, workflow cleanup
+// camera zoom, pause, scenes (menu, game), content (mechanics: quests, dialogues, details, tree chopping, etc)
+// optimization, collisions, events, UI styling
+// shaders
