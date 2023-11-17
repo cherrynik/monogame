@@ -18,6 +18,7 @@ using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.Styles;
 using Scellecs.Morpeh.Extended;
+using Systems.Debugging.Render;
 
 namespace GameDesktop;
 
@@ -136,6 +137,7 @@ public class Game : Microsoft.Xna.Framework.Game
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
     private RootFeature _rootFeature;
+    private SystemsGroup _debugSystemsGroup;
 
     public Game(ILogger logger, IServiceContainer container)
     {
@@ -233,8 +235,8 @@ public class Game : Microsoft.Xna.Framework.Game
                 _container.GetInstance<PlayerEntity>(),
                 _container.GetInstance<DummyEntity>()),
             // new MovementFeature(world,
-                new InputSystem(world, new KeyboardInput()),
-                new MovementSystem(world, new SimpleMovement()),
+            new InputSystem(world, new KeyboardInput()),
+            new MovementSystem(world, new SimpleMovement()),
             // ),
             new CharacterMovementAnimationSystem(world),
             new CameraFollowingSystem(world),
@@ -243,12 +245,12 @@ public class Game : Microsoft.Xna.Framework.Game
         _rootFeature.OnAwake();
 
 #if DEBUG
-        // _debugSystemsGroup = world.CreateSystemsGroup();
-        // _debugSystemsGroup.AddSystem(new EntitiesList(world));
-        // _debugSystemsGroup.AddSystem(new RenderFramesPerSec(world));
-
-        // _debugSystemsGroup.AddSystem(new FrameCounter(world));
-
+        _debugSystemsGroup = world.CreateSystemsGroup();
+        _debugSystemsGroup.AddSystem(new EntitiesList(world));
+        _debugSystemsGroup.AddSystem(new RenderFramesPerSec(world));
+        //
+        _debugSystemsGroup.AddSystem(new FrameCounter(world));
+        //
         // var pixel = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1);
         // pixel.SetData(new[] { Color.Gold });
         //
@@ -300,7 +302,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
 #if DEBUG
         _guiRenderer.BeginLayout(gameTime);
-        // _debugSystemsGroup.Update(deltaTime);
+        _debugSystemsGroup.Update(deltaTime);
         _guiRenderer.EndLayout();
 #endif
     }
