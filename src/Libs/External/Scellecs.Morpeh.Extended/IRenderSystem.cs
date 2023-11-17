@@ -1,8 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿namespace Scellecs.Morpeh.Extended;
 
-namespace Scellecs.Morpeh.Extended;
-
-public interface IRenderSystem : ISystem, IInitializer, IDisposable
+public interface IRenderSystem : ISystem
 {
-    void OnRender(float deltaTime, SpriteBatch spriteBatch);
 }

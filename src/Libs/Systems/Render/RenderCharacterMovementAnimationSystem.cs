@@ -4,18 +4,20 @@ using Components.Render.Static;
 using Components.Tags;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 
 namespace Systems.Render;
 
-public class RenderCharacterMovementAnimationSystem : ISystem
+public class RenderCharacterMovementAnimationSystem : IRenderSystem
 {
-    private readonly SpriteBatch _spriteBatch;
     public World World { get; set; }
+    private readonly SpriteBatch _spriteBatch;
+
 
     public RenderCharacterMovementAnimationSystem(World world, SpriteBatch spriteBatch)
     {
-        _spriteBatch = spriteBatch;
         World = world;
+        _spriteBatch = spriteBatch;
     }
 
     public void OnAwake()

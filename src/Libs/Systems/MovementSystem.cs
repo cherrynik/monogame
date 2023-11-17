@@ -36,8 +36,6 @@ public class MovementSystem : ISystem
             ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
 
             transform.Position = _movement.Move(from: transform.Position, by: transform.Velocity);
-            
-            Console.WriteLine(transform.Position);
         }
     }
 

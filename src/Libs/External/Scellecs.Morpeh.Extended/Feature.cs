@@ -2,18 +2,33 @@
 
 namespace Scellecs.Morpeh.Extended;
 
-public abstract class Feature : ISystem
+public abstract class Feature : IRenderSystem, ICleanupSystem, ILateSystem, IFixedSystem
 {
     public World World { get; set; }
 
-    protected SystemsGroup _initializers;
-    protected SystemsGroup _systems;
-    protected SystemsGroup _fixedSystems;
-    protected SystemsGroup _lateSystems;
-    protected SystemsGroup _cleanupSystems;
-    protected SystemsGroup _renderSystems;
+    private readonly SystemsGroup _initializers;
+    private readonly SystemsGroup _systems;
+    private readonly SystemsGroup _fixedSystems;
+    private readonly SystemsGroup _lateSystems;
+    private readonly SystemsGroup _cleanupSystems;
+    private readonly SystemsGroup _renderSystems;
 
-    public Feature(World world)
+    public void OnAwake() => _initializers.Initialize();
+
+    public void OnUpdate(float deltaTime) => _systems.Update(deltaTime);
+
+    public void OnFixedUpdate(float deltaTime) => _fixedSystems.FixedUpdate(deltaTime);
+
+    public void OnLateUpdate(float deltaTime)
+    {
+        _lateSystems.LateUpdate(deltaTime);
+        _cleanupSystems.CleanupUpdate(deltaTime);
+    }
+
+    public void OnRender(float deltaTime) => _renderSystems.Update(deltaTime);
+
+
+    protected Feature(World world)
     {
         World = world;
 
@@ -25,48 +40,42 @@ public abstract class Feature : ISystem
         _renderSystems = world.CreateSystemsGroup();
     }
 
+    protected void Add(Feature feature)
+    {
+        _renderSystems.AddSystem(feature);
+        _cleanupSystems.AddSystem(feature);
+        _lateSystems.AddSystem(feature);
+        _fixedSystems.AddSystem(feature);
+        _systems.AddSystem(feature);
+        _initializers.AddInitializer(feature);
+    }
+
     protected void Add(IInitializer initializer)
     {
-        if (initializer is ICleanupSystem cleanupSystem) _cleanupSystems.AddSystem(cleanupSystem);
-
-        if (initializer is ILateSystem lateSystem) _lateSystems.AddSystem(lateSystem);
-
-        if (initializer is IFixedSystem fixedSystem) _fixedSystems.AddSystem(fixedSystem);
-
-        if (initializer is ISystem system) _systems.AddSystem(system);
-
-        if (initializer is IRenderSystem renderSystem) _renderSystems.AddSystem(renderSystem);
-
-        _initializers.AddInitializer(initializer);
-    }
-
-    public void OnAwake()
-    {
-        _initializers.Initialize();
-    }
-
-    public void OnUpdate(float deltaTime)
-    {
-        _systems.Update(deltaTime);
-    }
-
-    public void OnFixedUpdate(float deltaTime)
-    {
-        _fixedSystems.Update(deltaTime);
-    }
-
-    public void OnLateUpdate(float deltaTime)
-    {
-        _lateSystems.Update(deltaTime);
-    }
-
-    public void OnRender(float deltaTime)
-    {
-        _renderSystems.Update(deltaTime);
+        switch (initializer)
+        {
+            case IRenderSystem renderSystem:
+                _renderSystems.AddSystem(renderSystem);
+                break;
+            case ICleanupSystem cleanupSystem:
+                _cleanupSystems.AddSystem(cleanupSystem);
+                break;
+            case ILateSystem lateSystem:
+                _lateSystems.AddSystem(lateSystem);
+                break;
+            case IFixedSystem fixedSystem:
+                _fixedSystems.AddSystem(fixedSystem);
+                break;
+            case ISystem system:
+                _systems.AddSystem(system);
+                break;
+            default:
+                _initializers.AddInitializer(initializer);
+                break;
+        }
     }
 
     public void Dispose()
     {
-        _cleanupSystems.Dispose();
     }
 }

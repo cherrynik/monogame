@@ -18,7 +18,6 @@ using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.Styles;
 using Scellecs.Morpeh.Extended;
-using Systems.Debugging.Render;
 
 namespace GameDesktop;
 
@@ -55,8 +54,7 @@ public class WorldInitializer : IInitializer
 public class RenderFeature : Feature
 {
     public RenderFeature(World world,
-        RenderCharacterMovementAnimationSystem renderCharacterMovementAnimationSystem) :
-        base(world)
+        RenderCharacterMovementAnimationSystem renderCharacterMovementAnimationSystem) : base(world)
     {
         Add(renderCharacterMovementAnimationSystem);
     }
@@ -75,7 +73,9 @@ public class PreRenderFeature : Feature
 
 public class MovementFeature : Feature
 {
-    public MovementFeature(World world, InputSystem inputSystem, MovementSystem movementSystem) : base(world)
+    public MovementFeature(World world,
+        InputSystem inputSystem,
+        MovementSystem movementSystem) : base(world)
     {
         Add(inputSystem);
         Add(movementSystem);
@@ -86,14 +86,20 @@ public class RootFeature : Feature
 {
     public RootFeature(World world,
         WorldInitializer worldInitializer,
-        MovementFeature movementFeature,
-        PreRenderFeature preRenderFeature,
-        RenderFeature renderFeature) : base(world)
+        // MovementFeature movementFeature,
+        InputSystem inputSystem,
+        MovementSystem movementSystem,
+        CharacterMovementAnimationSystem characterMovementAnimationSystem,
+        CameraFollowingSystem cameraFollowingSystem,
+        RenderCharacterMovementAnimationSystem renderCharacterMovementAnimationSystem) : base(world)
     {
         Add(worldInitializer);
-        Add(movementFeature);
-        Add(preRenderFeature);
-        // Add(renderFeature);
+        // Add(movementFeature);
+        Add(inputSystem);
+        Add(movementSystem);
+        Add(characterMovementAnimationSystem);
+        Add(cameraFollowingSystem);
+        Add(renderCharacterMovementAnimationSystem);
     }
 }
 
@@ -112,15 +118,6 @@ public static class MainWorld
 
         return systemsGroup;
     }
-
-    public static SystemsGroup AddRenderSystems(World @in, SpriteBatch spriteBatch)
-    {
-        SystemsGroup renderSystemsGroup = @in.CreateSystemsGroup();
-
-        renderSystemsGroup.AddSystem(new RenderCharacterMovementAnimationSystem(@in, spriteBatch));
-
-        return renderSystemsGroup;
-    }
 }
 
 public class Game : Microsoft.Xna.Framework.Game
@@ -132,18 +129,13 @@ public class Game : Microsoft.Xna.Framework.Game
     private SpriteBatch _spriteBatch;
     private Desktop _desktop;
 
-    // private SystemsGroup _systemsGroup;
-    // private SystemsGroup _renderSystemsGroup;
-    // private SystemsGroup _debugSystemsGroup;
-    private RootFeature _rootFeature;
-
     // TODO: Frames updating
     // TODO: Player position & other things debug showing, input, etc
+    // TODO: Nez has cool physics & other projects libs to use as deps
 
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
-
-    // TODO: Nez has cool physics & other projects libs to use as deps
+    private RootFeature _rootFeature;
 
     public Game(ILogger logger, IServiceContainer container)
     {
@@ -236,19 +228,19 @@ public class Game : Microsoft.Xna.Framework.Game
 
         World world = World.Create();
 
-        _rootFeature = new RootFeature(world, new WorldInitializer(world,
-                new WorldEntity(new WorldComponent()),
+        _rootFeature = new RootFeature(world,
+            new WorldInitializer(world, new WorldEntity(new WorldComponent()),
                 _container.GetInstance<PlayerEntity>(),
                 _container.GetInstance<DummyEntity>()),
-            new MovementFeature(world, new InputSystem(world, new KeyboardInput()),
-                new MovementSystem(world, new SimpleMovement())),
-            new PreRenderFeature(world, new CharacterMovementAnimationSystem(world), new CameraFollowingSystem(world)),
-            new RenderFeature(world, new RenderCharacterMovementAnimationSystem(world, _spriteBatch)));
+            // new MovementFeature(world,
+                new InputSystem(world, new KeyboardInput()),
+                new MovementSystem(world, new SimpleMovement()),
+            // ),
+            new CharacterMovementAnimationSystem(world),
+            new CameraFollowingSystem(world),
+            new RenderCharacterMovementAnimationSystem(world, _spriteBatch));
 
         _rootFeature.OnAwake();
-
-        // _systemsGroup = MainWorld.AddSystems(@in: world);
-        // _renderSystemsGroup = MainWorld.AddRenderSystems(@in: world, _spriteBatch);
 
 #if DEBUG
         // _debugSystemsGroup = world.CreateSystemsGroup();
@@ -287,13 +279,10 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        // _systemsGroup.FixedUpdate(deltaTime);
         _rootFeature.OnFixedUpdate(deltaTime);
 
-        // _systemsGroup.Update(deltaTime);
         _rootFeature.OnUpdate(deltaTime);
 
-        // _systemsGroup.LateUpdate(deltaTime);
         _rootFeature.OnLateUpdate(deltaTime);
     }
 
@@ -303,12 +292,7 @@ public class Game : Microsoft.Xna.Framework.Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-        // _rootFeature.OnRender(deltaTime, _spriteBatch);
-
-        // I guess, pre-render, pre-ui systems would go in update, to avoid frames skipping
-        // _preRenderSystemsGroup.Update(deltaTime);
-        // _renderSystemsGroup.Update(deltaTime);
+        _rootFeature.OnRender(deltaTime);
         _spriteBatch.End();
 
         // after everything, so, it's drawn on top
