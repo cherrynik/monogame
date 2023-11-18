@@ -2,10 +2,11 @@
 
 namespace Scellecs.Morpeh.Extended;
 
-public abstract class Feature : IRenderSystem, ICleanupSystem, ILateSystem, IFixedSystem
+public abstract class Feature
 {
     public World World { get; set; }
 
+    private readonly List<Feature> _features = new();
     private readonly SystemsGroup _initializers;
     private readonly SystemsGroup _systems;
     private readonly SystemsGroup _fixedSystems;
@@ -13,20 +14,45 @@ public abstract class Feature : IRenderSystem, ICleanupSystem, ILateSystem, IFix
     private readonly SystemsGroup _cleanupSystems;
     private readonly SystemsGroup _renderSystems;
 
-    public void OnAwake() => _initializers.Initialize();
+    public void OnAwake()
+    {
+        _initializers.Initialize();
 
-    public void OnUpdate(float deltaTime) => _systems.Update(deltaTime);
+        foreach (Feature feature in _features) feature._initializers.Initialize();
+    }
 
-    public void OnFixedUpdate(float deltaTime) => _fixedSystems.FixedUpdate(deltaTime);
+    public virtual void OnUpdate(float deltaTime)
+    {
+        _systems.Update(deltaTime);
 
-    public void OnLateUpdate(float deltaTime)
+        foreach (Feature feature in _features) feature._systems.Update(deltaTime);
+    }
+
+    public virtual void OnFixedUpdate(float deltaTime)
+    {
+        _fixedSystems.FixedUpdate(deltaTime);
+
+        foreach (Feature feature in _features) feature._fixedSystems.FixedUpdate(deltaTime);
+    }
+
+    public virtual void OnLateUpdate(float deltaTime)
     {
         _lateSystems.LateUpdate(deltaTime);
         _cleanupSystems.CleanupUpdate(deltaTime);
+
+        foreach (Feature feature in _features)
+        {
+            feature._lateSystems.LateUpdate(deltaTime);
+            feature._cleanupSystems.CleanupUpdate(deltaTime);
+        }
     }
 
-    public void OnRender(float deltaTime) => _renderSystems.Update(deltaTime);
+    public virtual void OnRender(float deltaTime)
+    {
+        _renderSystems.Update(deltaTime);
 
+        foreach (Feature feature in _features) feature._renderSystems.Update(deltaTime);
+    }
 
     protected Feature(World world)
     {
@@ -40,15 +66,7 @@ public abstract class Feature : IRenderSystem, ICleanupSystem, ILateSystem, IFix
         _renderSystems = world.CreateSystemsGroup();
     }
 
-    protected void Add(Feature feature)
-    {
-        _renderSystems.AddSystem(feature);
-        _cleanupSystems.AddSystem(feature);
-        _lateSystems.AddSystem(feature);
-        _fixedSystems.AddSystem(feature);
-        _systems.AddSystem(feature);
-        _initializers.AddInitializer(feature);
-    }
+    protected void Add(Feature feature) => _features.Add(feature);
 
     protected void Add(IInitializer initializer)
     {

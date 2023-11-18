@@ -87,20 +87,15 @@ public class RootFeature : Feature
 {
     public RootFeature(World world,
         WorldInitializer worldInitializer,
-        // MovementFeature movementFeature,
-        InputSystem inputSystem,
-        MovementSystem movementSystem,
-        CharacterMovementAnimationSystem characterMovementAnimationSystem,
-        CameraFollowingSystem cameraFollowingSystem,
-        RenderCharacterMovementAnimationSystem renderCharacterMovementAnimationSystem) : base(world)
+        MovementFeature movementFeature,
+        PreRenderFeature preRenderFeature,
+        RenderFeature renderFeature
+    ) : base(world)
     {
         Add(worldInitializer);
-        // Add(movementFeature);
-        Add(inputSystem);
-        Add(movementSystem);
-        Add(characterMovementAnimationSystem);
-        Add(cameraFollowingSystem);
-        Add(renderCharacterMovementAnimationSystem);
+        Add(movementFeature);
+        Add(preRenderFeature);
+        Add(renderFeature);
     }
 }
 
@@ -234,13 +229,17 @@ public class Game : Microsoft.Xna.Framework.Game
             new WorldInitializer(world, new WorldEntity(new WorldComponent()),
                 _container.GetInstance<PlayerEntity>(),
                 _container.GetInstance<DummyEntity>()),
-            // new MovementFeature(world,
-            new InputSystem(world, new KeyboardInput()),
-            new MovementSystem(world, new SimpleMovement()),
-            // ),
-            new CharacterMovementAnimationSystem(world),
-            new CameraFollowingSystem(world),
-            new RenderCharacterMovementAnimationSystem(world, _spriteBatch));
+            new MovementFeature(world,
+                new InputSystem(world, new KeyboardInput()),
+                new MovementSystem(world, new SimpleMovement())
+            ),
+            new PreRenderFeature(world,
+                new CharacterMovementAnimationSystem(world),
+                new CameraFollowingSystem(world)
+            ),
+            new RenderFeature(world,
+                new RenderCharacterMovementAnimationSystem(world, _spriteBatch))
+        );
 
         _rootFeature.OnAwake();
 
