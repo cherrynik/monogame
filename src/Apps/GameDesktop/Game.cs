@@ -132,26 +132,7 @@ public class Game : Microsoft.Xna.Framework.Game
 //         _desktop.Root = grid;
         // ------
 
-        World world = World.Create();
-
-        _rootFeature = new RootFeature(world,
-            new WorldInitializer(world, new WorldEntityFactory(new WorldComponent()),
-                _container.GetInstance<PlayerEntityFactory>(),
-                _container.GetInstance<DummyEntityFactory>()),
-            new MovementFeature(world,
-                new InputSystem(world, new KeyboardInput()),
-                new MovementSystem(world, new SimpleMovement())),
-            new PreRenderFeature(world,
-                new CharacterMovementAnimationSystem(world),
-                new CameraFollowingSystem(world)),
-            new RenderFeature(world,
-                new RenderCharacterMovementAnimationSystem(world, _spriteBatch))
-#if DEBUG
-            ,
-            new DebugFeature(world, new EntitiesList(world), new FrameCounter(world), new RenderFramesPerSec(world),
-                new PivotRenderSystem(world, _spriteBatch, pixel))
-#endif
-        );
+        _rootFeature = _container.GetInstance<RootFeature>();
 
         _rootFeature.OnAwake();
 

@@ -95,7 +95,7 @@ public class Tests
         Assert.That(transform.Velocity.X, Is.EqualTo(0));
         Assert.That(transform.Position.Y, Is.EqualTo(0));
 
-        rootFeature.OnUpdate(16.6f);
+        rootFeature.OnUpdate(.0f);
 
         Assert.That(transform.Velocity.X, Is.EqualTo(1));
         // Assert.That(transform.Position.Y, Is.EqualTo(0));

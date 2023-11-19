@@ -1,6 +1,19 @@
-﻿using LightInject;
+﻿using Components.Data;
+using Entities.Factories.Characters;
+using Entities.Factories.Meta;
+using Features;
+using LightInject;
 using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
+using Implementations;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Scellecs.Morpeh;
+using Services.Movement;
+using Systems;
+using Systems.Debugging;
+using Systems.Debugging.Render;
+using Systems.Render;
 #if DEBUG
 using GameDesktop.CompositionRoots.DebugFeatures;
 #endif
@@ -29,7 +42,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
 #endif
 
-        // RegisterEntryPoint(serviceRegistry);
+        RegisterEntryPoint(serviceRegistry);
     }
 
     private static void RegisterFundamental(IServiceRegistry serviceRegistry) =>
@@ -52,6 +65,37 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         // serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
     }
 
-    // private static void RegisterEntryPoint(IServiceRegistry serviceRegistry) =>
+    private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterSingleton(_ => World.Create());
+
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            Texture2D pixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, 1, 1);
+            pixel.SetData(new[] { Color.Gold });
+
+            return new RootFeature(factory.GetInstance<World>(),
+                new WorldInitializer(factory.GetInstance<World>(), new WorldEntityFactory(new WorldComponent()),
+                    factory.GetInstance<PlayerEntityFactory>(),
+                    factory.GetInstance<DummyEntityFactory>()),
+                new MovementFeature(factory.GetInstance<World>(),
+                    new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
+                    new MovementSystem(factory.GetInstance<World>(), new SimpleMovement())),
+                new PreRenderFeature(factory.GetInstance<World>(),
+                    new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
+                    new CameraFollowingSystem(factory.GetInstance<World>())),
+                new RenderFeature(factory.GetInstance<World>(),
+                    new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
+                        factory.GetInstance<SpriteBatch>()))
+#if DEBUG
+                ,
+                new DebugFeature(factory.GetInstance<World>(), new EntitiesList(factory.GetInstance<World>()),
+                    new FrameCounter(factory.GetInstance<World>()),
+                    new RenderFramesPerSec(factory.GetInstance<World>()),
+                    new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel))
+#endif
+            );
+        });
+    }
     // serviceRegistry.RegisterSingleton<RootFeature>();
 }
