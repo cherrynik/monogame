@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Libs\Entities\Entities.csproj" />
+      <ProjectReference Include="..\..\Libs\Features\Features.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,16 +1,25 @@
+using System.Numerics;
 using Components.Data;
 using Components.Render.Animation;
 using Components.Tags;
-using Entities;
-using Entities.Factories;
 using Entities.Factories.Characters;
+using Entities.Factories.Meta;
+using Features;
+using Implementations;
+using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
+using Services.Movement;
+using Systems;
 
 namespace UnitTests.Entities;
 
+public class MockKeyboardInput : IInputScanner
+{
+    public Vector2 GetDirection() => new(1, 1);
+}
+
 public class Tests
 {
-    // TODO: Systems test
     private World _world;
 
     [SetUp]
@@ -24,7 +33,7 @@ public class Tests
     {
         _world.Dispose();
     }
-    
+
     [Test]
     public void PlayerEntity_IsCreatedInTheWorld()
     {
@@ -65,5 +74,30 @@ public class Tests
                 Assert.That(result.Has<MovableComponent>(), Is.True);
             });
         }
+    }
+
+    [Test]
+    public void WorldSystemAndEntityWorkTogether()
+    {
+        var rootFeature = new RootFeature(_world,
+            new WorldInitializer(_world, new WorldEntityFactory(new WorldComponent()),
+                new PlayerEntityFactory(new InputMovableComponent(), new MovableComponent(), new TransformComponent(),
+                    new CameraComponent(new Viewport(0, 0, 640, 480)), new RectangleCollisionComponent()),
+                new DummyEntityFactory(new TransformComponent(), new RectangleCollisionComponent())),
+            new MovementFeature(_world, new InputSystem(_world, new MockKeyboardInput()),
+                new MovementSystem(_world, new SimpleMovement())));
+
+        rootFeature.OnAwake();
+
+        var player = _world.Filter.With<InputMovableComponent>().Build().First();
+        ref var transform = ref player.GetComponent<TransformComponent>();
+
+        Assert.That(transform.Velocity.X, Is.EqualTo(0));
+        Assert.That(transform.Position.Y, Is.EqualTo(0));
+
+        rootFeature.OnUpdate(16.6f);
+
+        Assert.That(transform.Velocity.X, Is.EqualTo(1));
+        // Assert.That(transform.Position.Y, Is.EqualTo(0));
     }
 }

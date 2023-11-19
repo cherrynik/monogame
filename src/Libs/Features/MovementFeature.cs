@@ -1,16 +1,16 @@
-﻿// using Systems;
-//
-// namespace Features;
-//
-// public sealed class MovementFeature : Entitas.Extended.Feature
-// {
-//     public MovementFeature(
-//         CollisionSystem collisionSystem,
-//         MovementSystem movementSystem,
-//         AnimatedMovementSystem animatedMovementSystem)
-//     {
-//         Add(collisionSystem);
-//         Add(movementSystem);
-//         Add(animatedMovementSystem);
-//     }
-// }
+﻿using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
+using Systems;
+
+namespace Features;
+
+public class MovementFeature : Feature
+{
+    public MovementFeature(World world,
+        InputSystem inputSystem,
+        MovementSystem movementSystem) : base(world)
+    {
+        Add(inputSystem);
+        Add(movementSystem);
+    }
+}

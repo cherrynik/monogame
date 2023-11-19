@@ -1,9 +1,7 @@
-﻿using System.Numerics;
-using Components.Data;
-using Entities;
-using Entities.Factories;
+﻿using Components.Data;
 using Entities.Factories.Characters;
 using Entities.Factories.Meta;
+using Features;
 using GameDesktop.CompositionRoots.Features;
 using ImGuiNET;
 using Implementations;
@@ -18,118 +16,10 @@ using Systems;
 using Systems.Debugging;
 using Systems.Render;
 using Myra;
-using Myra.Graphics2D;
-using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
-using Myra.Graphics2D.UI.Styles;
-using Scellecs.Morpeh.Extended;
 using Systems.Debugging.Render;
-using Vector2 = System.Numerics.Vector2;
 
 namespace GameDesktop;
-
-public class WorldInitializer : IInitializer
-{
-    public World World { get; set; }
-    private readonly WorldEntityFactory _worldEntityFactory;
-    private readonly PlayerEntityFactory _playerEntityFactory;
-    private readonly DummyEntityFactory _dummyEntityFactory;
-
-    public WorldInitializer(World world,
-        WorldEntityFactory worldEntityFactory,
-        PlayerEntityFactory playerEntityFactory,
-        DummyEntityFactory dummyEntityFactory)
-    {
-        World = world;
-        _worldEntityFactory = worldEntityFactory;
-        _playerEntityFactory = playerEntityFactory;
-        _dummyEntityFactory = dummyEntityFactory;
-    }
-
-    public void OnAwake()
-    {
-        _worldEntityFactory.CreateEntity(@in: World);
-        _playerEntityFactory.CreateEntity(@in: World);
-        _dummyEntityFactory.CreateEntity(@in: World);
-    }
-
-    public void Dispose()
-    {
-    }
-}
-
-public class RenderFeature : Feature
-{
-    public RenderFeature(World world,
-        RenderCharacterMovementAnimationSystem renderCharacterMovementAnimationSystem) : base(world)
-    {
-        Add(renderCharacterMovementAnimationSystem);
-    }
-}
-
-public class PreRenderFeature : Feature
-{
-    public PreRenderFeature(World world,
-        CharacterMovementAnimationSystem characterMovementAnimationSystem,
-        CameraFollowingSystem cameraFollowingSystem) : base(world)
-    {
-        Add(characterMovementAnimationSystem);
-        Add(cameraFollowingSystem);
-    }
-}
-
-public class MovementFeature : Feature
-{
-    public MovementFeature(World world,
-        InputSystem inputSystem,
-        MovementSystem movementSystem) : base(world)
-    {
-        Add(inputSystem);
-        Add(movementSystem);
-    }
-}
-
-public class DebugFeature : Feature
-{
-    public DebugFeature(World world,
-        EntitiesList entitiesList,
-        FrameCounter frameCounter,
-        RenderFramesPerSec renderFramesPerSec, PivotRenderSystem pivotRenderSystem) : base(world)
-    {
-        Add(entitiesList);
-        Add(frameCounter);
-        Add(renderFramesPerSec);
-    }
-}
-
-public class RootFeature : Feature
-{
-    public RootFeature(World world,
-        WorldInitializer worldInitializer,
-        MovementFeature movementFeature,
-        PreRenderFeature preRenderFeature,
-        RenderFeature renderFeature
-    ) : base(world)
-    {
-        Add(worldInitializer);
-        Add(movementFeature);
-        Add(preRenderFeature);
-        Add(renderFeature);
-    }
-
-#if DEBUG
-    public RootFeature(World world,
-        WorldInitializer worldInitializer,
-        MovementFeature movementFeature,
-        PreRenderFeature preRenderFeature,
-        RenderFeature renderFeature,
-        DebugFeature debugFeature
-    ) : this(world, worldInitializer, movementFeature, preRenderFeature, renderFeature)
-    {
-        Add(debugFeature);
-    }
-#endif
-}
 
 public class Game : Microsoft.Xna.Framework.Game
 {

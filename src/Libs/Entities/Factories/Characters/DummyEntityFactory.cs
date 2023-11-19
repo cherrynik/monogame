@@ -12,12 +12,17 @@ public class DummyEntityFactory : EntityFactory
     private readonly RectangleCollisionComponent _rectangleCollision;
 
     public DummyEntityFactory(TransformComponent transform,
-        SpriteComponent sprite,
         RectangleCollisionComponent rectangleCollision)
     {
         _transform = transform;
-        _sprite = sprite;
         _rectangleCollision = rectangleCollision;
+    }
+
+    public DummyEntityFactory(TransformComponent transform,
+        SpriteComponent sprite,
+        RectangleCollisionComponent rectangleCollision) : this(transform, rectangleCollision)
+    {
+        _sprite = sprite;
     }
 
     protected override void AddTags(Entity e)

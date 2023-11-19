@@ -25,15 +25,25 @@ public class PlayerEntityFactory : EntityFactory
         MovableComponent movable,
         TransformComponent transform,
         CameraComponent cameraComponent,
-        RectangleCollisionComponent rectangleCollision,
-        MovementAnimationsComponent movementAnimations,
-        CharacterAnimatorComponent characterAnimator)
+        RectangleCollisionComponent rectangleCollision
+    )
     {
         _inputMovable = inputMovable;
         _movable = movable;
         _transform = transform;
         _cameraComponent = cameraComponent;
         _rectangleCollision = rectangleCollision;
+    }
+
+    public PlayerEntityFactory(InputMovableComponent inputMovable,
+        MovableComponent movable,
+        TransformComponent transform,
+        CameraComponent cameraComponent,
+        RectangleCollisionComponent rectangleCollision,
+        MovementAnimationsComponent movementAnimations,
+        CharacterAnimatorComponent characterAnimator) : this(inputMovable, movable, transform, cameraComponent,
+        rectangleCollision)
+    {
         _movementAnimations = movementAnimations;
         _characterAnimator = characterAnimator;
     }
