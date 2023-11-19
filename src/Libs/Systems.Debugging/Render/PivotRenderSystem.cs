@@ -1,12 +1,12 @@
-﻿using System.Drawing;
-using Components.Data;
+﻿using Components.Data;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 using Color = Microsoft.Xna.Framework.Color;
 
 namespace Systems.Debugging.Render;
 
-public class PivotRenderSystem : ISystem
+public class PivotRenderSystem : IRenderSystem
 {
     private readonly SpriteBatch _spriteBatch;
     private readonly Texture2D _pixel;

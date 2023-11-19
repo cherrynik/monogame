@@ -2,6 +2,8 @@ using Components.Data;
 using Components.Render.Animation;
 using Components.Tags;
 using Entities;
+using Entities.Factories;
+using Entities.Factories.Characters;
 using Scellecs.Morpeh;
 
 namespace UnitTests.Entities;
@@ -27,14 +29,14 @@ public class Tests
     public void PlayerEntity_IsCreatedInTheWorld()
     {
         // TODO: Use mocks for deps
-        Entity playerEntity = new PlayerEntity(new InputMovableComponent(),
+        Entity playerEntity = new PlayerEntityFactory(new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
                 new RectangleCollisionComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent())
-            .Create(@in: _world);
+            .CreateEntity(@in: _world);
 
         {
             _world.TryGetEntity(playerEntity.ID, out Entity result);
@@ -46,14 +48,14 @@ public class Tests
     [Test]
     public void PlayerEntity_HasComponents()
     {
-        Entity playerEntity = new PlayerEntity(new InputMovableComponent(),
+        Entity playerEntity = new PlayerEntityFactory(new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
                 new RectangleCollisionComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent())
-            .Create(@in: _world);
+            .CreateEntity(@in: _world);
         {
             _world.TryGetEntity(playerEntity.ID, out Entity result);
 

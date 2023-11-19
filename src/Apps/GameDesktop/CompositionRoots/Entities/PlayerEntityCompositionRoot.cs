@@ -2,6 +2,8 @@
 using Components.Render.Animation;
 using Components.Tags;
 using Entities;
+using Entities.Factories;
+using Entities.Factories.Characters;
 using LightInject;
 
 namespace GameDesktop.CompositionRoots.Entities;
@@ -14,7 +16,7 @@ internal class PlayerEntityCompositionRoot : ICompositionRoot
     }
 
     private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
-        serviceRegistry.RegisterTransient(factory => new PlayerEntity(
+        serviceRegistry.RegisterTransient(factory => new PlayerEntityFactory(
             factory.GetInstance<InputMovableComponent>(),
             factory.GetInstance<MovableComponent>(),
             factory.GetInstance<TransformComponent>("PlayerEntity"),

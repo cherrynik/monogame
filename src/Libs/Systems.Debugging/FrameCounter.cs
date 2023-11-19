@@ -5,7 +5,7 @@ namespace Systems.Debugging;
 
 public class FrameCounter : ISystem
 {
-    private const float UpdateFrequencyInSec = .01f;
+    private const float UpdateFrequencyInSec = .02f;
     private float _elapsedTime;
     private int _framesCount;
 

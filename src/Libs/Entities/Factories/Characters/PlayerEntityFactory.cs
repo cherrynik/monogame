@@ -1,18 +1,17 @@
-﻿using Components.Render.Animation;
+﻿using Components.Data;
+using Components.Render.Animation;
+using Components.Tags;
+using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
 
-namespace Entities;
-
-using Scellecs.Morpeh;
-using Components.Tags;
-using Components.Data;
+namespace Entities.Factories.Characters;
 
 // TODO: Might be good, if we create a base Entity class, and derive from that.
 // Which will contain components list, it might be easier then
 // to debug entities and their components with ImGui.
 // But also, for the factory, ig, the view of the entities class will change.
 // For now, Imma keep it as it is.
-public class PlayerEntity
+public class PlayerEntityFactory : EntityFactory
 {
     private readonly InputMovableComponent _inputMovable;
     private readonly MovableComponent _movable;
@@ -22,7 +21,7 @@ public class PlayerEntity
     private readonly MovementAnimationsComponent _movementAnimations;
     private readonly CharacterAnimatorComponent _characterAnimator;
 
-    public PlayerEntity(InputMovableComponent inputMovable,
+    public PlayerEntityFactory(InputMovableComponent inputMovable,
         MovableComponent movable,
         TransformComponent transform,
         CameraComponent cameraComponent,
@@ -39,31 +38,20 @@ public class PlayerEntity
         _characterAnimator = characterAnimator;
     }
 
-    public Entity Create(World @in)
-    {
-        Entity e = @in.CreateEntity();
-
-        AddTags(e);
-        AddData(e);
-        AddRender(e);
-
-        return e;
-    }
-
-    private void AddTags(Entity e)
+    protected override void AddTags(Entity e)
     {
         e.AddComponent(_cameraComponent);
         e.AddComponent(_inputMovable);
         e.AddComponent(_movable);
     }
 
-    private void AddData(Entity e)
+    protected override void AddData(Entity e)
     {
         e.AddComponent(_transform);
         e.AddComponent(_rectangleCollision);
     }
 
-    private void AddRender(Entity e)
+    protected override void AddRender(Entity e)
     {
         e.AddComponent(_movementAnimations);
         e.AddComponent(_characterAnimator);

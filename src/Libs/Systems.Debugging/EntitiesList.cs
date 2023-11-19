@@ -1,10 +1,11 @@
 ﻿using Components.Data;
 using ImGuiNET;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging;
 
-public class EntitiesList : ISystem
+public class EntitiesList : IRenderSystem
 {
     public World World { set; get; }
 
@@ -21,11 +22,11 @@ public class EntitiesList : ISystem
     {
         Filter filter = World.Filter.With<TransformComponent>().Build();
 
-        ImGui.Begin("Entities");
+        ImGui.Begin("World");
 
-        foreach (Entity e in filter)
+        if (ImGui.CollapsingHeader("Entities"))
         {
-            ImGui.Text(e.ToString());
+            foreach (Entity e in filter) ImGui.Text(e.ToString());
         }
 
         ImGui.End();

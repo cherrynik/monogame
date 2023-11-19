@@ -1,6 +1,8 @@
 ﻿using Components.Data;
 using Components.Render.Static;
 using Entities;
+using Entities.Factories;
+using Entities.Factories.Characters;
 using LightInject;
 
 namespace GameDesktop.CompositionRoots.Entities;
@@ -14,7 +16,7 @@ internal class StaticEntityCompositionRoot : ICompositionRoot
 
 
     private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
-        serviceRegistry.RegisterTransient(factory => new DummyEntity(
+        serviceRegistry.RegisterTransient(factory => new DummyEntityFactory(
             factory.GetInstance<TransformComponent>("DummyEntity"),
             factory.GetInstance<SpriteComponent>(),
             factory.GetInstance<RectangleCollisionComponent>()));

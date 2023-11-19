@@ -1,10 +1,11 @@
 ﻿using Components.Data;
 using ImGuiNET;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging.Render;
 
-public class RenderFramesPerSec : ISystem
+public class RenderFramesPerSec : IRenderSystem
 {
     public World World { get; set; }
 

@@ -9,6 +9,7 @@ internal class GameCompositionRoot : ICompositionRoot
 {
     private const float TargetFramesPerSecond = 120.0f;
     private const bool IsMouseVisible = true;
+    private const bool IsFixedTimeStep = false;
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
@@ -18,7 +19,8 @@ internal class GameCompositionRoot : ICompositionRoot
                 factory.GetInstance<IServiceContainer>())
             {
                 IsMouseVisible = IsMouseVisible,
-                IsFixedTimeStep = false,
+                IsFixedTimeStep = IsFixedTimeStep,
+                Window = { Title = "Test" },
                 Content = { RootDirectory = AppVariable.ContentRootDirectory, },
             };
 

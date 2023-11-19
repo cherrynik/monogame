@@ -1,7 +1,9 @@
-﻿using GameDesktop.CompositionRoots.Components;
-using GameDesktop.CompositionRoots.DebugFeatures;
+﻿using LightInject;
+using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
-using LightInject;
+#if DEBUG
+using GameDesktop.CompositionRoots.DebugFeatures;
+#endif
 
 namespace GameDesktop.CompositionRoots.Features;
 
@@ -51,5 +53,5 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
     }
 
     // private static void RegisterEntryPoint(IServiceRegistry serviceRegistry) =>
-        // serviceRegistry.RegisterSingleton<RootFeature>();
+    // serviceRegistry.RegisterSingleton<RootFeature>();
 }
