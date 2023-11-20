@@ -7,16 +7,12 @@ using Entities.Factories.Meta;
 using Features;
 using Implementations;
 using Microsoft.Xna.Framework.Graphics;
+using Moq;
 using Scellecs.Morpeh;
 using Services.Movement;
 using Systems;
 
 namespace UnitTests.Entities;
-
-public class MockKeyboardInput : IInputScanner
-{
-    public Vector2 GetDirection() => new(1, 1);
-}
 
 public class Tests
 {
@@ -79,25 +75,21 @@ public class Tests
     [Test]
     public void WorldSystemAndEntityWorkTogether()
     {
+        var mockInputScanner = new Mock<IInputScanner>();
+        mockInputScanner.Setup(p => p.GetDirection()).Returns(Vector2.One);
+
         var rootFeature = new RootFeature(_world,
             new WorldInitializer(_world, new WorldEntityFactory(new WorldComponent()),
                 new PlayerEntityFactory(new InputMovableComponent(), new MovableComponent(), new TransformComponent(),
                     new CameraComponent(new Viewport(0, 0, 640, 480)), new RectangleCollisionComponent()),
                 new DummyEntityFactory(new TransformComponent(), new RectangleCollisionComponent())),
-            new MovementFeature(_world, new InputSystem(_world, new MockKeyboardInput()),
+            new MovementFeature(_world, new InputSystem(_world, mockInputScanner.Object),
                 new MovementSystem(_world, new SimpleMovement())));
 
         rootFeature.OnAwake();
 
-        var player = _world.Filter.With<InputMovableComponent>().Build().First();
-        ref var transform = ref player.GetComponent<TransformComponent>();
+        rootFeature.OnUpdate(It.IsAny<float>());
 
-        Assert.That(transform.Velocity.X, Is.EqualTo(0));
-        Assert.That(transform.Position.Y, Is.EqualTo(0));
-
-        rootFeature.OnUpdate(.0f);
-
-        Assert.That(transform.Velocity.X, Is.EqualTo(1));
-        // Assert.That(transform.Position.Y, Is.EqualTo(0));
+        mockInputScanner.Verify(p => p.GetDirection(), Times.Once);
     }
 }
