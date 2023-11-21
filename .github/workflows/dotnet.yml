@@ -16,6 +16,7 @@ jobs:
         with: 
           submodules: recursive
           token: ${{ secrets.PAT_TOKEN }}
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
