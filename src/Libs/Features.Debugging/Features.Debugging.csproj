@@ -11,10 +11,4 @@
       <ProjectReference Include="..\Systems.Debugging\Systems.Debugging.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Scellecs.Morpeh">
-        <HintPath>..\..\..\..\..\.nuget\packages\scellecs.morpeh\2023.1.0\lib\netstandard2.1\Scellecs.Morpeh.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 </Project>

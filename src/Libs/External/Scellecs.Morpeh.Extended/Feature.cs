@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-
-namespace Scellecs.Morpeh.Extended;
+﻿namespace Scellecs.Morpeh.Extended;
 
 public abstract class Feature
 {
