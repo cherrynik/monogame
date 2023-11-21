@@ -2,10 +2,12 @@
 using GameDesktop.CompositionRoots.Features;
 using GameDesktop.Factories;
 using ImGuiNET;
+using JetBrains.Annotations;
 using MonoGame.ImGuiNet;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Myra;
 using Serilog;
 using Myra.Graphics2D.UI;
 
@@ -16,7 +18,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private readonly ILogger _logger;
     private readonly IServiceContainer _container;
 
-    private ImGuiRenderer _guiRenderer;
+    [CanBeNull] private ImGuiRenderer _imGuiRenderer;
     private SpriteBatch _spriteBatch;
     private Desktop _desktop;
 
@@ -39,13 +41,15 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
-        _logger.ForContext<Game>().Verbose("SpriteBatch initialization...");
+        _logger.ForContext<Game>().Warning("Circular dependencies initialization...");
 
-        _container.RegisterSingleton(_ => new SpriteBatch(GraphicsDevice));
-        _spriteBatch = _container.GetInstance<SpriteBatch>();
+        RegisterSpriteBatch();
+        RegisterMyraUI();
+#if DEBUG
+        RegisterImGui();
+#endif
 
-
-        _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
+        _logger.ForContext<Game>().Warning("Circular dependencies initialized");
 
         base.Initialize();
 
@@ -60,13 +64,6 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
         _container.RegisterFrom<RootFeatureCompositionRoot>();
-
-#if DEBUG
-        _guiRenderer = new ImGuiRenderer(this);
-        _guiRenderer.RebuildFontAtlas();
-
-        ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable;
-#endif
 
         // ComboBox
         var combo = new ComboBox();
@@ -132,9 +129,7 @@ public class Game : Microsoft.Xna.Framework.Game
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-#if DEBUG
-        _guiRenderer.BeginLayout(gameTime);
-#endif
+        _imGuiRenderer?.BeginLayout(gameTime);
 
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _rootFeature.OnRender(deltaTime);
@@ -142,9 +137,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _desktop.Render();
 
-#if DEBUG
-        _guiRenderer.EndLayout();
-#endif
+        _imGuiRenderer?.EndLayout();
     }
 
     protected override void Dispose(bool disposing)
@@ -154,5 +147,27 @@ public class Game : Microsoft.Xna.Framework.Game
         base.Dispose(disposing);
 
         _logger.ForContext<Game>().Verbose("Disposed");
+    }
+
+    private void RegisterSpriteBatch()
+    {
+        _container.RegisterSingleton(_ => new SpriteBatch(GraphicsDevice));
+        _spriteBatch = _container.GetInstance<SpriteBatch>();
+    }
+
+    private void RegisterMyraUI() => MyraEnvironment.Game = this;
+
+    private void RegisterImGui()
+    {
+        _container.RegisterSingleton(factory =>
+        {
+            ImGuiRenderer imGuiRenderer = new(factory.GetInstance<Game>());
+            imGuiRenderer.RebuildFontAtlas();
+            return imGuiRenderer;
+        });
+
+        _imGuiRenderer = _container.GetInstance<ImGuiRenderer>();
+
+        ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable;
     }
 }

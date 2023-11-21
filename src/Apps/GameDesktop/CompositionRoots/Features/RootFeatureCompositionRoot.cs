@@ -8,7 +8,6 @@ using GameDesktop.CompositionRoots.Entities;
 using Implementations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.ImGuiNet;
 using Myra;
 using Myra.Graphics2D.UI;
 using Scellecs.Morpeh;
@@ -70,6 +69,9 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
     private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
     {
+        // var serviceRegistration = (Game)((PerContainerLifetime)serviceRegistry.AvailableServices.First(x => x.ServiceType == typeof(Game)).Lifetime).GetInstance((args, scope) => new object(), new Scope(new ServiceContainer()), Array.Empty<object>());
+        // serviceRegistry.RegisterSingleton(factory => new ImGuiRenderer(factory.GetInstance<Game>()));
+
         // UI
         serviceRegistry.RegisterSingleton(_ =>
         {

@@ -1,6 +1,8 @@
-﻿using GameDesktop.Resources.Internal;
+﻿using System.Linq;
+using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
+using MonoGame.ImGuiNet;
 using Myra;
 using Serilog;
 
@@ -14,7 +16,7 @@ internal class GameCompositionRoot : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.Register(factory =>
+        serviceRegistry.RegisterSingleton(factory =>
         {
             Game game = new(factory.GetInstance<ILogger>(),
                 factory.GetInstance<IServiceContainer>())
@@ -23,9 +25,6 @@ internal class GameCompositionRoot : ICompositionRoot
                 IsFixedTimeStep = IsFixedTimeStep,
                 Content = { RootDirectory = AppVariable.ContentRootDirectory, },
             };
-
-            // TODO: Put somewhere else?
-            MyraEnvironment.Game = game;
 
             // Hack. Resolving cycle dependency issue (fundamental architecture)
             // Implicitly adds itself in the game services container.

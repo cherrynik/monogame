@@ -14,8 +14,6 @@ internal class DebugRootFeatureCompositionRoot : ICompositionRoot
 
     private static void RegisterSystems(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(factory => new ImGuiRenderer(factory.GetInstance<Game>()));
-
         // serviceRegistry.RegisterSingleton(factory =>
         // {
             // return new DrawRectangleCollisionComponentsSystem(factory.GetInstance<ILogger>());
