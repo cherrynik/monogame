@@ -8,6 +8,9 @@ using GameDesktop.CompositionRoots.Entities;
 using Implementations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.ImGuiNet;
+using Myra;
+using Myra.Graphics2D.UI;
 using Scellecs.Morpeh;
 using Services.Movement;
 using Systems;
@@ -67,6 +70,28 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
     private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
     {
+        // UI
+        serviceRegistry.RegisterSingleton(_ =>
+        {
+            var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
+
+            grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+            grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+
+            return grid;
+        });
+
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            Desktop desktop = new();
+            desktop.Root = factory.GetInstance<Grid>();
+
+            return desktop;
+        });
+
+        // ECS
         serviceRegistry.RegisterSingleton(_ => World.Create());
 
         serviceRegistry.RegisterSingleton(factory =>

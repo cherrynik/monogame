@@ -1,23 +1,13 @@
-﻿using Components.Data;
-using Entities.Factories.Characters;
-using Entities.Factories.Meta;
-using Features;
+﻿using Features;
 using GameDesktop.CompositionRoots.Features;
+using GameDesktop.Factories;
 using ImGuiNET;
-using Implementations;
 using MonoGame.ImGuiNet;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Scellecs.Morpeh;
 using Serilog;
-using Services.Movement;
-using Systems;
-using Systems.Debugging;
-using Systems.Render;
-using Myra;
 using Myra.Graphics2D.UI;
-using Systems.Debugging.Render;
 
 namespace GameDesktop;
 
@@ -54,12 +44,6 @@ public class Game : Microsoft.Xna.Framework.Game
         _container.RegisterSingleton(_ => new SpriteBatch(GraphicsDevice));
         _spriteBatch = _container.GetInstance<SpriteBatch>();
 
-#if DEBUG
-        _guiRenderer = new ImGuiRenderer(this);
-        _guiRenderer.RebuildFontAtlas();
-
-        ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable;
-#endif
 
         _logger.ForContext<Game>().Verbose("SpriteBatch initialized");
 
@@ -77,60 +61,36 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _container.RegisterFrom<RootFeatureCompositionRoot>();
 
-        // -----
-         Texture2D pixel = new(_spriteBatch.GraphicsDevice, 1, 1);
-         pixel.SetData(new[] { Color.Gold });
+#if DEBUG
+        _guiRenderer = new ImGuiRenderer(this);
+        _guiRenderer.RebuildFontAtlas();
 
-         MyraEnvironment.Game = this;
-//         Stylesheet.Current.ButtonStyle = new ButtonStyle
-//         {
-//             Background = new ColoredRegion(new TextureRegion(pixel, new Rectangle(0, 0, 15, 15)), Color.Gold),
-//             Padding = new Thickness(5, 5),
-//         };
-//         var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
-//
-//         grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-//         grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-//         grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-//         grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-//
-//         var helloWorld = new Label { Id = "label", Text = "Hello, World!" };
-//         grid.Widgets.Add(helloWorld);
-//
-// // ComboBox
-//         var combo = new ComboBox();
-//         Grid.SetColumn(combo, 1);
-//         Grid.SetRow(combo, 0);
-//
-//         combo.Items.Add(new ListItem("Red", Color.Red));
-//         combo.Items.Add(new ListItem("Green", Color.Green));
-//         combo.Items.Add(new ListItem("Blue", Color.Blue));
-//         grid.Widgets.Add(combo);
-//
-// // Button
-//         var button = new Button { Content = new Label { Text = "Show" } };
-//         Grid.SetColumn(button, 0);
-//         Grid.SetRow(button, 1);
-//
-//         button.Click += (s, a) =>
-//         {
-//             var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
-//             messageBox.ShowModal(_desktop);
-//         };
-//
-//         grid.Widgets.Add(button);
-//
-// // Spin button
-//         var spinButton = new SpinButton { Width = 100, Nullable = true };
-//         Grid.SetColumn(spinButton, 1);
-//         Grid.SetRow(spinButton, 1);
-//
-//         grid.Widgets.Add(spinButton);
-//
-// // Add it to the desktop
-         _desktop = new Desktop();
-//         _desktop.Root = grid;
-        // ------
+        ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable;
+#endif
+
+        // ComboBox
+        var combo = new ComboBox();
+        combo.Items.Add(new ListItem("Red", Color.Red));
+        combo.Items.Add(new ListItem("Green", Color.Green));
+        combo.Items.Add(new ListItem("Blue", Color.Blue));
+
+        // Button
+        var button = new Button { Content = new Label { Text = "Show" } };
+        button.Click += (s, a) =>
+        {
+            var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
+            messageBox.ShowModal(_desktop);
+        };
+
+        var grid = _container.GetInstance<Grid>();
+        new UIFactory(grid,
+                new Label { Id = "label", Text = "Hello, World!" },
+                combo,
+                button,
+                new SpinButton { Width = 100, Nullable = true })
+            .Build();
+
+        _desktop = _container.GetInstance<Desktop>();
 
         _rootFeature = _container.GetInstance<RootFeature>();
 

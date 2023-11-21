@@ -1,6 +1,7 @@
 ﻿using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
+using Myra;
 using Serilog;
 
 namespace GameDesktop.CompositionRoots;
@@ -20,9 +21,11 @@ internal class GameCompositionRoot : ICompositionRoot
             {
                 IsMouseVisible = IsMouseVisible,
                 IsFixedTimeStep = IsFixedTimeStep,
-                Window = { Title = "Test" },
                 Content = { RootDirectory = AppVariable.ContentRootDirectory, },
             };
+
+            // TODO: Put somewhere else?
+            MyraEnvironment.Game = game;
 
             // Hack. Resolving cycle dependency issue (fundamental architecture)
             // Implicitly adds itself in the game services container.
