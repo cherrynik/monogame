@@ -33,7 +33,7 @@ try
 
     container.RegisterFrom<GameCompositionRoot>();
 
-    using Game game = container.GetInstance<Game>();
+    using var game = container.GetInstance<Game>();
     game.Run();
 }
 catch (Exception e)

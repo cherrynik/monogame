@@ -10,7 +10,7 @@ namespace Systems.Render;
 
 public class CameraFollowingSystem : ILateSystem
 {
-    private readonly ICamera _camera;
+    // private readonly ICamera _camera;
     public World World { get; set; }
 
     public CameraFollowingSystem(World world)
@@ -95,8 +95,9 @@ public class FollowingCamera : BaseCamera, ICamera
 {
     private Vector2 _position;
 
-    public FollowingCamera(SpriteBatch spriteBatch, Viewport viewport) : base(spriteBatch, viewport)
+    public FollowingCamera(SpriteBatch spriteBatch, Viewport viewport, Vector2 position) : base(spriteBatch, viewport)
     {
+        _position = position;
     }
 
     public void Render(Entity e)

@@ -41,15 +41,18 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
-        _logger.ForContext<Game>().Warning("Circular dependencies initialization...");
-
+        _logger.ForContext<Game>().Verbose("Circular dependencies initialization...");
         RegisterSpriteBatch();
-        RegisterMyraUI();
+        RegisterMyraUIEnvironment();
 #if DEBUG
-        RegisterImGui();
+        RegisterImGuiRenderer();
 #endif
+        _logger.ForContext<Game>().Verbose("Circular dependencies initialized");
 
-        _logger.ForContext<Game>().Warning("Circular dependencies initialized");
+        _logger.ForContext<Game>().Verbose("Game services initialization...");
+        RegisterRootFeature();
+        RegisterMyraUI();
+        _logger.ForContext<Game>().Verbose("Game services initialized");
 
         base.Initialize();
 
@@ -62,34 +65,6 @@ public class Game : Microsoft.Xna.Framework.Game
         // todo: pass tru logger & log places
         // TODO: Error handling
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
-
-        _container.RegisterFrom<RootFeatureCompositionRoot>();
-
-        // ComboBox
-        var combo = new ComboBox();
-        combo.Items.Add(new ListItem("Red", Color.Red));
-        combo.Items.Add(new ListItem("Green", Color.Green));
-        combo.Items.Add(new ListItem("Blue", Color.Blue));
-
-        // Button
-        var button = new Button { Content = new Label { Text = "Show" } };
-        button.Click += (s, a) =>
-        {
-            var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
-            messageBox.ShowModal(_desktop);
-        };
-
-        var grid = _container.GetInstance<Grid>();
-        new UIFactory(grid,
-                new Label { Id = "label", Text = "Hello, World!" },
-                combo,
-                button,
-                new SpinButton { Width = 100, Nullable = true })
-            .Build();
-
-        _desktop = _container.GetInstance<Desktop>();
-
-        _rootFeature = _container.GetInstance<RootFeature>();
 
         _rootFeature.OnAwake();
 
@@ -155,9 +130,9 @@ public class Game : Microsoft.Xna.Framework.Game
         _spriteBatch = _container.GetInstance<SpriteBatch>();
     }
 
-    private void RegisterMyraUI() => MyraEnvironment.Game = this;
+    private void RegisterMyraUIEnvironment() => MyraEnvironment.Game = this;
 
-    private void RegisterImGui()
+    private void RegisterImGuiRenderer()
     {
         _container.RegisterSingleton(factory =>
         {
@@ -169,5 +144,38 @@ public class Game : Microsoft.Xna.Framework.Game
         _imGuiRenderer = _container.GetInstance<ImGuiRenderer>();
 
         ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable;
+    }
+
+    private void RegisterRootFeature()
+    {
+        _container.RegisterFrom<RootFeatureCompositionRoot>();
+        _rootFeature = _container.GetInstance<RootFeature>();
+    }
+
+    private void RegisterMyraUI()
+    {
+        // ComboBox
+        var combo = new ComboBox();
+        combo.Items.Add(new ListItem("Red", Color.Red));
+        combo.Items.Add(new ListItem("Green", Color.Green));
+        combo.Items.Add(new ListItem("Blue", Color.Blue));
+
+        // Button
+        var button = new Button { Content = new Label { Text = "Show" } };
+        button.Click += (s, a) =>
+        {
+            var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
+            messageBox.ShowModal(_desktop);
+        };
+
+        var grid = _container.GetInstance<Grid>();
+        new UIFactory(grid,
+                new Label { Id = "label", Text = "Hello, World!" },
+                combo,
+                button,
+                new SpinButton { Width = 100, Nullable = true })
+            .Build();
+
+        _desktop = _container.GetInstance<Desktop>();
     }
 }

@@ -33,7 +33,6 @@ public class Tests
     [Test]
     public void PlayerEntity_IsCreatedInTheWorld()
     {
-        // TODO: Use mocks for deps
         Entity playerEntity = new PlayerEntityFactory(new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
