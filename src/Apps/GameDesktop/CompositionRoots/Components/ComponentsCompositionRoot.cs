@@ -32,6 +32,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     {
         RegisterTransformComponent(serviceRegistry);
         RegisterRectangleCollisionComponent(serviceRegistry);
+        RegisterInventoryComponent(serviceRegistry);
     }
 
     private static void RegisterTagComponents(IServiceRegistry serviceRegistry)
@@ -108,6 +109,12 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     {
         serviceRegistry.RegisterTransient(_ =>
             new RectangleCollisionComponent { Size = new(0, 0, 8, 8) });
+    }
+
+    private static void RegisterInventoryComponent(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterTransient(_ =>
+            new InventoryComponent([]));
     }
 
     private static void RegisterCharacterAnimatorComponent(IServiceRegistry serviceRegistry)

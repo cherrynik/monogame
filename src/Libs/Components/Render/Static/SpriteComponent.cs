@@ -20,18 +20,12 @@
 // }
 
 
-namespace Components.Render.Static
+using Scellecs.Morpeh;
+using MonoGame.Aseprite.Sprites;
+
+namespace Components.Render.Static;
+
+public struct SpriteComponent(Sprite sprite) : IComponent
 {
-    using Scellecs.Morpeh;
-    using MonoGame.Aseprite.Sprites;
-
-    public struct SpriteComponent : IComponent
-    {
-        public Sprite Sprite { get; private set; }
-
-        public SpriteComponent(Sprite sprite)
-        {
-            Sprite = sprite;
-        }
-    }
+    public Sprite Sprite { get; private set; } = sprite;
 }

@@ -4,14 +4,8 @@ using Services.Math;
 
 namespace Components.Render.Animation;
 
-public struct CharacterAnimatorComponent : IComponent
+public struct CharacterAnimatorComponent(Direction facing, AnimatedSprite animation) : IComponent
 {
-    public Direction Facing;
-    public AnimatedSprite Animation;
-
-    public CharacterAnimatorComponent(Direction facing, AnimatedSprite animation)
-    {
-        Facing = facing;
-        Animation = animation;
-    }
+    public Direction Facing = facing;
+    public AnimatedSprite Animation = animation;
 }

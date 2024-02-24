@@ -11,13 +11,15 @@ namespace Entities.Factories.Characters;
 // to debug entities and their components with ImGui.
 // But also, for the factory, ig, the view of the entities class will change.
 // For now, Imma keep it as it is.
-public class PlayerEntityFactory : EntityFactory
+public class PlayerEntityFactory(
+    InputMovableComponent inputMovable,
+    MovableComponent movable,
+    TransformComponent transform,
+    CameraComponent cameraComponent,
+    RectangleCollisionComponent rectangleCollision,
+    InventoryComponent inventoryComponent)
+    : EntityFactory
 {
-    private readonly InputMovableComponent _inputMovable;
-    private readonly MovableComponent _movable;
-    private readonly TransformComponent _transform;
-    private readonly CameraComponent _cameraComponent;
-    private readonly RectangleCollisionComponent _rectangleCollision;
     private readonly MovementAnimationsComponent _movementAnimations;
     private readonly CharacterAnimatorComponent _characterAnimator;
 
@@ -25,24 +27,11 @@ public class PlayerEntityFactory : EntityFactory
         MovableComponent movable,
         TransformComponent transform,
         CameraComponent cameraComponent,
-        RectangleCollisionComponent rectangleCollision
-    )
-    {
-        _inputMovable = inputMovable;
-        _movable = movable;
-        _transform = transform;
-        _cameraComponent = cameraComponent;
-        _rectangleCollision = rectangleCollision;
-    }
-
-    public PlayerEntityFactory(InputMovableComponent inputMovable,
-        MovableComponent movable,
-        TransformComponent transform,
-        CameraComponent cameraComponent,
         RectangleCollisionComponent rectangleCollision,
         MovementAnimationsComponent movementAnimations,
-        CharacterAnimatorComponent characterAnimator) : this(inputMovable, movable, transform, cameraComponent,
-        rectangleCollision)
+        CharacterAnimatorComponent characterAnimator,
+        InventoryComponent inventoryComponent) : this(inputMovable, movable, transform, cameraComponent,
+        rectangleCollision, inventoryComponent)
     {
         _movementAnimations = movementAnimations;
         _characterAnimator = characterAnimator;
@@ -50,15 +39,16 @@ public class PlayerEntityFactory : EntityFactory
 
     protected override void AddTags(Entity e)
     {
-        e.AddComponent(_cameraComponent);
-        e.AddComponent(_inputMovable);
-        e.AddComponent(_movable);
+        e.AddComponent(cameraComponent);
+        e.AddComponent(inputMovable);
+        e.AddComponent(movable);
     }
 
     protected override void AddData(Entity e)
     {
-        e.AddComponent(_transform);
-        e.AddComponent(_rectangleCollision);
+        e.AddComponent(transform);
+        e.AddComponent(rectangleCollision);
+        e.AddComponent(inventoryComponent);
     }
 
     protected override void AddRender(Entity e)

@@ -4,13 +4,8 @@ using Scellecs.Morpeh;
 
 namespace Components.Tags;
 
-public struct CameraComponent : IComponent
+public struct CameraComponent(Viewport viewport) : IComponent
 {
-    public Viewport Viewport;
+    public Viewport Viewport = viewport;
     public Vector2 Position;
-
-    public CameraComponent(Viewport viewport)
-    {
-        Viewport = viewport;
-    }
 }

@@ -22,9 +22,11 @@ try
     using ServiceContainer container = new(
         new ContainerOptions
         {
+            EnablePropertyInjection = false,
+            EnableCurrentScope = false,
             LogFactory = _ => entry => logger
                 .ForContext<ServiceContainer>()
-                .Verbose($"{entry.Message}")
+                .Verbose($"{entry.Message}"),
         });
 
     container.RegisterInstance<IServiceContainer>(container);

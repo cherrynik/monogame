@@ -41,13 +41,13 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Initialize()
     {
         _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
-        _logger.ForContext<Game>().Verbose("Circular dependencies initialization...");
+        _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialization...");
         RegisterSpriteBatch();
         RegisterMyraUIEnvironment();
 #if DEBUG
         RegisterImGuiRenderer();
 #endif
-        _logger.ForContext<Game>().Verbose("Circular dependencies initialized");
+        _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialized");
 
         _logger.ForContext<Game>().Verbose("Game services initialization...");
         RegisterRootFeature();
@@ -73,7 +73,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void BeginRun()
     {
-        _logger.ForContext<Game>().Verbose("Beginning run...");
+        _logger.ForContext<Game>().Verbose("Beginning to run...");
 
         base.BeginRun();
 

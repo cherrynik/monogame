@@ -26,24 +26,19 @@
 //     }
 // }
 
-namespace Components.Render.Animation
+using Scellecs.Morpeh;
+using MonoGame.Aseprite.Sprites;
+using Services.Math;
+
+namespace Components.Render.Animation;
+
+public struct MovementAnimationsComponent(
+    Dictionary<Direction, AnimatedSprite> idleAnimations,
+    Dictionary<Direction, AnimatedSprite> walkingAnimations)
+    : IComponent
 {
-    using Scellecs.Morpeh;
-    using MonoGame.Aseprite.Sprites;
-    using Services.Math;
-
-    public struct MovementAnimationsComponent : IComponent
-    {
-        public readonly Dictionary<Direction, AnimatedSprite> IdleAnimations;
-        public readonly Dictionary<Direction, AnimatedSprite> WalkingAnimations;
-
-        public MovementAnimationsComponent(Dictionary<Direction, AnimatedSprite> idleAnimations,
-            Dictionary<Direction, AnimatedSprite> walkingAnimations)
-        {
-            IdleAnimations = idleAnimations;
-            WalkingAnimations = walkingAnimations;
-        }
-    }
-
-    // CharacterAnimatorComponent
+    public readonly Dictionary<Direction, AnimatedSprite> IdleAnimations = idleAnimations;
+    public readonly Dictionary<Direction, AnimatedSprite> WalkingAnimations = walkingAnimations;
 }
+
+// CharacterAnimatorComponent

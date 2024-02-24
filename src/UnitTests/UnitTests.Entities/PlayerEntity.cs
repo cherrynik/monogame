@@ -39,7 +39,8 @@ public class Tests
                 new CameraComponent(),
                 new RectangleCollisionComponent(),
                 new MovementAnimationsComponent(),
-                new CharacterAnimatorComponent())
+                new CharacterAnimatorComponent(),
+                new InventoryComponent())
             .CreateEntity(@in: _world);
 
         {
@@ -58,7 +59,8 @@ public class Tests
                 new CameraComponent(),
                 new RectangleCollisionComponent(),
                 new MovementAnimationsComponent(),
-                new CharacterAnimatorComponent())
+                new CharacterAnimatorComponent(),
+                new InventoryComponent())
             .CreateEntity(@in: _world);
         {
             _world.TryGetEntity(playerEntity.ID, out Entity result);
@@ -80,7 +82,8 @@ public class Tests
         var rootFeature = new RootFeature(_world,
             new WorldInitializer(_world, new WorldEntityFactory(new WorldComponent()),
                 new PlayerEntityFactory(new InputMovableComponent(), new MovableComponent(), new TransformComponent(),
-                    new CameraComponent(new Viewport(0, 0, 640, 480)), new RectangleCollisionComponent()),
+                    new CameraComponent(new Viewport(0, 0, 640, 480)), new RectangleCollisionComponent(),
+                    new InventoryComponent()),
                 new DummyEntityFactory(new TransformComponent(), new RectangleCollisionComponent())),
             new MovementFeature(_world, new InputSystem(_world, mockInputScanner.Object),
                 new MovementSystem(_world, new SimpleMovement())));

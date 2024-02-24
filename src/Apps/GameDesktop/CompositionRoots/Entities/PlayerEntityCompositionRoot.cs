@@ -23,5 +23,6 @@ internal class PlayerEntityCompositionRoot : ICompositionRoot
             factory.GetInstance<CameraComponent>(),
             factory.GetInstance<RectangleCollisionComponent>(),
             factory.GetInstance<MovementAnimationsComponent>(),
-            factory.GetInstance<CharacterAnimatorComponent>("PlayerEntity")));
+            factory.GetInstance<CharacterAnimatorComponent>("PlayerEntity"),
+            factory.GetInstance<InventoryComponent>()));
 }
