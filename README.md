@@ -18,7 +18,7 @@
 npm i
 ```
 
-2. Install .NET 7 - [Link](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
+2. Install .NET 8 - [Link](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
 3. Run
 
