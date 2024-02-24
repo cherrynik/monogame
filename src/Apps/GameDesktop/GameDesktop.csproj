@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Components\Components.csproj" />
+    <ProjectReference Include="..\..\Libs\External\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj" />
     <ProjectReference Include="..\..\Libs\Features\Features.csproj" />
     <ProjectReference Include="..\..\Libs\Services\Services.csproj" />
   </ItemGroup>
