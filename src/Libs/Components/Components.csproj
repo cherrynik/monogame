@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <_TargetFrameworkDirectories>Jenny.Plugins.ReferenceAssemblyPathsPreProcessor</_TargetFrameworkDirectories>
-    <_FullFrameworkReferenceAssemblyPaths>Jenny.Plugins.ReferenceAssemblyPathsPreProcessor</_FullFrameworkReferenceAssemblyPaths>
     <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Entitas" Version="1.14.2"/>
-    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1"/>
-    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2"/>
-    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2"/>
-    <PackageReference Include="MonoGame.Aseprite" Version="5.1.0" />
+    <PackageReference Include="MonoGame.Aseprite" Version="5.1.1" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303"/>
-    <PackageReference Include="Stateless" Version="5.13.0" />
+    <PackageReference Include="Scellecs.Morpeh" Version="2023.1.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\External\Scellecs.Morpeh.Extended\Scellecs.Morpeh.Extended.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 </Project>

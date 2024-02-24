@@ -1,4 +1,6 @@
-﻿## Getting Started
+﻿[![.NET](https://github.com/cherrynik/monogame/actions/workflows/dotnet.yml/badge.svg)](https://github.com/cherrynik/monogame/actions/workflows/dotnet.yml)
+
+## Getting Started
 
 - [Wiki](./docs/TableOfContent.md)
 - [MonoGame repository](https://github.com/MonoGame/MonoGame)

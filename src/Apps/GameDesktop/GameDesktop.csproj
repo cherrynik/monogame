@@ -2,10 +2,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
     <RollForward>Major</RollForward>
     <PublishReadyToRun>false</PublishReadyToRun>
     <LangVersion>default</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -21,6 +21,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="appsettings.Production.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\SpriteSheets\Player.aseprite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -45,28 +48,25 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Entitas" Version="1.14.2" />
-    <PackageReference Include="Entitas.CodeGeneration.Attributes" Version="1.14.1" />
-    <PackageReference Include="Entitas.CodeGeneration.Plugins" Version="1.14.2" />
-    <PackageReference Include="Entitas.Roslyn.CodeGeneration.Plugins" Version="1.14.2" />
     <PackageReference Include="LightInject" Version="6.6.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-    <PackageReference Include="MonoGame.Aseprite" Version="5.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="MonoGame.Aseprite" Version="5.1.1" />
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
-    <PackageReference Include="Sentry" Version="3.39.1" />
-    <PackageReference Include="Sentry.Serilog" Version="3.39.1" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="7.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Myra" Version="1.5.3" />
+    <PackageReference Include="Scellecs.Morpeh" Version="2023.1.0" />
+    <PackageReference Include="Sentry" Version="3.41.0" />
+    <PackageReference Include="Sentry.Serilog" Version="3.41.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="Stateless" Version="5.13.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Components\Components.csproj" />
-    <ProjectReference Include="..\..\Libs\External\Entitas.Extended\Entitas.Extended.csproj" />
+    <ProjectReference Include="..\..\Libs\External\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj" />
     <ProjectReference Include="..\..\Libs\Features\Features.csproj" />
     <ProjectReference Include="..\..\Libs\Services\Services.csproj" />
   </ItemGroup>

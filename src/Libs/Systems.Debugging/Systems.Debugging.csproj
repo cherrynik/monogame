@@ -1,17 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <LangVersion>default</LangVersion>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\External\Entitas.Extended\Entitas.Extended.csproj" />
+      <PackageReference Include="Serilog" Version="3.1.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Serilog" Version="2.12.0" />
+      <ProjectReference Include="..\Components\Components.csproj" />
+      <ProjectReference Include="..\External\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj" />
     </ItemGroup>
 
 </Project>

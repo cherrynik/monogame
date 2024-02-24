@@ -1,7 +1,7 @@
-﻿using Entitas;
+﻿using Scellecs.Morpeh;
 
 namespace Components.Tags;
 
-public class MovableComponent : IComponent
+public struct MovableComponent : IComponent
 {
 }

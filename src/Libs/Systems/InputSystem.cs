@@ -1,49 +1,41 @@
-﻿using Entitas;
-using Entitas.Extended;
-using Microsoft.Xna.Framework;
-using Serilog;
-using Services.Input;
+using Components;
+using Components.Data;
+using Components.Tags;
+using Implementations;
+using Scellecs.Morpeh;
 
 namespace Systems;
 
-// Input & Collision systems both have to be fixed execute systems,
-// otherwise it'll lead to the desynchronized behaviour.
-[Input]
-public class InputSystem : IFixedExecuteSystem
+public class InputSystem : ISystem
 {
     private readonly IInputScanner _inputScanner;
-    private readonly IGroup<GameEntity> _group;
-    private readonly ILogger _logger;
+    public World World { get; set; }
 
-    public InputSystem(IInputScanner inputScanner, IGroup<GameEntity> group, ILogger logger)
+    public InputSystem(World world, IInputScanner inputScanner)
     {
+        World = world;
         _inputScanner = inputScanner;
-        _group = group;
-        _logger = logger;
     }
 
-    public void FixedExecute(GameTime gameTime)
+    public void OnAwake()
     {
-        try
+    }
+
+    public void OnUpdate(float deltaTime)
+    {
+        Filter filter = World.Filter
+            .With<InputMovableComponent>()
+            .With<TransformComponent>()
+            .Build();
+
+        foreach (Entity e in filter)
         {
-            Vector2 direction = _inputScanner.GetDirection();
-
-            if (direction.Equals(Vector2.Zero) is false)
-            {
-                _logger.ForContext<InputSystem>().Verbose(direction.ToString()!);
-            }
-
-            GameEntity[] entities = _group.GetEntities();
-            foreach (GameEntity e in entities)
-            {
-                e.transform.Velocity = direction;
-            }
+            ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
+            transform.Velocity = _inputScanner.GetDirection();
         }
-        catch (Exception e)
-        {
-            _logger.ForContext<InputSystem>().Fatal(e.ToString());
+    }
 
-            throw new Exception(e.Message);
-        }
+    public void Dispose()
+    {
     }
 }

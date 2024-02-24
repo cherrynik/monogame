@@ -19,12 +19,15 @@ logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) initiali
 
 try
 {
-    ContainerOptions containerOptions =
+    using ServiceContainer container = new(
         new ContainerOptions
         {
-            LogFactory = _ => entry => logger.ForContext<ServiceContainer>().Verbose($"{entry.Message}")
-        };
-    using ServiceContainer container = new(containerOptions);
+            EnablePropertyInjection = false,
+            EnableCurrentScope = false,
+            LogFactory = _ => entry => logger
+                .ForContext<ServiceContainer>()
+                .Verbose($"{entry.Message}"),
+        });
 
     container.RegisterInstance<IServiceContainer>(container);
     container.RegisterInstance<IConfiguration>(configuration);
@@ -32,7 +35,7 @@ try
 
     container.RegisterFrom<GameCompositionRoot>();
 
-    using Game game = container.GetInstance<Game>();
+    using var game = container.GetInstance<Game>();
     game.Run();
 }
 catch (Exception e)

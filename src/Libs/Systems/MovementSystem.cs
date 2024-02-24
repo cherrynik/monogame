@@ -1,46 +1,45 @@
-﻿using Entitas;
-using Entitas.Extended;
-using Microsoft.Xna.Framework;
-using Serilog;
+using System.Numerics;
+using Components;
+using Components.Data;
+using Components.Tags;
+using Scellecs.Morpeh;
 using Services;
-using IExecuteSystem = Entitas.Extended.IExecuteSystem;
+using Services.Movement;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Systems;
 
-public class MovementSystem : IExecuteSystem
+public class MovementSystem : ISystem
 {
-    private readonly IGroup<GameEntity> _group;
     private readonly IMovement _movement;
-    private readonly ILogger _logger;
+    public World World { get; set; }
 
-    public MovementSystem(IMovement movement, IGroup<GameEntity> group, ILogger logger)
+    public MovementSystem(World world, IMovement movement)
     {
-        _group = group;
+        World = world;
         _movement = movement;
-        _logger = logger;
     }
 
-    public void Execute(GameTime fixedGameTime)
+    public void OnAwake()
     {
-        try
-        {
-            GameEntity[] entities = _group.GetEntities();
-            foreach (GameEntity e in entities)
-            {
-                if (e.transform.Velocity.Equals(Vector2.Zero))
-                {
-                    continue;
-                }
+    }
 
-                e.transform.Position = _movement.Move(e.transform.Position, e.transform.Velocity);
-                _logger.ForContext<MovementSystem>().Verbose(e.transform.Position.ToString()!);
-            }
-        }
-        catch (Exception e)
-        {
-            _logger.ForContext<MovementSystem>().Fatal(e.ToString());
+    public void OnUpdate(float deltaTime)
+    {
+        Filter filter = World.Filter
+            .With<InputMovableComponent>()
+            .With<TransformComponent>()
+            .Build();
 
-            throw new Exception(e.Message);
+        foreach (Entity e in filter)
+        {
+            ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
+
+            transform.Position = _movement.Move(from: transform.Position, by: transform.Velocity);
         }
+    }
+
+    public void Dispose()
+    {
     }
 }

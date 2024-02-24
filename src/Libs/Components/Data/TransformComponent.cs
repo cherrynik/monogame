@@ -1,12 +1,14 @@
-﻿using Entitas;
-using Microsoft.Xna.Framework;
+﻿using System.Numerics;
+using Scellecs.Morpeh;
+using Pivot = Services.Math.Direction;
 
 namespace Components.Data;
 
-public class TransformComponent : IComponent
+public struct TransformComponent : IComponent
 {
     public Vector2 Position;
     public Vector2 Velocity;
+    public Pivot Pivot;
 }
 
 // Input Scan System -> Write Velocity

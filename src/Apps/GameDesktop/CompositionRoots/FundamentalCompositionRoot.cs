@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Entitas;
 using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,34 +12,8 @@ internal class FundamentalCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        RegisterContexts(serviceRegistry);
-        RegisterAllOfMatcher(serviceRegistry);
-        RegisterAnyOfMatcher(serviceRegistry);
         RegisterAnimationsFactory(serviceRegistry);
         serviceRegistry.RegisterSingleton(typeof(AbstractFactory<>));
-    }
-
-    private static void RegisterContexts(IServiceRegistry serviceRegistry) =>
-        serviceRegistry.RegisterInstance(Contexts.sharedInstance);
-
-    private static void RegisterAllOfMatcher(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register<IMatcher<GameEntity>[], IGroup<GameEntity>>((factory, matchers) =>
-        {
-            IAllOfMatcher<GameEntity> groupMatcher = GameMatcher.AllOf(matchers);
-            var contexts = factory.GetInstance<Contexts>();
-            return contexts.game.GetGroup(groupMatcher);
-        }, Matcher.AllOf);
-    }
-
-    private static void RegisterAnyOfMatcher(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.Register<IMatcher<GameEntity>[], IGroup<GameEntity>>((factory, matchers) =>
-        {
-            IAnyOfMatcher<GameEntity> groupMatcher = GameMatcher.AnyOf(matchers);
-            var contexts = factory.GetInstance<Contexts>();
-            return contexts.game.GetGroup(groupMatcher);
-        }, Matcher.AnyOf);
     }
 
     private static void RegisterAnimationsFactory(IServiceRegistry serviceRegistry)

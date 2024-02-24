@@ -1,26 +1,41 @@
-﻿using Features.Debugging;
+﻿using GameDesktop;
+using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 
 namespace Features;
 
-public sealed class RootFeature : Entitas.Extended.Feature
+public class RootFeature : Feature
 {
-    public RootFeature(WorldInitializeFeature worldInitializeFeature,
-        InputFeature inputFeature,
-        MovementFeature movementFeature,
-        CameraFeature cameraFeature)
+    public RootFeature(World world,
+        WorldInitializer worldInitializer,
+        MovementFeature movementFeature
+    ) : base(world)
     {
-        Add(worldInitializeFeature);
-        Add(inputFeature);
+        Add(worldInitializer);
         Add(movementFeature);
-        Add(cameraFeature);
     }
 
-    public RootFeature(DebugRootFeature debugRootFeature,
-        WorldInitializeFeature worldInitializeFeature,
-        InputFeature inputFeature,
+    public RootFeature(World world,
+        WorldInitializer worldInitializer,
         MovementFeature movementFeature,
-        CameraFeature cameraFeature) : this(worldInitializeFeature, inputFeature, movementFeature, cameraFeature)
+        PreRenderFeature preRenderFeature,
+        RenderFeature renderFeature
+    ) : this(world, worldInitializer, movementFeature)
     {
-        Add(debugRootFeature);
+        Add(preRenderFeature);
+        Add(renderFeature);
     }
+
+#if DEBUG
+    public RootFeature(World world,
+        WorldInitializer worldInitializer,
+        MovementFeature movementFeature,
+        PreRenderFeature preRenderFeature,
+        RenderFeature renderFeature,
+        DebugFeature debugFeature
+    ) : this(world, worldInitializer, movementFeature, preRenderFeature, renderFeature)
+    {
+        Add(debugFeature);
+    }
+#endif
 }
