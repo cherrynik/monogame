@@ -6,18 +6,9 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace Systems.Debugging.Render;
 
-public class PivotRenderSystem : IRenderSystem
+public class PivotRenderSystem(World world, SpriteBatch spriteBatch, Texture2D pixel) : IRenderSystem
 {
-    private readonly SpriteBatch _spriteBatch;
-    private readonly Texture2D _pixel;
-    public World World { get; set; }
-
-    public PivotRenderSystem(World world, SpriteBatch spriteBatch, Texture2D pixel)
-    {
-        _spriteBatch = spriteBatch;
-        _pixel = pixel;
-        World = world;
-    }
+    public World World { get; set; } = world;
 
     public void OnAwake()
     {
@@ -31,7 +22,7 @@ public class PivotRenderSystem : IRenderSystem
         {
             ref var transform = ref e.GetComponent<TransformComponent>();
 
-            _spriteBatch.Draw(texture: _pixel, position: transform.Position, color: Color.Gold);
+            spriteBatch.Draw(texture: pixel, position: transform.Position, color: Color.Gold);
         }
     }
 

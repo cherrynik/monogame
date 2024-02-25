@@ -8,15 +8,10 @@ using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging;
 
-public class EntitiesList : IRenderSystem
+public class EntitiesList(World world) : IRenderSystem
 {
-    public World World { set; get; }
+    public World World { set; get; } = world;
     private const float Indentation = 16.0f;
-
-    public EntitiesList(World world)
-    {
-        World = world;
-    }
 
     public void OnAwake()
     {
@@ -28,40 +23,53 @@ public class EntitiesList : IRenderSystem
 
         ImGui.Begin("World");
 
-        if (ImGui.CollapsingHeader("Entities"))
+        ImGui.SeparatorText("Entities");
+        ImGui.TextWrapped($"Count: {filter.GetLengthSlow()}");
+        // if (ImGui.CollapsingHeader("Entities"))
+
+        // ImGui.Indent(Indentation);
+        foreach (Entity e in filter)
         {
-            ImGui.Indent(Indentation);
-            foreach (Entity e in filter)
+            // TODO: By flag components I could decide what entity this is and show the proper name
+            if (!ImGui.CollapsingHeader($"Entity###{e.ID}")) // ### -> for identical values
             {
-                // TODO: By flag components I could decide what entity this is and show the proper name
-                if (!ImGui.CollapsingHeader($"Entity###{e.ID}")) // ### -> for identical values
-                {
-                    continue;
-                }
-
-                ImGui.Indent(Indentation);
-
-                // TODO: collect all the components' names automatically
-                // TODO: use List<Type> types -> Has(typeof(T)) (with underlying Has<T>());
-                if (e.Has<InventoryComponent>()) ImGui.TextWrapped(nameof(InventoryComponent));
-                if (e.Has<TransformComponent>()) ImGui.TextWrapped(nameof(TransformComponent));
-                if (e.Has<CameraComponent>()) ImGui.TextWrapped(nameof(CameraComponent));
-                if (e.Has<RectangleCollisionComponent>()) ImGui.TextWrapped(nameof(RectangleCollisionComponent));
-                if (e.Has<CharacterAnimatorComponent>()) ImGui.TextWrapped(nameof(CharacterAnimatorComponent));
-                if (e.Has<MovementAnimationsComponent>()) ImGui.TextWrapped(nameof(MovementAnimationsComponent));
-                if (e.Has<SpriteComponent>()) ImGui.TextWrapped(nameof(SpriteComponent));
-                if (e.Has<InputMovableComponent>()) ImGui.TextWrapped(nameof(InputMovableComponent));
-                if (e.Has<MovableComponent>()) ImGui.TextWrapped(nameof(MovableComponent));
-                if (e.Has<RenderComponent>()) ImGui.TextWrapped(nameof(RenderComponent));
-                // TODO: menu for each component to edit the values
-
-                ImGui.Unindent(Indentation);
+                continue;
             }
+
+            ImGui.Indent(Indentation);
+
+            DrawComponentsList(e);
 
             ImGui.Unindent(Indentation);
         }
 
+        // ImGui.Unindent(Indentation);
+
         ImGui.End();
+    }
+
+    private static void DrawComponentsList(Entity e)
+    {
+        // TODO: collect all the components' names automatically
+        Dictionary<Type, string> types = new()
+        {
+            { typeof(InventoryComponent), "Inventory" },
+            { typeof(TransformComponent), "Transform" },
+            { typeof(CameraComponent), "Camera" },
+            { typeof(RectangleCollisionComponent), "Rectangle Collision" },
+            { typeof(CharacterAnimatorComponent), "Character Animator" },
+            { typeof(MovementAnimationsComponent), "Movement Animations" },
+            { typeof(SpriteComponent), "Sprite" },
+            { typeof(InputMovableComponent), "Input Movable" },
+            { typeof(MovableComponent), "Movable" },
+            { typeof(RenderComponent), "Render" },
+        };
+
+        foreach (var type in types.Where(type => e.Has(type.Key)))
+        {
+            ImGui.TextWrapped(type.Value);
+        }
+        // TODO: menu for each component to edit the values
     }
 
     public void Dispose()

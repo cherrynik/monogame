@@ -30,8 +30,9 @@ public class FrameCounter : ISystem
             return;
         }
 
-        World.Filter.With<WorldComponent>().Build().First().GetComponent<WorldComponent>().FramesPerSec =
-            _framesCount / _elapsedTime;
+        ref WorldComponent world =
+            ref World.Filter.With<WorldComponent>().Build().First().GetComponent<WorldComponent>();
+        world.FramesPerSec = _framesCount / _elapsedTime;
 
         _framesCount = 0;
         _elapsedTime = 0;
