@@ -1,5 +1,6 @@
 ﻿using Components.Data;
 using Entities.Factories.Characters;
+using Entities.Factories.Items;
 using Entities.Factories.Meta;
 using Features;
 using LightInject;
@@ -57,6 +58,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
     {
         serviceRegistry.RegisterFrom<PlayerEntityCompositionRoot>();
         serviceRegistry.RegisterFrom<StaticEntityCompositionRoot>();
+        serviceRegistry.RegisterFrom<RockEntityCompositionRoot>();
     }
 
     private static void RegisterFeatures(IServiceRegistry serviceRegistry)
@@ -104,7 +106,8 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             return new RootFeature(factory.GetInstance<World>(),
                 new WorldInitializer(factory.GetInstance<World>(), new WorldEntityFactory(new WorldComponent()),
                     factory.GetInstance<PlayerEntityFactory>(),
-                    factory.GetInstance<DummyEntityFactory>()),
+                    factory.GetInstance<DummyEntityFactory>(),
+                    factory.GetInstance<RockEntityFactory>()),
                 new MovementFeature(factory.GetInstance<World>(),
                     new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
                     new MovementSystem(factory.GetInstance<World>(), new SimpleMovement())),

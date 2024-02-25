@@ -32,7 +32,19 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     {
         RegisterTransformComponent(serviceRegistry);
         RegisterRectangleCollisionComponent(serviceRegistry);
+        RegisterItemComponent(serviceRegistry);
         RegisterInventoryComponent(serviceRegistry);
+    }
+
+    private static void RegisterItemComponent(IServiceRegistry serviceRegistry)
+    {
+        // TODO: make this accessible globally? So, the name, etc. of an item are reused between classes easily
+        Dictionary<ItemId, Item> items = new()
+         {
+             { ItemId.Rock, new Item(name: "Rock", isStackable: true, maximumInStack: 16) }
+         };
+
+        serviceRegistry.RegisterSingleton(_ => new ItemComponent(ItemId.Rock), "Rock");
     }
 
     private static void RegisterTagComponents(IServiceRegistry serviceRegistry)
@@ -77,7 +89,12 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             AnimatedSprite defaultSprite = idle[Direction.Down];
 
             return new SpriteComponent(defaultSprite);
-        });
+        }, "Player");
+        
+        // serviceRegistry.RegisterSingleton(factory =>
+        // {
+            // TODO: add sprite for a rock
+        // })
     }
 
     private static void RegisterMovementAnimationsComponent(IServiceRegistry serviceRegistry)
@@ -103,6 +120,9 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
         serviceRegistry.RegisterSingleton(_ =>
             new TransformComponent { Position = new(300, 100) }, "DummyEntity");
+
+        serviceRegistry.RegisterSingleton(_ =>
+            new TransformComponent { Position = new(180, 50) }, "RockEntity");
     }
 
     private static void RegisterRectangleCollisionComponent(IServiceRegistry serviceRegistry)
