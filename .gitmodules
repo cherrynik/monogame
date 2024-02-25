@@ -1,5 +1,5 @@
 [submodule "MonoGame.ImGuiNet"]
 	path = src/Libs/External/MonoGame.ImGuiNet
-	url = git://github.com/Mezo-hx/MonoGame.ImGuiNet.git
+	url = git@github.com:Mezo-hx/MonoGame.ImGuiNet.git
 	branch = main
 	ignore = dirty
