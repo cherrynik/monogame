@@ -9,16 +9,9 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace Systems;
 
-public class MovementSystem : ISystem
+public class MovementSystem(World world, IMovement movement) : ISystem
 {
-    private readonly IMovement _movement;
-    public World World { get; set; }
-
-    public MovementSystem(World world, IMovement movement)
-    {
-        World = world;
-        _movement = movement;
-    }
+    public World World { get; set; } = world;
 
     public void OnAwake()
     {
@@ -35,7 +28,7 @@ public class MovementSystem : ISystem
         {
             ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
 
-            transform.Position = _movement.Move(from: transform.Position, by: transform.Velocity);
+            transform.Position = movement.Move(from: transform.Position, by: transform.Velocity);
         }
     }
 

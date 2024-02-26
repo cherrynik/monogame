@@ -15,7 +15,7 @@ public class RenderFramesPerSec(World world) : IRenderSystem
 
     public void OnUpdate(float deltaTime)
     {
-        var world = World.Filter.With<WorldComponent>().Build().First().GetComponent<WorldComponent>();
+        var world = World.Filter.With<WorldMetaComponent>().Build().First().GetComponent<WorldMetaComponent>();
 
         ImGui.Begin("Diagnostics", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking);
 

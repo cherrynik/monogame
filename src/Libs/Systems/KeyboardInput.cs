@@ -1,7 +1,7 @@
 using System.Numerics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Implementations;
+namespace Systems;
 
 public interface IInputScanner
 {

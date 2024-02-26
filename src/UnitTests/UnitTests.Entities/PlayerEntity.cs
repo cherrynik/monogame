@@ -7,7 +7,6 @@ using Entities.Factories.Characters;
 using Entities.Factories.Items;
 using Entities.Factories.Meta;
 using Features;
-using Implementations;
 using Microsoft.Xna.Framework.Graphics;
 using Moq;
 using Scellecs.Morpeh;
@@ -35,7 +34,9 @@ public class Tests
     [Test]
     public void PlayerEntity_IsCreatedInTheWorld()
     {
-        Entity playerEntity = new PlayerEntityFactory(new InputMovableComponent(),
+        Entity playerEntity = new PlayerEntityFactory(
+                new NameComponent("Player"),
+                new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
@@ -55,7 +56,9 @@ public class Tests
     [Test]
     public void PlayerEntity_HasComponents()
     {
-        Entity playerEntity = new PlayerEntityFactory(new InputMovableComponent(),
+        Entity playerEntity = new PlayerEntityFactory(
+                new NameComponent("Player"),
+                new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
@@ -82,12 +85,14 @@ public class Tests
         mockInputScanner.Setup(p => p.GetDirection()).Returns(Vector2.One);
 
         var rootFeature = new RootFeature(_world,
-            new WorldInitializer(_world, new WorldEntityFactory(new WorldComponent()),
-                new PlayerEntityFactory(new InputMovableComponent(), new MovableComponent(), new TransformComponent(),
-                    new CameraComponent(new Viewport(0, 0, 640, 480)), new RectangleCollisionComponent(),
-                    new InventoryComponent()),
-                new DummyEntityFactory(new TransformComponent(), new RectangleCollisionComponent()),
-                new RockEntityFactory(new ItemComponent(ItemId.Rock), new TransformComponent())),
+            new WorldInitializer(_world, new WorldEntityFactory(new WorldMetaComponent()),
+                new PlayerEntityFactory(
+                    new NameComponent("Player"), new InputMovableComponent(), new MovableComponent(),
+                    new TransformComponent(), new CameraComponent(new Viewport(0, 0, 640, 480)),
+                    new RectangleCollisionComponent(), new InventoryComponent()),
+                new DummyEntityFactory(new NameComponent("Dummy"), new TransformComponent(),
+                    new RectangleCollisionComponent()),
+                new RockEntityFactory(new NameComponent("Rock"), new ItemComponent(ItemId.Rock), new TransformComponent())),
             new MovementFeature(_world, new InputSystem(_world, mockInputScanner.Object),
                 new MovementSystem(_world, new SimpleMovement())));
 

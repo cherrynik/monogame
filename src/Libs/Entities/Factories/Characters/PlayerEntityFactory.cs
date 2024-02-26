@@ -12,6 +12,7 @@ namespace Entities.Factories.Characters;
 // But also, for the factory, ig, the view of the entities class will change.
 // For now, Imma keep it as it is.
 public class PlayerEntityFactory(
+    NameComponent nameComponent,
     InputMovableComponent inputMovable,
     MovableComponent movable,
     TransformComponent transform,
@@ -23,14 +24,16 @@ public class PlayerEntityFactory(
     private readonly MovementAnimationsComponent _movementAnimations;
     private readonly CharacterAnimatorComponent _characterAnimator;
 
-    public PlayerEntityFactory(InputMovableComponent inputMovable,
+    public PlayerEntityFactory(
+        NameComponent nameComponent,
+        InputMovableComponent inputMovable,
         MovableComponent movable,
         TransformComponent transform,
         CameraComponent cameraComponent,
         RectangleCollisionComponent rectangleCollision,
         MovementAnimationsComponent movementAnimations,
         CharacterAnimatorComponent characterAnimator,
-        InventoryComponent inventoryComponent) : this(inputMovable, movable, transform, cameraComponent,
+        InventoryComponent inventoryComponent) : this(nameComponent, inputMovable, movable, transform, cameraComponent,
         rectangleCollision, inventoryComponent)
     {
         _movementAnimations = movementAnimations;
@@ -46,6 +49,7 @@ public class PlayerEntityFactory(
 
     protected override void AddData(Entity e)
     {
+        e.AddComponent(nameComponent);
         e.AddComponent(transform);
         e.AddComponent(rectangleCollision);
         e.AddComponent(inventoryComponent);

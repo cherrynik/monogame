@@ -31,7 +31,8 @@ public class EntitiesList(World world) : IRenderSystem
         foreach (Entity e in filter)
         {
             // TODO: By flag components I could decide what entity this is and show the proper name
-            if (!ImGui.CollapsingHeader($"Entity###{e.ID}")) // ### -> for identical values
+            string entityName = GetEntityName(e);
+            if (!ImGui.CollapsingHeader($"{entityName}###{e.ID}")) // ### -> for identical values
             {
                 continue;
             }
@@ -48,6 +49,12 @@ public class EntitiesList(World world) : IRenderSystem
         ImGui.End();
     }
 
+    private static string GetEntityName(Entity entity)
+    {
+        ref NameComponent nameComponent = ref entity.GetComponent<NameComponent>();
+        return string.IsNullOrWhiteSpace(nameComponent.Name) ? "Entity" : nameComponent.Name;
+    }
+
     private static void DrawComponentsList(Entity e)
     {
         // TODO: collect all the components' names automatically
@@ -62,7 +69,7 @@ public class EntitiesList(World world) : IRenderSystem
             { typeof(SpriteComponent), "Sprite" },
             { typeof(InputMovableComponent), "Input Movable" },
             { typeof(MovableComponent), "Movable" },
-            { typeof(RenderComponent), "Render" },
+            { typeof(RenderableComponent), "Renderable" },
         };
 
         foreach (var type in types.Where(type => e.Has(type.Key)))

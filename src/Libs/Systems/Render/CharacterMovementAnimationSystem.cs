@@ -7,14 +7,9 @@ using Services.Math;
 
 namespace Systems.Render;
 
-public class CharacterMovementAnimationSystem : ISystem
+public class CharacterMovementAnimationSystem(World world) : ISystem
 {
-    public World World { get; set; }
-
-    public CharacterMovementAnimationSystem(World world)
-    {
-        World = world;
-    }
+    public World World { get; set; } = world;
 
     public void OnAwake()
     {

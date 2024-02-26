@@ -6,7 +6,6 @@ using Features;
 using LightInject;
 using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
-using Implementations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra;
@@ -14,10 +13,11 @@ using Myra.Graphics2D.UI;
 using Scellecs.Morpeh;
 using Services.Movement;
 using Systems;
-using Systems.Debugging;
-using Systems.Debugging.Render;
 using Systems.Render;
 #if DEBUG
+using Features.Debugging;
+using Systems.Debugging;
+using Systems.Debugging.Render;
 using GameDesktop.CompositionRoots.DebugFeatures;
 #endif
 
@@ -104,7 +104,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             pixel.SetData(new[] { Color.Gold });
 
             return new RootFeature(factory.GetInstance<World>(),
-                new WorldInitializer(factory.GetInstance<World>(), new WorldEntityFactory(new WorldComponent()),
+                new WorldInitializer(factory.GetInstance<World>(), new WorldEntityFactory(new WorldMetaComponent()),
                     factory.GetInstance<PlayerEntityFactory>(),
                     factory.GetInstance<DummyEntityFactory>(),
                     factory.GetInstance<RockEntityFactory>()),

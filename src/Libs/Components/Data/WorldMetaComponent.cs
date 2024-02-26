@@ -2,7 +2,7 @@
 
 namespace Components.Data;
 
-public struct WorldComponent() : IComponent
+public struct WorldMetaComponent() : IComponent
 {
     public float FramesPerSec;
 }

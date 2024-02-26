@@ -5,22 +5,19 @@ using Scellecs.Morpeh.Extended;
 
 namespace Entities.Factories.Characters;
 
-public class DummyEntityFactory : EntityFactory
+public class DummyEntityFactory(
+    NameComponent name,
+    TransformComponent transform,
+    RectangleCollisionComponent rectangleCollision)
+    : EntityFactory
 {
-    private readonly TransformComponent _transform;
     private readonly SpriteComponent _sprite;
-    private readonly RectangleCollisionComponent _rectangleCollision;
 
-    public DummyEntityFactory(TransformComponent transform,
-        RectangleCollisionComponent rectangleCollision)
-    {
-        _transform = transform;
-        _rectangleCollision = rectangleCollision;
-    }
-
-    public DummyEntityFactory(TransformComponent transform,
+    public DummyEntityFactory(
+        NameComponent name,
+        TransformComponent transform,
         SpriteComponent sprite,
-        RectangleCollisionComponent rectangleCollision) : this(transform, rectangleCollision)
+        RectangleCollisionComponent rectangleCollision) : this(name, transform, rectangleCollision)
     {
         _sprite = sprite;
     }
@@ -31,8 +28,9 @@ public class DummyEntityFactory : EntityFactory
 
     protected override void AddData(Entity e)
     {
-        e.AddComponent(_transform);
-        e.AddComponent(_rectangleCollision);
+        e.AddComponent(name);
+        e.AddComponent(transform);
+        e.AddComponent(rectangleCollision);
     }
 
     protected override void AddRender(Entity e)

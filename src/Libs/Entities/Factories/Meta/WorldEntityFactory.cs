@@ -4,22 +4,15 @@ using Scellecs.Morpeh.Extended;
 
 namespace Entities.Factories.Meta;
 
-public class WorldEntityFactory : EntityFactory
+public class WorldEntityFactory(WorldMetaComponent worldMetaComponent) : EntityFactory
 {
-    private readonly WorldComponent _worldComponent;
-
-    public WorldEntityFactory(WorldComponent worldComponent)
-    {
-        _worldComponent = worldComponent;
-    }
-
     protected override void AddTags(Entity e)
     {
     }
 
     protected override void AddData(Entity e)
     {
-        e.AddComponent(_worldComponent);
+        e.AddComponent(worldMetaComponent);
     }
 
     protected override void AddRender(Entity e)

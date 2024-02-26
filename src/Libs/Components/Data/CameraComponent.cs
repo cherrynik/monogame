@@ -1,13 +1,15 @@
-﻿// namespace Entitas.Components.Data;
-//
-// [Unique]
-// public class CameraComponent : IComponent
-// {
-//     public Rectangle Size;
-// }
+﻿using System.Numerics;
+using Microsoft.Xna.Framework.Graphics;
+using Scellecs.Morpeh;
 
-// Camera is a system but a component,
+namespace Components.Data;
+
+// TODO: Camera is a system and not a component,
 // So, the system would have a target as a dependency,
 // And exist only in the current world,
-// As well, the system has its own behaviour,
-// Thus, there's no reason to migrate the component
+// As well, the system has its own behaviour
+public struct CameraComponent(Viewport viewport) : IComponent
+{
+    public Viewport Viewport = viewport;
+    public Vector2 Position;
+}

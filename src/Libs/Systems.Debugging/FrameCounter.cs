@@ -3,18 +3,13 @@ using Scellecs.Morpeh;
 
 namespace Systems.Debugging;
 
-public class FrameCounter : ISystem
+public class FrameCounter(World world) : ISystem
 {
     private const float UpdateFrequencyInSec = .02f;
     private float _elapsedTime;
     private int _framesCount;
 
-    public World World { get; set; }
-
-    public FrameCounter(World world)
-    {
-        World = world;
-    }
+    public World World { get; set; } = world;
 
     public void OnAwake()
     {
@@ -30,9 +25,9 @@ public class FrameCounter : ISystem
             return;
         }
 
-        ref WorldComponent world =
-            ref World.Filter.With<WorldComponent>().Build().First().GetComponent<WorldComponent>();
-        world.FramesPerSec = _framesCount / _elapsedTime;
+        ref WorldMetaComponent worldMeta =
+            ref World.Filter.With<WorldMetaComponent>().Build().First().GetComponent<WorldMetaComponent>();
+        worldMeta.FramesPerSec = _framesCount / _elapsedTime;
 
         _framesCount = 0;
         _elapsedTime = 0;

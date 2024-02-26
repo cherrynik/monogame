@@ -6,13 +6,15 @@ using Scellecs.Morpeh.Extended;
 namespace Entities.Factories.Items;
 
 public class RockEntityFactory(
+    NameComponent nameComponent,
     ItemComponent itemComponent,
     TransformComponent transformComponent) : EntityFactory
 {
     private readonly SpriteComponent _spriteComponent;
 
-    public RockEntityFactory(ItemComponent itemComponent, TransformComponent transformComponent,
-        SpriteComponent spriteComponent) : this(itemComponent, transformComponent)
+    public RockEntityFactory(NameComponent nameComponent, ItemComponent itemComponent,
+        TransformComponent transformComponent,
+        SpriteComponent spriteComponent) : this(nameComponent, itemComponent, transformComponent)
     {
         _spriteComponent = spriteComponent;
     }
@@ -23,6 +25,7 @@ public class RockEntityFactory(
 
     protected override void AddData(Entity e)
     {
+        e.AddComponent(nameComponent);
         e.AddComponent(itemComponent);
         e.AddComponent(transformComponent);
     }

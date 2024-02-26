@@ -2,4 +2,4 @@
 
 namespace Components.Tags;
 
-public struct InputMovableComponent : IComponent;
+public struct RenderableComponent : IComponent;

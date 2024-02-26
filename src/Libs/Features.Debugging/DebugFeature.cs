@@ -3,7 +3,7 @@ using Scellecs.Morpeh.Extended;
 using Systems.Debugging;
 using Systems.Debugging.Render;
 
-namespace GameDesktop;
+namespace Features.Debugging;
 
 public class DebugFeature : Feature
 {

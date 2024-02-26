@@ -8,15 +8,10 @@ using Scellecs.Morpeh;
 
 namespace Systems.Render;
 
-public class CameraFollowingSystem : ILateSystem
+public class CameraFollowingSystem(World world) : ILateSystem
 {
     // private readonly ICamera _camera;
-    public World World { get; set; }
-
-    public CameraFollowingSystem(World world)
-    {
-        World = world;
-    }
+    public World World { get; set; } = world;
 
     public void OnAwake()
     {

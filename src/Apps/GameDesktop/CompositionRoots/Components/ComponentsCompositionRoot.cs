@@ -39,12 +39,12 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     private static void RegisterItemComponent(IServiceRegistry serviceRegistry)
     {
         // TODO: make this accessible globally? So, the name, etc. of an item are reused between classes easily
-        Dictionary<ItemId, Item> items = new()
-         {
-             { ItemId.Rock, new Item(name: "Rock", isStackable: true, maximumInStack: 16) }
-         };
+        // Dictionary<ItemId, Item> items = new()
+        //  {
+        //      { ItemId.Rock, new Item(name: "Rock", isStackable: true, maximumInStack: 16) }
+        //  };
 
-        serviceRegistry.RegisterSingleton(_ => new ItemComponent(ItemId.Rock), "Rock");
+        serviceRegistry.RegisterSingleton(_ => new ItemComponent(ItemId.Rock), ItemsTable.Items[ItemId.Rock].Name);
     }
 
     private static void RegisterTagComponents(IServiceRegistry serviceRegistry)
@@ -67,7 +67,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterCameraComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new Viewport(0, 0, 800, 480), "CameraComponent");
+        serviceRegistry.RegisterSingleton(_ => new Viewport(0, 0, 801, 480), "CameraComponent");
         serviceRegistry.RegisterSingleton(factory =>
             new CameraComponent(factory.GetInstance<Viewport>("CameraComponent")));
     }
