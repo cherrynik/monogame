@@ -90,10 +90,10 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
             return new SpriteComponent(defaultSprite);
         }, "Player");
-        
+
         // serviceRegistry.RegisterSingleton(factory =>
         // {
-            // TODO: add sprite for a rock
+        // TODO: add sprite for a rock
         // })
     }
 
@@ -134,7 +134,15 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     private static void RegisterInventoryComponent(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterTransient(_ =>
-            new InventoryComponent([]));
+        {
+            const int count = 9;
+            Slot[] slots = new Slot[count];
+
+            // Put items in slots like that:
+            // slots[0].Item = ItemId.Rock;
+
+            return new InventoryComponent(slots);
+        });
     }
 
     private static void RegisterCharacterAnimatorComponent(IServiceRegistry serviceRegistry)

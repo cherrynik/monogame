@@ -32,6 +32,12 @@ Microsoft Docs - [Link](https://learn.microsoft.com/en-us/dotnet/fundamentals/co
 
 Use CSharpier - [Link](https://csharpier.com/docs/Editors)
 
+# Tools
+
+## UI Debugging
+
+ImGUI Docs - [Link](https://github.com/ocornut/imgui/blob/master/docs/FAQ.md#q-where-is-the-documentation)
+
 ## Dependency Injection
 
 LightInject Docs - [Link](https://github.com/seesharper/LightInject)

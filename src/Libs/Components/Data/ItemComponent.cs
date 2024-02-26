@@ -5,7 +5,8 @@ namespace Components.Data;
 // TODO: refactor here a lil bit
 public enum ItemId
 {
-    Rock = 0,
+    None = 0,
+    Rock = 1,
 }
 
 public readonly struct ItemComponent(ItemId itemId) : IComponent
@@ -39,6 +40,6 @@ public static class ItemsTable
 {
     public static readonly Dictionary<ItemId, Item> Items = new()
     {
-        { ItemId.Rock, new Item(name: "Rock", maximumInStack: 16) }
+        { ItemId.None, new Item(name: "None") }, { ItemId.Rock, new Item(name: "Rock", maximumInStack: 16) }
     };
 }

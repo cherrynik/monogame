@@ -8,10 +8,25 @@ using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging;
 
+// TODO: Debugger show SystemsList
 public class EntitiesList(World world) : IRenderSystem
 {
     public World World { set; get; } = world;
     private const float Indentation = 16.0f;
+
+    static readonly Dictionary<Type, string> Types = new()
+    {
+        { typeof(InventoryComponent), "Inventory" },
+        { typeof(TransformComponent), "Transform" },
+        { typeof(CameraComponent), "Camera" },
+        { typeof(RectangleCollisionComponent), "Rectangle Collision" },
+        { typeof(CharacterAnimatorComponent), "Character Animator" },
+        { typeof(MovementAnimationsComponent), "Movement Animations" },
+        { typeof(SpriteComponent), "Sprite" },
+        { typeof(InputMovableComponent), "Input Movable" },
+        { typeof(MovableComponent), "Movable" },
+        { typeof(RenderableComponent), "Renderable" },
+    };
 
     public void OnAwake()
     {
@@ -25,26 +40,18 @@ public class EntitiesList(World world) : IRenderSystem
 
         ImGui.SeparatorText("Entities");
         ImGui.TextWrapped($"Count: {filter.GetLengthSlow()}");
-        // if (ImGui.CollapsingHeader("Entities"))
 
-        // ImGui.Indent(Indentation);
         foreach (Entity e in filter)
         {
-            // TODO: By flag components I could decide what entity this is and show the proper name
-            string entityName = GetEntityName(e);
-            if (!ImGui.CollapsingHeader($"{entityName}###{e.ID}")) // ### -> for identical values
+            if (!ImGui.TreeNode($"{GetEntityName(e)}##{e.ID}")) // ## -> for identical values
             {
                 continue;
             }
 
-            ImGui.Indent(Indentation);
-
             DrawComponentsList(e);
 
-            ImGui.Unindent(Indentation);
+            ImGui.TreePop();
         }
-
-        // ImGui.Unindent(Indentation);
 
         ImGui.End();
     }
@@ -58,25 +65,43 @@ public class EntitiesList(World world) : IRenderSystem
     private static void DrawComponentsList(Entity e)
     {
         // TODO: collect all the components' names automatically
-        Dictionary<Type, string> types = new()
-        {
-            { typeof(InventoryComponent), "Inventory" },
-            { typeof(TransformComponent), "Transform" },
-            { typeof(CameraComponent), "Camera" },
-            { typeof(RectangleCollisionComponent), "Rectangle Collision" },
-            { typeof(CharacterAnimatorComponent), "Character Animator" },
-            { typeof(MovementAnimationsComponent), "Movement Animations" },
-            { typeof(SpriteComponent), "Sprite" },
-            { typeof(InputMovableComponent), "Input Movable" },
-            { typeof(MovableComponent), "Movable" },
-            { typeof(RenderableComponent), "Renderable" },
-        };
 
-        foreach (var type in types.Where(type => e.Has(type.Key)))
+        foreach (var (key, value) in Types.Where(type => e.Has(type.Key)))
         {
-            ImGui.TextWrapped(type.Value);
+            // FIXME: button to open closable window (now it's screwed, the window is closed when unfocused)
+            if (ImGui.Button(value)) ImGui.OpenPopup(value);
+
+            if (ImGui.IsPopupOpen(value, ImGuiPopupFlags.None))
+            {
+                ImGui.Begin(value);
+
+                DrawComponentEditor(key, e);
+
+                ImGui.End();
+            }
         }
         // TODO: menu for each component to edit the values
+    }
+
+    // TODO: refactor this?
+    private static void DrawComponentEditor(Type component, Entity e)
+    {
+        if (component == typeof(TransformComponent))
+        {
+            ref TransformComponent transformComponent = ref e.GetComponent<TransformComponent>();
+
+            ImGui.SliderFloat2("Position", ref transformComponent.Position, 0, 300);
+        }
+        else if (component == typeof(InventoryComponent))
+        {
+            ref InventoryComponent inventoryComponent = ref e.GetComponent<InventoryComponent>();
+            ImGui.SeparatorText("Slots");
+            for (var i = 0; i < inventoryComponent.Slots.Length; i++)
+            {
+                var slot = inventoryComponent.Slots[i];
+                ImGui.TextWrapped($"{i + 1}: {slot.GetInfo().Name}");
+            }
+        }
     }
 
     public void Dispose()

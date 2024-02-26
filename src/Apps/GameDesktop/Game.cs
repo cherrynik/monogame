@@ -106,6 +106,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _imGuiRenderer?.BeginLayout(gameTime);
 
+        // ImGui.ShowMetricsWindow();
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _rootFeature.OnRender(deltaTime);
         _spriteBatch.End();
@@ -143,7 +144,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _imGuiRenderer = _container.GetInstance<ImGuiRenderer>();
 
-        ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable;
+        ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable;
     }
 
     private void RegisterRootFeature()
