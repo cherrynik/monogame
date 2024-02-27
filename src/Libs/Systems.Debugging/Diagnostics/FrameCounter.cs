@@ -5,7 +5,7 @@ namespace Systems.Debugging.Diagnostics;
 
 public class FrameCounter(Scellecs.Morpeh.World world) : ISystem
 {
-    private const float UpdateFrequencyInSec = .02f;
+    private const float UpdateFrequencyInSec = .0875f;
     private float _elapsedTime;
     private int _framesCount;
 
@@ -20,13 +20,13 @@ public class FrameCounter(Scellecs.Morpeh.World world) : ISystem
         ++_framesCount;
         _elapsedTime += deltaTime;
 
-        if (_elapsedTime < UpdateFrequencyInSec)
-        {
-            return;
-        }
+        if (_elapsedTime < UpdateFrequencyInSec) return;
 
-        ref WorldMetaComponent worldMeta =
-            ref World.Filter.With<WorldMetaComponent>().Build().First().GetComponent<WorldMetaComponent>();
+        ref WorldMetaComponent worldMeta = ref World.Filter
+            .With<WorldMetaComponent>()
+            .Build()
+            .First()
+            .GetComponent<WorldMetaComponent>();
         worldMeta.FramesPerSec = _framesCount / _elapsedTime;
 
         _framesCount = 0;

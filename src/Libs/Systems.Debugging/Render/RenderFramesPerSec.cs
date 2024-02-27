@@ -20,7 +20,7 @@ public class RenderFramesPerSec(Scellecs.Morpeh.World world) : IRenderSystem
         ImGui.Begin("Diagnostics",
             ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking);
 
-        ImGui.Text($"FPS: {world.FramesPerSec}");
+        ImGui.Text($"FPS: {world.FramesPerSec:F2}");
 
         ImGui.End();
     }

@@ -22,12 +22,15 @@ public class SystemsList(Scellecs.Morpeh.World world, SystemsEngine systemsEngin
             return;
         }
 
-        DrawSystemsGroup("Initializers", systemsEngine.Initializers.GetInitializersInfo());
-        DrawSystemsGroup("Systems", systemsEngine.Systems.GetSystemsInfo());
-        DrawSystemsGroup("FixedSystems", systemsEngine.FixedSystems.GetFixedSystemsInfo());
-        DrawSystemsGroup("CleanupSystems", systemsEngine.CleanupSystems.GetCleanupSystemsInfo());
-        DrawSystemsGroup("RenderSystems", systemsEngine.RenderSystems.GetSystemsInfo());
-        DrawSystemsGroup("LateSystems", systemsEngine.LateSystems.GetLateSystemsInfo());
+        DrawSystemsGroup("1. Initializers", systemsEngine.Initializers.GetInitializersInfo());
+
+        DrawSystemsGroup("2. FixedSystems", systemsEngine.FixedSystems.GetFixedSystemsInfo());
+        DrawSystemsGroup("3. Systems", systemsEngine.Systems.GetSystemsInfo());
+        DrawSystemsGroup("4. LateSystems", systemsEngine.LateSystems.GetLateSystemsInfo());
+
+        DrawSystemsGroup("5. RenderSystems", systemsEngine.RenderSystems.GetSystemsInfo());
+
+        DrawSystemsGroup("[Undetermined] CleanupSystems", systemsEngine.CleanupSystems.GetCleanupSystemsInfo());
 
         ImGui.TreePop();
     }
