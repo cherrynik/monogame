@@ -1,4 +1,5 @@
-﻿using Components.Data;
+﻿using System.Linq;
+using Components.Data;
 using Entities.Factories.Characters;
 using Entities.Factories.Items;
 using Entities.Factories.Meta;
@@ -105,8 +106,9 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory => new SystemsEngine(factory.GetInstance<World>()));
         serviceRegistry.RegisterSingleton(factory =>
         {
-            Texture2D pixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, 1, 1);
-            pixel.SetData([Color.Gold]);
+            const int w = 3, h = 3;
+            Texture2D pixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
+            pixel.SetData(Enumerable.Repeat(Color.Red, w * h).ToArray());
 
             var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
                 new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
@@ -128,8 +130,8 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                     factory.GetInstance<SystemsEngine>()),
                 new EntitiesList(factory.GetInstance<World>()),
                 new FrameCounter(factory.GetInstance<World>()),
-                new RenderFramesPerSec(factory.GetInstance<World>())
-                // new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel)
+                new RenderFramesPerSec(factory.GetInstance<World>()),
+                new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel)
             );
 #endif
 

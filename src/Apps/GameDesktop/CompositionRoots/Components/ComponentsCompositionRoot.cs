@@ -93,7 +93,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
         // serviceRegistry.RegisterSingleton(factory =>
         // {
-        // TODO: add sprite for a rock
+        // TODO: add the sprite of a rock
         // })
     }
 

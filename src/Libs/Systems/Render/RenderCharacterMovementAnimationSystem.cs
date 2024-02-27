@@ -32,7 +32,7 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
         foreach (Entity e in entities)
         {
             ref var transform = ref e.GetComponent<TransformComponent>();
-            var at = transform.Position - camera.Position;
+            var at = camera.WorldToScreen(transform.Position);
 
             if (e.Has<CharacterAnimatorComponent>())
             {

@@ -18,11 +18,17 @@ public class PivotRenderSystem(Scellecs.Morpeh.World world, SpriteBatch spriteBa
     {
         Filter filter = World.Filter.With<TransformComponent>().Build();
 
+        var camera = World.Filter
+            .With<CameraComponent>()
+            .Build()
+            .First()
+            .GetComponent<CameraComponent>();
+
         foreach (Entity e in filter)
         {
             ref var transform = ref e.GetComponent<TransformComponent>();
 
-            spriteBatch.Draw(texture: pixel, position: transform.Position, color: Color.Gold);
+            spriteBatch.Draw(texture: pixel, position: camera.WorldToScreen(transform.Position), color: Color.Gold);
         }
     }
 

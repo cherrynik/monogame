@@ -12,4 +12,6 @@ public struct CameraComponent(Viewport viewport) : IComponent
 {
     public Viewport Viewport = viewport;
     public Vector2 Position;
+
+    public Vector2 WorldToScreen(Vector2 other) => other - Position;
 }
