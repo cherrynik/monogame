@@ -2,7 +2,7 @@
 using Components.Render.Animation;
 using Components.Tags;
 using Scellecs.Morpeh;
-using Scellecs.Morpeh.Extended;
+using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Characters;
 

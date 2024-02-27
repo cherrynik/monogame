@@ -1,92 +1,50 @@
 ﻿namespace Scellecs.Morpeh.Extended;
 
-public abstract class Feature
+public class Feature(World world, SystemsEngine systemsEngine)
 {
-    public World World { get; set; }
+    public readonly SystemsEngine SystemsEngine = systemsEngine;
+    public World World { get; set; } = world;
 
-    private readonly List<Feature> _features = new();
-    private readonly SystemsGroup _initializers;
-    private readonly SystemsGroup _systems;
-    private readonly SystemsGroup _fixedSystems;
-    private readonly SystemsGroup _lateSystems;
-    private readonly SystemsGroup _cleanupSystems;
-    private readonly SystemsGroup _renderSystems;
-
-    public void OnAwake()
+    public Feature(World world, SystemsEngine systemsEngine, params IInitializer[] systems) : this(world, systemsEngine)
     {
-        _initializers.Initialize();
-
-        foreach (Feature feature in _features) feature._initializers.Initialize();
+        foreach (var system in systems) Add(system);
     }
 
-    public virtual void OnUpdate(float deltaTime)
-    {
-        _systems.Update(deltaTime);
+    public void OnAwake() => SystemsEngine.Initializers.Initialize();
 
-        foreach (Feature feature in _features) feature._systems.Update(deltaTime);
-    }
+    public virtual void OnUpdate(float deltaTime) => SystemsEngine.Systems.Update(deltaTime);
 
-    public virtual void OnFixedUpdate(float deltaTime)
-    {
-        _fixedSystems.FixedUpdate(deltaTime);
-
-        foreach (Feature feature in _features) feature._fixedSystems.FixedUpdate(deltaTime);
-    }
+    public virtual void OnFixedUpdate(float deltaTime) => SystemsEngine.FixedSystems.FixedUpdate(deltaTime);
 
     public virtual void OnLateUpdate(float deltaTime)
     {
-        _lateSystems.LateUpdate(deltaTime);
-        _cleanupSystems.CleanupUpdate(deltaTime);
-
-        foreach (Feature feature in _features)
-        {
-            feature._lateSystems.LateUpdate(deltaTime);
-            feature._cleanupSystems.CleanupUpdate(deltaTime);
-        }
+        SystemsEngine.LateSystems.LateUpdate(deltaTime);
+        SystemsEngine.CleanupSystems.CleanupUpdate(deltaTime);
     }
 
-    public virtual void OnRender(float deltaTime)
-    {
-        _renderSystems.Update(deltaTime);
-
-        foreach (Feature feature in _features) feature._renderSystems.Update(deltaTime);
-    }
-
-    protected Feature(World world)
-    {
-        World = world;
-
-        _initializers = world.CreateSystemsGroup();
-        _systems = world.CreateSystemsGroup();
-        _fixedSystems = world.CreateSystemsGroup();
-        _lateSystems = world.CreateSystemsGroup();
-        _cleanupSystems = world.CreateSystemsGroup();
-        _renderSystems = world.CreateSystemsGroup();
-    }
-
-    protected void Add(Feature feature) => _features.Add(feature);
+    public virtual void OnRender(float deltaTime) => SystemsEngine.RenderSystems.Update(deltaTime);
 
     protected void Add(IInitializer initializer)
     {
         switch (initializer)
         {
             case IRenderSystem renderSystem:
-                _renderSystems.AddSystem(renderSystem);
+                SystemsEngine.RenderSystems.AddSystem(renderSystem);
                 break;
             case ICleanupSystem cleanupSystem:
-                _cleanupSystems.AddSystem(cleanupSystem);
+                SystemsEngine.CleanupSystems.AddSystem(cleanupSystem);
                 break;
             case ILateSystem lateSystem:
-                _lateSystems.AddSystem(lateSystem);
+                SystemsEngine.LateSystems.AddSystem(lateSystem);
                 break;
             case IFixedSystem fixedSystem:
-                _fixedSystems.AddSystem(fixedSystem);
+                SystemsEngine.FixedSystems.AddSystem(fixedSystem);
                 break;
             case ISystem system:
-                _systems.AddSystem(system);
+                SystemsEngine.Systems.AddSystem(system);
                 break;
             default:
-                _initializers.AddInitializer(initializer);
+                SystemsEngine.Initializers.AddInitializer(initializer);
                 break;
         }
     }

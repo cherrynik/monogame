@@ -11,12 +11,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Myra.Graphics2D.UI;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 using Services.Movement;
 using Systems;
+using Systems.Debugging.Diagnostics;
+using Systems.Debugging.World;
 using Systems.Render;
 #if DEBUG
-using Features.Debugging;
-using Systems.Debugging;
 using Systems.Debugging.Render;
 using GameDesktop.CompositionRoots.DebugFeatures;
 #endif
@@ -98,32 +99,46 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         // ECS
         serviceRegistry.RegisterSingleton(_ => World.Create());
 
+        // TODO: I guess, I should delete "Features" project,
+        // register features actually in another particular place,
+        // and create "CompositionRoots" project
+        serviceRegistry.RegisterSingleton(factory => new SystemsEngine(factory.GetInstance<World>()));
         serviceRegistry.RegisterSingleton(factory =>
         {
             Texture2D pixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, 1, 1);
-            pixel.SetData(new[] { Color.Gold });
+            pixel.SetData([Color.Gold]);
+
+            var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
+                new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
+                new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
+
+            var preRender = new Feature(factory.GetInstance<World>(),
+                factory.GetInstance<SystemsEngine>(),
+                new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
+                new CameraFollowingSystem(factory.GetInstance<World>()));
+
+            var render = new Feature(factory.GetInstance<World>(),
+                factory.GetInstance<SystemsEngine>(),
+                new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
+                    factory.GetInstance<SpriteBatch>()));
+#if DEBUG
+            var debug = new Feature(factory.GetInstance<World>(),
+                factory.GetInstance<SystemsEngine>(),
+                new SystemsList(factory.GetInstance<World>(),
+                    factory.GetInstance<SystemsEngine>()),
+                new EntitiesList(factory.GetInstance<World>()),
+                new FrameCounter(factory.GetInstance<World>()),
+                new RenderFramesPerSec(factory.GetInstance<World>())
+                // new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel)
+            );
+#endif
 
             return new RootFeature(factory.GetInstance<World>(),
+                factory.GetInstance<SystemsEngine>(),
                 new WorldInitializer(factory.GetInstance<World>(), new WorldEntityFactory(new WorldMetaComponent()),
                     factory.GetInstance<PlayerEntityFactory>(),
                     factory.GetInstance<DummyEntityFactory>(),
-                    factory.GetInstance<RockEntityFactory>()),
-                new MovementFeature(factory.GetInstance<World>(),
-                    new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
-                    new MovementSystem(factory.GetInstance<World>(), new SimpleMovement())),
-                new PreRenderFeature(factory.GetInstance<World>(),
-                    new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
-                    new CameraFollowingSystem(factory.GetInstance<World>())),
-                new RenderFeature(factory.GetInstance<World>(),
-                    new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
-                        factory.GetInstance<SpriteBatch>()))
-#if DEBUG
-                ,
-                new DebugFeature(factory.GetInstance<World>(), new EntitiesList(factory.GetInstance<World>()),
-                    new FrameCounter(factory.GetInstance<World>()),
-                    new RenderFramesPerSec(factory.GetInstance<World>()),
-                    new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel))
-#endif
+                    factory.GetInstance<RockEntityFactory>())
             );
         });
     }

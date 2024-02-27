@@ -6,9 +6,9 @@ using Color = Microsoft.Xna.Framework.Color;
 
 namespace Systems.Debugging.Render;
 
-public class PivotRenderSystem(World world, SpriteBatch spriteBatch, Texture2D pixel) : IRenderSystem
+public class PivotRenderSystem(Scellecs.Morpeh.World world, SpriteBatch spriteBatch, Texture2D pixel) : IRenderSystem
 {
-    public World World { get; set; } = world;
+    public Scellecs.Morpeh.World World { get; set; } = world;
 
     public void OnAwake()
     {

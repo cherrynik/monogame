@@ -1,15 +1,15 @@
 ﻿using Components.Data;
 using Scellecs.Morpeh;
 
-namespace Systems.Debugging;
+namespace Systems.Debugging.Diagnostics;
 
-public class FrameCounter(World world) : ISystem
+public class FrameCounter(Scellecs.Morpeh.World world) : ISystem
 {
     private const float UpdateFrequencyInSec = .02f;
     private float _elapsedTime;
     private int _framesCount;
 
-    public World World { get; set; } = world;
+    public Scellecs.Morpeh.World World { get; set; } = world;
 
     public void OnAwake()
     {

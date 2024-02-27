@@ -1,7 +1,7 @@
 ﻿using Components.Data;
 using Components.Render.Static;
 using Scellecs.Morpeh;
-using Scellecs.Morpeh.Extended;
+using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Characters;
 

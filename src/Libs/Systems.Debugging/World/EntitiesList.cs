@@ -5,13 +5,13 @@ using Components.Tags;
 using ImGuiNET;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
+using Scellecs.Morpeh.Extended.Extensions;
 
-namespace Systems.Debugging;
+namespace Systems.Debugging.World;
 
-// TODO: Debugger show SystemsList
-public class EntitiesList(World world) : IRenderSystem
+public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
 {
-    public World World { set; get; } = world;
+    public Scellecs.Morpeh.World World { set; get; } = world;
     private const float Indentation = 16.0f;
 
     static readonly Dictionary<Type, string> Types = new()
@@ -38,8 +38,11 @@ public class EntitiesList(World world) : IRenderSystem
 
         ImGui.Begin("World");
 
-        ImGui.SeparatorText("Entities");
-        ImGui.TextWrapped($"Count: {filter.GetLengthSlow()}");
+        if (!ImGui.TreeNode($"Entities ({filter.GetLengthSlow()})"))
+        {
+            return;
+        }
+
 
         foreach (Entity e in filter)
         {
@@ -52,6 +55,8 @@ public class EntitiesList(World world) : IRenderSystem
 
             ImGui.TreePop();
         }
+
+        ImGui.TreePop();
 
         ImGui.End();
     }
@@ -71,14 +76,16 @@ public class EntitiesList(World world) : IRenderSystem
             // FIXME: button to open closable window (now it's screwed, the window is closed when unfocused)
             if (ImGui.Button(value)) ImGui.OpenPopup(value);
 
-            if (ImGui.IsPopupOpen(value, ImGuiPopupFlags.None))
+            if (!ImGui.IsPopupOpen(value))
             {
-                ImGui.Begin(value);
-
-                DrawComponentEditor(key, e);
-
-                ImGui.End();
+                continue;
             }
+
+            ImGui.BeginPopup(value, ImGuiWindowFlags.ChildMenu);
+
+            DrawComponentEditor(key, e);
+
+            ImGui.End();
         }
         // TODO: menu for each component to edit the values
     }
@@ -94,6 +101,7 @@ public class EntitiesList(World world) : IRenderSystem
         }
         else if (component == typeof(InventoryComponent))
         {
+            // TODO: table with dropdown selectable items of the range of ItemsTable & ItemIds enum at the slots
             ref InventoryComponent inventoryComponent = ref e.GetComponent<InventoryComponent>();
             ImGui.SeparatorText("Slots");
             for (var i = 0; i < inventoryComponent.Slots.Length; i++)

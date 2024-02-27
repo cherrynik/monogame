@@ -10,6 +10,7 @@ using Features;
 using Microsoft.Xna.Framework.Graphics;
 using Moq;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 using Services.Movement;
 using Systems;
 
@@ -84,7 +85,13 @@ public class Tests
         var mockInputScanner = new Mock<IInputScanner>();
         mockInputScanner.Setup(p => p.GetDirection()).Returns(Vector2.One);
 
+        var systemsEngine = new SystemsEngine(_world);
+
+        var movementFeature = new Feature(_world, systemsEngine, new InputSystem(_world, mockInputScanner.Object),
+            new MovementSystem(_world, new SimpleMovement()));
+
         var rootFeature = new RootFeature(_world,
+            systemsEngine,
             new WorldInitializer(_world, new WorldEntityFactory(new WorldMetaComponent()),
                 new PlayerEntityFactory(
                     new NameComponent("Player"), new InputMovableComponent(), new MovableComponent(),
@@ -92,9 +99,8 @@ public class Tests
                     new RectangleCollisionComponent(), new InventoryComponent()),
                 new DummyEntityFactory(new NameComponent("Dummy"), new TransformComponent(),
                     new RectangleCollisionComponent()),
-                new RockEntityFactory(new NameComponent("Rock"), new ItemComponent(ItemId.Rock), new TransformComponent())),
-            new MovementFeature(_world, new InputSystem(_world, mockInputScanner.Object),
-                new MovementSystem(_world, new SimpleMovement())));
+                new RockEntityFactory(new NameComponent("Rock"), new ItemComponent(ItemId.Rock),
+                    new TransformComponent())));
 
         rootFeature.OnAwake();
 

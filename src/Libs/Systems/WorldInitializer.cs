@@ -3,7 +3,7 @@ using Entities.Factories.Items;
 using Entities.Factories.Meta;
 using Scellecs.Morpeh;
 
-namespace Features;
+namespace Systems;
 
 public class WorldInitializer(
     World world,

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Scellecs.Morpeh.Extended;
+namespace Scellecs.Morpeh.Extended.Extensions;
 
 public static class EntityExtensions
 {

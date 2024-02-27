@@ -5,9 +5,9 @@ using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging.Render;
 
-public class RenderFramesPerSec(World world) : IRenderSystem
+public class RenderFramesPerSec(Scellecs.Morpeh.World world) : IRenderSystem
 {
-    public World World { get; set; } = world;
+    public Scellecs.Morpeh.World World { get; set; } = world;
 
     public void OnAwake()
     {
@@ -17,7 +17,8 @@ public class RenderFramesPerSec(World world) : IRenderSystem
     {
         var world = World.Filter.With<WorldMetaComponent>().Build().First().GetComponent<WorldMetaComponent>();
 
-        ImGui.Begin("Diagnostics", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking);
+        ImGui.Begin("Diagnostics",
+            ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking);
 
         ImGui.Text($"FPS: {world.FramesPerSec}");
 

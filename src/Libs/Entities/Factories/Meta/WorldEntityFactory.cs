@@ -1,6 +1,6 @@
 ﻿using Components.Data;
 using Scellecs.Morpeh;
-using Scellecs.Morpeh.Extended;
+using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Meta;
 
