@@ -5,7 +5,7 @@ using Scellecs.Morpeh;
 
 namespace Systems;
 
-public class InputSystem(World world, IInputScanner inputScanner) : ISystem
+public class InputSystem(World world, IInputScanner inputScanner) : IFixedSystem
 {
     public World World { get; set; } = world;
 

@@ -127,8 +127,15 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterRectangleColliderComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterTransient(_ =>
-            new RectangleColliderComponent { Size = new(0, 0, 8, 8) });
+        serviceRegistry.RegisterSingleton(_ =>
+            new RectangleColliderComponent
+            {
+                Size = new(0, 0, 8, 8),
+                // IsTrigger = true
+            }, "DummyEntity");
+
+        serviceRegistry.RegisterSingleton(_ =>
+            new RectangleColliderComponent { Size = new(0, 0, 8, 8) }, "PlayerEntity");
     }
 
     private static void RegisterInventoryComponent(IServiceRegistry serviceRegistry)

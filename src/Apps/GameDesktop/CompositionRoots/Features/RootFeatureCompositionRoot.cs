@@ -91,7 +91,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             var panel = new Panel();
             var rightBottomText = new Label()
             {
-                Text = "Pre-Alpha v0.1.0",
+                Text = "Pre-Alpha v0.1.1",
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Left = -30,
@@ -122,7 +122,9 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             // ⚠ Order-sensitive zone ⚠ 
             var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
                 new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
-                new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
+                new CollisionSystem(factory.GetInstance<World>()),
+                new MovementSystem(factory.GetInstance<World>(), new SimpleMovement())
+            );
 
             var preRender = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),

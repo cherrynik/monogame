@@ -1,56 +1,81 @@
-﻿// using Entitas;
-// using Entitas.Extended;
-// using Microsoft.Xna.Framework;
-// using Serilog;
-//
-// namespace Systems;
-//
-// // Input & Collision systems both have to be fixed execute systems,
-// // otherwise it'll lead to the desynchronized behaviour.
-// public class CollisionSystem : IFixedExecuteSystem
-// {
-//     private readonly IGroup<GameEntity> _group;
-//     private readonly ILogger _logger;
-//
-//     public CollisionSystem(IGroup<GameEntity> group, ILogger logger)
-//     {
-//         _group = group;
-//         _logger = logger;
-//     }
-//
-//     // TODO: Optimize efficiency
-//     public void FixedExecute(GameTime gameTime)
-//     {
-//         GameEntity[] entities = _group.GetEntities();
-//
-//         for (int i = 0; i < entities.Length; ++i)
-//         {
-//             GameEntity first = entities[i];
-//
-//             for (int j = i + 1; j < entities.Length; ++j)
-//             {
-//                 GameEntity second = entities[j];
-//
-//                 if (AreIntersecting(first, second))
-//                 {
-//                     first.transform.Velocity = Vector2.Zero;
-//                     second.transform.Velocity = Vector2.Zero;
-//                 }
-//             }
-//         }
-//     }
-//
-//     private static bool AreIntersecting(GameEntity first, GameEntity second)
-//     {
-//         Rectangle firstRectangle = BuildRectangle(first);
-//         Rectangle secondRectangle = BuildRectangle(second);
-//
-//         Rectangle intersect = Rectangle.Intersect(firstRectangle, secondRectangle);
-//
-//         return !intersect.IsEmpty;
-//
-//         Rectangle BuildRectangle(GameEntity x) => new((int)(x.transform.Position.X + x.transform.Velocity.X),
-//             (int)(x.transform.Position.Y + x.transform.Velocity.Y), x.rectangleCollision.Size.Width,
-//             x.rectangleCollision.Size.Height);
-//     }
-// }
+﻿using Components.Data;
+using Microsoft.Xna.Framework;
+using Scellecs.Morpeh;
+using Vector2 = System.Numerics.Vector2;
+
+namespace Systems;
+
+// Input & Collision systems both have to be fixed execute systems,
+// otherwise it'll lead to the desynchronized behaviour.
+public class CollisionSystem(World world) : IFixedSystem
+{
+    public World World { get; set; } = world;
+
+    public void OnAwake()
+    {
+    }
+
+    public void OnUpdate(float deltaTime)
+    {
+        Filter filter = World.Filter
+            .With<RectangleColliderComponent>()
+            .With<TransformComponent>()
+            .Build();
+
+        foreach (Entity e in filter)
+        {
+            ref var leftTransform = ref e.GetComponent<TransformComponent>();
+            ref var leftCollider = ref e.GetComponent<RectangleColliderComponent>();
+
+            foreach (Entity other in filter)
+            {
+                if (e.Equals(other)) continue;
+
+                ref var rightTransform = ref other.GetComponent<TransformComponent>();
+                ref var rightCollider = ref other.GetComponent<RectangleColliderComponent>();
+
+                if (!AreColliding(new(leftTransform, leftCollider),
+                        new(rightTransform, rightCollider))) continue;
+
+                if (leftCollider.IsTrigger || rightCollider.IsTrigger) HandleTrigger();
+                else HandleCollision(ref leftTransform, ref rightTransform);
+            }
+        }
+    }
+
+    private static void HandleTrigger()
+    {
+        // raise event of triggered
+    }
+
+    private static void HandleCollision(ref TransformComponent left, ref TransformComponent right)
+    {
+        left.Velocity = Vector2.Zero;
+        right.Velocity = Vector2.Zero;
+    }
+
+    private static bool AreColliding(Tuple<TransformComponent, RectangleColliderComponent> first,
+        Tuple<TransformComponent, RectangleColliderComponent> second)
+    {
+        var left = BuildRectangle(first);
+        var right = BuildRectangle(second);
+
+        var intersect = Rectangle.Intersect(left, right);
+
+        return !intersect.IsEmpty;
+
+        Rectangle BuildRectangle(Tuple<TransformComponent, RectangleColliderComponent> target)
+        {
+            (TransformComponent transform, RectangleColliderComponent rectCollider) = target;
+
+            return new Rectangle((int)(transform.Position.X + transform.Velocity.X),
+                (int)(transform.Position.Y + transform.Velocity.Y),
+                rectCollider.Size.Width,
+                rectCollider.Size.Height);
+        }
+    }
+
+    public void Dispose()
+    {
+    }
+}
