@@ -123,8 +123,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
                 new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
                 new CollisionSystem(factory.GetInstance<World>()),
-                new MovementSystem(factory.GetInstance<World>(), new SimpleMovement())
-            );
+                new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
 
             var preRender = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),

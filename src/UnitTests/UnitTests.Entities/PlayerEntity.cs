@@ -103,8 +103,9 @@ public class Tests
                     new TransformComponent())));
 
         rootFeature.OnAwake();
-
+        rootFeature.OnFixedUpdate(It.IsAny<float>());
         rootFeature.OnUpdate(It.IsAny<float>());
+        rootFeature.OnLateUpdate(It.IsAny<float>());
 
         mockInputScanner.Verify(p => p.GetDirection(), Times.Once);
     }
