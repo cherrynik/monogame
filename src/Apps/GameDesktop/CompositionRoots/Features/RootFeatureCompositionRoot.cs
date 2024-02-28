@@ -91,7 +91,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             var panel = new Panel();
             var rightBottomText = new Label()
             {
-                Text = "Right Bottom Text",
+                Text = "Pre-Alpha v0.1.0",
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Bottom,
                 Left = -30,
