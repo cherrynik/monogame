@@ -156,26 +156,27 @@ public class Game : Microsoft.Xna.Framework.Game
     private void RegisterMyraUI()
     {
         // ComboBox
-        var combo = new ComboBox();
-        combo.Items.Add(new ListItem("Red", Color.Red));
-        combo.Items.Add(new ListItem("Green", Color.Green));
-        combo.Items.Add(new ListItem("Blue", Color.Blue));
+        // var combo = new ComboBox();
+        // combo.Items.Add(new ListItem("Red", Color.Red));
+        // combo.Items.Add(new ListItem("Green", Color.Green));
+        // combo.Items.Add(new ListItem("Blue", Color.Blue));
 
         // Button
-        var button = new Button { Content = new Label { Text = "Show" } };
-        button.Click += (s, a) =>
-        {
-            var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
-            messageBox.ShowModal(_desktop);
-        };
+        // var button = new Button { Content = new Label { Text = "Show" } };
+        // button.Click += (s, a) =>
+        // {
+            // var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
+            // messageBox.ShowModal(_desktop);
+        // };
 
-        var grid = _container.GetInstance<Grid>();
-        new UIFactory(grid,
-                new Label { Id = "label", Text = "Hello, World!" },
-                combo,
-                button,
-                new SpinButton { Width = 100, Nullable = true })
-            .Build();
+        // var grid = _container.GetInstance<Grid>();
+        // new UIFactory(grid,
+        //         new Label { Id = "label", Text = "Hello, World!" },
+        //         combo,
+        //         button,
+        //         new SpinButton { Width = 100, Nullable = true })
+        //     .Build();
+        // ---
 
         _desktop = _container.GetInstance<Desktop>();
     }

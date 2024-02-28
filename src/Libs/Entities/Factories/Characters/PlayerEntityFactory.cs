@@ -17,7 +17,7 @@ public class PlayerEntityFactory(
     MovableComponent movable,
     TransformComponent transform,
     CameraComponent cameraComponent,
-    RectangleCollisionComponent rectangleCollision,
+    RectangleColliderComponent rectangleCollider,
     InventoryComponent inventoryComponent)
     : EntityFactory
 {
@@ -30,11 +30,11 @@ public class PlayerEntityFactory(
         MovableComponent movable,
         TransformComponent transform,
         CameraComponent cameraComponent,
-        RectangleCollisionComponent rectangleCollision,
+        RectangleColliderComponent rectangleCollider,
         MovementAnimationsComponent movementAnimations,
         CharacterAnimatorComponent characterAnimator,
         InventoryComponent inventoryComponent) : this(nameComponent, inputMovable, movable, transform, cameraComponent,
-        rectangleCollision, inventoryComponent)
+        rectangleCollider, inventoryComponent)
     {
         _movementAnimations = movementAnimations;
         _characterAnimator = characterAnimator;
@@ -51,7 +51,7 @@ public class PlayerEntityFactory(
     {
         e.AddComponent(nameComponent);
         e.AddComponent(transform);
-        e.AddComponent(rectangleCollision);
+        e.AddComponent(rectangleCollider);
         e.AddComponent(inventoryComponent);
     }
 

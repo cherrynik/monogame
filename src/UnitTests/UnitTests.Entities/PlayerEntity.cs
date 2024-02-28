@@ -41,7 +41,7 @@ public class Tests
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
-                new RectangleCollisionComponent(),
+                new RectangleColliderComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent(),
                 new InventoryComponent())
@@ -63,7 +63,7 @@ public class Tests
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
-                new RectangleCollisionComponent(),
+                new RectangleColliderComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent(),
                 new InventoryComponent())
@@ -96,9 +96,9 @@ public class Tests
                 new PlayerEntityFactory(
                     new NameComponent("Player"), new InputMovableComponent(), new MovableComponent(),
                     new TransformComponent(), new CameraComponent(new Viewport(0, 0, 640, 480)),
-                    new RectangleCollisionComponent(), new InventoryComponent()),
+                    new RectangleColliderComponent(), new InventoryComponent()),
                 new DummyEntityFactory(new NameComponent("Dummy"), new TransformComponent(),
-                    new RectangleCollisionComponent()),
+                    new RectangleColliderComponent()),
                 new RockEntityFactory(new NameComponent("Rock"), new ItemComponent(ItemId.Rock),
                     new TransformComponent())));
 

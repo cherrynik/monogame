@@ -79,20 +79,33 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         // UI
         serviceRegistry.RegisterSingleton(_ =>
         {
-            var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
+            // var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
+            //
+            // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+            // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+            // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+            // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+            //
+            // return grid;
 
-            grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+            var panel = new Panel();
+            var rightBottomText = new Label()
+            {
+                Text = "Right Bottom Text",
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Left = -30,
+                Top = -20
+            };
+            panel.Widgets.Add(rightBottomText);
 
-            return grid;
+            return panel;
         });
 
         serviceRegistry.RegisterSingleton(factory =>
         {
             Desktop desktop = new();
-            desktop.Root = factory.GetInstance<Grid>();
+            desktop.Root = factory.GetInstance<Panel>();
 
             return desktop;
         });
@@ -106,10 +119,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory => new SystemsEngine(factory.GetInstance<World>()));
         serviceRegistry.RegisterSingleton(factory =>
         {
-            const int w = 3, h = 3;
-            Texture2D pixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
-            pixel.SetData(Enumerable.Repeat(Color.Red, w * h).ToArray());
-
+            // ⚠ Order-sensitive zone ⚠ 
             var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
                 new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
                 new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
@@ -124,6 +134,13 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
                     factory.GetInstance<SpriteBatch>()));
 #if DEBUG
+            const int w = 3, h = 3;
+            Texture2D pivotPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
+            pivotPixel.SetData(Enumerable.Repeat(Color.Red, w * h).ToArray());
+
+            Texture2D colliderPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
+            colliderPixel.SetData(Enumerable.Repeat(Color.LawnGreen, w * h).ToArray());
+
             var debug = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
                 new SystemsList(factory.GetInstance<World>(),
@@ -131,7 +148,9 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 new EntitiesList(factory.GetInstance<World>()),
                 new FrameCounter(factory.GetInstance<World>()),
                 new RenderFramesPerSec(factory.GetInstance<World>()),
-                new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel)
+                new RectangleColliderRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
+                    colliderPixel),
+                new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pivotPixel)
             );
 #endif
 

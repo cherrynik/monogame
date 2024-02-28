@@ -20,5 +20,5 @@ internal class StaticEntityCompositionRoot : ICompositionRoot
             new NameComponent("Dummy"), // factory.GetInstance<NameComponent>("Dummy")
             factory.GetInstance<TransformComponent>("DummyEntity"),
             factory.GetInstance<SpriteComponent>(),
-            factory.GetInstance<RectangleCollisionComponent>()));
+            factory.GetInstance<RectangleColliderComponent>()));
 }

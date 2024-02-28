@@ -8,7 +8,7 @@ namespace Entities.Factories.Characters;
 public class DummyEntityFactory(
     NameComponent name,
     TransformComponent transform,
-    RectangleCollisionComponent rectangleCollision)
+    RectangleColliderComponent rectangleCollider)
     : EntityFactory
 {
     private readonly SpriteComponent _sprite;
@@ -17,7 +17,7 @@ public class DummyEntityFactory(
         NameComponent name,
         TransformComponent transform,
         SpriteComponent sprite,
-        RectangleCollisionComponent rectangleCollision) : this(name, transform, rectangleCollision)
+        RectangleColliderComponent rectangleCollider) : this(name, transform, rectangleCollider)
     {
         _sprite = sprite;
     }
@@ -30,7 +30,7 @@ public class DummyEntityFactory(
     {
         e.AddComponent(name);
         e.AddComponent(transform);
-        e.AddComponent(rectangleCollision);
+        e.AddComponent(rectangleCollider);
     }
 
     protected override void AddRender(Entity e)

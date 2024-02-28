@@ -19,7 +19,7 @@ public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
         { typeof(InventoryComponent), "Inventory" },
         { typeof(TransformComponent), "Transform" },
         { typeof(CameraComponent), "Camera" },
-        { typeof(RectangleCollisionComponent), "Rectangle Collision" },
+        { typeof(RectangleColliderComponent), "Rectangle Collision" },
         { typeof(CharacterAnimatorComponent), "Character Animator" },
         { typeof(MovementAnimationsComponent), "Movement Animations" },
         { typeof(SpriteComponent), "Sprite" },

@@ -31,7 +31,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     private static void RegisterDataComponents(IServiceRegistry serviceRegistry)
     {
         RegisterTransformComponent(serviceRegistry);
-        RegisterRectangleCollisionComponent(serviceRegistry);
+        RegisterRectangleColliderComponent(serviceRegistry);
         RegisterItemComponent(serviceRegistry);
         RegisterInventoryComponent(serviceRegistry);
     }
@@ -125,10 +125,10 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             new TransformComponent { Position = new(180, 50) }, "RockEntity");
     }
 
-    private static void RegisterRectangleCollisionComponent(IServiceRegistry serviceRegistry)
+    private static void RegisterRectangleColliderComponent(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterTransient(_ =>
-            new RectangleCollisionComponent { Size = new(0, 0, 8, 8) });
+            new RectangleColliderComponent { Size = new(0, 0, 8, 8) });
     }
 
     private static void RegisterInventoryComponent(IServiceRegistry serviceRegistry)
