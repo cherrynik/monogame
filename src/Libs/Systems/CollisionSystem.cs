@@ -5,11 +5,19 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace Systems;
 
+public class CustomEventArgs(string message) : EventArgs
+{
+    public string Message = message;
+}
+
 // Input & Collision systems both have to be fixed execute systems,
 // otherwise it'll lead to the desynchronized behaviour.
 public class CollisionSystem(World world) : IFixedSystem
 {
     public World World { get; set; } = world;
+
+    public delegate void TriggerHandler(Entity sender, CustomEventArgs args);
+    public event TriggerHandler? RaiseTriggerEntered;
 
     public void OnAwake()
     {
@@ -37,15 +45,21 @@ public class CollisionSystem(World world) : IFixedSystem
                 if (!AreColliding(new(leftTransform, leftCollider),
                         new(rightTransform, rightCollider))) continue;
 
-                if (leftCollider.IsTrigger || rightCollider.IsTrigger) HandleTrigger();
+                if (leftCollider.IsTrigger || rightCollider.IsTrigger)
+                    OnRaiseTriggerEnter(other, new CustomEventArgs("Entered"));
                 else HandleCollision(ref leftTransform, ref rightTransform);
             }
         }
     }
 
-    private static void HandleTrigger()
+    private void OnRaiseTriggerEnter(Entity sender, CustomEventArgs customEventArgs)
     {
-        // raise event of triggered
+        var raiseEvent = RaiseTriggerEntered;
+
+        if (raiseEvent is null) return;
+
+        customEventArgs.Message += $" at {DateTime.Now}";
+        raiseEvent(sender, customEventArgs);
     }
 
     private static void HandleCollision(ref TransformComponent left, ref TransformComponent right)

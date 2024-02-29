@@ -70,6 +70,7 @@
     <ProjectReference Include="..\..\Libs\Features\Features.csproj" />
     <ProjectReference Include="..\..\Libs\Services\Services.csproj" />
     <ProjectReference Include="..\..\Libs\Systems.Debugging\Systems.Debugging.csproj" />
+    <ProjectReference Include="..\..\Libs\UI\UI.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\SpriteSheet.Designer.cs">

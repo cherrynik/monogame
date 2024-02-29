@@ -131,7 +131,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             new RectangleColliderComponent
             {
                 Size = new(0, 0, 8, 8),
-                // IsTrigger = true
+                IsTrigger = true
             }, "DummyEntity");
 
         serviceRegistry.RegisterSingleton(_ =>

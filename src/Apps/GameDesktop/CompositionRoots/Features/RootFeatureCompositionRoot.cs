@@ -4,6 +4,7 @@ using Entities.Factories.Characters;
 using Entities.Factories.Items;
 using Entities.Factories.Meta;
 using Features;
+using FontStashSharp.RichText;
 using LightInject;
 using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
@@ -18,6 +19,7 @@ using Systems;
 using Systems.Debugging.Diagnostics;
 using Systems.Debugging.World;
 using Systems.Render;
+using UI;
 #if DEBUG
 using Systems.Debugging.Render;
 using GameDesktop.CompositionRoots.DebugFeatures;
@@ -77,35 +79,47 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         // serviceRegistry.RegisterSingleton(factory => new ImGuiRenderer(factory.GetInstance<Game>()));
 
         // UI
-        serviceRegistry.RegisterSingleton(_ =>
-        {
-            // var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
-            //
-            // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-            // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-            //
-            // return grid;
-
-            var panel = new Panel();
-            var rightBottomText = new Label()
-            {
-                Text = "Pre-Alpha v0.1.1",
-                HorizontalAlignment = HorizontalAlignment.Right,
-                VerticalAlignment = VerticalAlignment.Bottom,
-                Left = -30,
-                Top = -20
-            };
-            panel.Widgets.Add(rightBottomText);
-
-            return panel;
-        });
+        // serviceRegistry.RegisterSingleton(_ =>
+        // {
+        // return new Panel();
+        // var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
+        //
+        // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+        // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
+        // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+        // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+        //
+        // return grid;
+        // });
+        serviceRegistry.RegisterSingleton(factory => new CollisionSystem(factory.GetInstance<World>()));
+        serviceRegistry.RegisterSingleton(factory =>
+            new TriggerSystem(factory.GetInstance<World>(), factory.GetInstance<CollisionSystem>()));
 
         serviceRegistry.RegisterSingleton(factory =>
         {
+            var panel = new Panel();
+            new TestElement(panel,
+                    new Label
+                    {
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Left = -30,
+                        Top = -40,
+                        TextAlign = TextHorizontalAlignment.Right
+                    },
+                    new Label
+                    {
+                        Text = "Pre-Alpha v0.2.0",
+                        HorizontalAlignment = HorizontalAlignment.Right,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Left = -30,
+                        Top = -20
+                    }, factory.GetInstance<CollisionSystem>())
+                .AddCounterLabel()
+                .AddVersionLabel();
+
             Desktop desktop = new();
-            desktop.Root = factory.GetInstance<Panel>();
+            desktop.Root = panel;
 
             return desktop;
         });
@@ -122,7 +136,8 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             // ⚠ Order-sensitive zone ⚠ 
             var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
                 new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
-                new CollisionSystem(factory.GetInstance<World>()),
+                factory.GetInstance<CollisionSystem>(),
+                factory.GetInstance<TriggerSystem>(),
                 new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
 
             var preRender = new Feature(factory.GetInstance<World>(),
