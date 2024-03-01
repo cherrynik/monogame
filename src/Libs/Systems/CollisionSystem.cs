@@ -17,7 +17,8 @@ public class CollisionSystem(World world) : IFixedSystem
     public World World { get; set; } = world;
 
     public delegate void TriggerHandler(Entity sender, CustomEventArgs args);
-    public event TriggerHandler? RaiseTriggerEntered;
+
+    public event TriggerHandler? RaiseTriggerIntersect;
 
     public void OnAwake()
     {
@@ -42,19 +43,20 @@ public class CollisionSystem(World world) : IFixedSystem
                 ref var rightTransform = ref other.GetComponent<TransformComponent>();
                 ref var rightCollider = ref other.GetComponent<RectangleColliderComponent>();
 
-                if (!AreColliding(new(leftTransform, leftCollider),
+                if (!Intersect(new(leftTransform, leftCollider),
                         new(rightTransform, rightCollider))) continue;
 
+                // TODO: OnEnter, OnStay, OnExit
                 if (leftCollider.IsTrigger || rightCollider.IsTrigger)
-                    OnRaiseTriggerEnter(other, new CustomEventArgs("Entered"));
+                    OnRaiseTriggerIntersect(other, new CustomEventArgs("Intersect"));
                 else HandleCollision(ref leftTransform, ref rightTransform);
             }
         }
     }
 
-    private void OnRaiseTriggerEnter(Entity sender, CustomEventArgs customEventArgs)
+    private void OnRaiseTriggerIntersect(Entity sender, CustomEventArgs customEventArgs)
     {
-        var raiseEvent = RaiseTriggerEntered;
+        var raiseEvent = RaiseTriggerIntersect;
 
         if (raiseEvent is null) return;
 
@@ -68,7 +70,7 @@ public class CollisionSystem(World world) : IFixedSystem
         right.Velocity = Vector2.Zero;
     }
 
-    private static bool AreColliding(Tuple<TransformComponent, RectangleColliderComponent> first,
+    private static bool Intersect(Tuple<TransformComponent, RectangleColliderComponent> first,
         Tuple<TransformComponent, RectangleColliderComponent> second)
     {
         var left = BuildRectangle(first);

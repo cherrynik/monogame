@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Components.Data;
 using Entities.Factories.Characters;
 using Entities.Factories.Items;
@@ -20,6 +21,9 @@ using Systems.Debugging.Diagnostics;
 using Systems.Debugging.World;
 using Systems.Render;
 using UI;
+using UI.Blocks;
+using UI.Factories;
+using UI.Feature;
 #if DEBUG
 using Systems.Debugging.Render;
 using GameDesktop.CompositionRoots.DebugFeatures;
@@ -43,7 +47,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         RegisterComponents(serviceRegistry);
         RegisterEntities(serviceRegistry);
 
-        RegisterFeatures(serviceRegistry);
+        // RegisterFeatures(serviceRegistry);
 
 #if DEBUG
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
@@ -65,64 +69,19 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterFrom<RockEntityCompositionRoot>();
     }
 
-    private static void RegisterFeatures(IServiceRegistry serviceRegistry)
-    {
-        // serviceRegistry.RegisterFrom<WorldInitializeFeatureCompositionRoot>();
-        // serviceRegistry.RegisterFrom<InputFeatureCompositionRoot>();
-        // serviceRegistry.RegisterFrom<CameraFeatureCompositionRoot>();
-        // serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
-    }
+    // private static void RegisterFeatures(IServiceRegistry serviceRegistry)
+    // {
+    // serviceRegistry.RegisterFrom<WorldInitializeFeatureCompositionRoot>();
+    // serviceRegistry.RegisterFrom<InputFeatureCompositionRoot>();
+    // serviceRegistry.RegisterFrom<CameraFeatureCompositionRoot>();
+    // serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
+    // }
 
     private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
     {
-        // var serviceRegistration = (Game)((PerContainerLifetime)serviceRegistry.AvailableServices.First(x => x.ServiceType == typeof(Game)).Lifetime).GetInstance((args, scope) => new object(), new Scope(new ServiceContainer()), Array.Empty<object>());
-        // serviceRegistry.RegisterSingleton(factory => new ImGuiRenderer(factory.GetInstance<Game>()));
-
-        // UI
-        // serviceRegistry.RegisterSingleton(_ =>
-        // {
-        // return new Panel();
-        // var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
-        //
-        // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-        // grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-        // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-        // grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-        //
-        // return grid;
-        // });
         serviceRegistry.RegisterSingleton(factory => new CollisionSystem(factory.GetInstance<World>()));
         serviceRegistry.RegisterSingleton(factory =>
             new TriggerSystem(factory.GetInstance<World>(), factory.GetInstance<CollisionSystem>()));
-
-        serviceRegistry.RegisterSingleton(factory =>
-        {
-            var panel = new Panel();
-            new TestElement(panel,
-                    new Label
-                    {
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Bottom,
-                        Left = -30,
-                        Top = -40,
-                        TextAlign = TextHorizontalAlignment.Right
-                    },
-                    new Label
-                    {
-                        Text = "Pre-Alpha v0.2.0",
-                        HorizontalAlignment = HorizontalAlignment.Right,
-                        VerticalAlignment = VerticalAlignment.Bottom,
-                        Left = -30,
-                        Top = -20
-                    }, factory.GetInstance<CollisionSystem>())
-                .AddCounterLabel()
-                .AddVersionLabel();
-
-            Desktop desktop = new();
-            desktop.Root = panel;
-
-            return desktop;
-        });
 
         // ECS
         serviceRegistry.RegisterSingleton(_ => World.Create());
@@ -177,6 +136,48 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                     factory.GetInstance<DummyEntityFactory>(),
                     factory.GetInstance<RockEntityFactory>())
             );
+        });
+
+        // UI
+        serviceRegistry.RegisterSingleton(_ => new Panel());
+        serviceRegistry.RegisterSingleton(factory =>
+            new Counter(factory.GetInstance<Panel>(),
+                new Label
+                {
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    VerticalAlignment = VerticalAlignment.Bottom,
+                    Left = -30,
+                    Top = -50,
+                    TextAlign = TextHorizontalAlignment.Right
+                }));
+        serviceRegistry.RegisterSingleton<Func<Counter>>(factory => factory.GetInstance<Counter>);
+
+        serviceRegistry.RegisterSingleton(factory => new GameVersion(
+            factory.GetInstance<Panel>(),
+            new Label
+            {
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Left = -30,
+                Top = -20,
+                TextAlign = TextHorizontalAlignment.Right,
+                Text = "Pre-alpha v0.2.1"
+            }));
+        serviceRegistry.RegisterSingleton<Func<GameVersion>>(factory => factory.GetInstance<GameVersion>);
+
+        serviceRegistry.RegisterSingleton(factory =>
+            new UIFactory(factory.GetInstance<Func<Counter>>(), factory.GetInstance<Func<GameVersion>>(),
+                factory.GetInstance<CollisionSystem>()));
+        serviceRegistry.RegisterSingleton(factory => new MainScreen(factory.GetInstance<UIFactory>()));
+
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            Desktop desktop = new();
+            desktop.Root = factory.GetInstance<Panel>();
+
+            factory.GetInstance<MainScreen>();
+
+            return desktop;
         });
     }
     // serviceRegistry.RegisterSingleton<RootFeature>();
