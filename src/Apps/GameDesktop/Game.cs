@@ -43,15 +43,10 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
         _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialization...");
         RegisterSpriteBatch();
-        RegisterMyraUIEnvironment();
-#if DEBUG
-        RegisterImGuiRenderer();
-#endif
         _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialized");
 
         _logger.ForContext<Game>().Verbose("Game services initialization...");
         RegisterRootFeature();
-        RegisterMyraUI();
         _logger.ForContext<Game>().Verbose("Game services initialized");
 
         base.Initialize();
@@ -67,6 +62,15 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
         _rootFeature.OnAwake();
+
+        // Register UIs after systems initialization, because they have initialized,
+        // thus we can make the first queries to the world like:
+        // World.Filter.With<>() -> ref e.GetComponent<> -> Pass-through in UI
+#if DEBUG
+        RegisterImGuiRenderer();
+#endif
+        RegisterMyraUIEnvironment();
+        RegisterMyraUI();
 
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
@@ -131,7 +135,11 @@ public class Game : Microsoft.Xna.Framework.Game
         _spriteBatch = _container.GetInstance<SpriteBatch>();
     }
 
-    private void RegisterMyraUIEnvironment() => MyraEnvironment.Game = this;
+    private void RegisterRootFeature()
+    {
+        _container.RegisterFrom<RootFeatureCompositionRoot>();
+        _rootFeature = _container.GetInstance<RootFeature>();
+    }
 
     private void RegisterImGuiRenderer()
     {
@@ -147,37 +155,7 @@ public class Game : Microsoft.Xna.Framework.Game
         ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable;
     }
 
-    private void RegisterRootFeature()
-    {
-        _container.RegisterFrom<RootFeatureCompositionRoot>();
-        _rootFeature = _container.GetInstance<RootFeature>();
-    }
+    private void RegisterMyraUIEnvironment() => MyraEnvironment.Game = this;
 
-    private void RegisterMyraUI()
-    {
-        // ComboBox
-        // var combo = new ComboBox();
-        // combo.Items.Add(new ListItem("Red", Color.Red));
-        // combo.Items.Add(new ListItem("Green", Color.Green));
-        // combo.Items.Add(new ListItem("Blue", Color.Blue));
-
-        // Button
-        // var button = new Button { Content = new Label { Text = "Show" } };
-        // button.Click += (s, a) =>
-        // {
-            // var messageBox = Dialog.CreateMessageBox("Message", "Some message!");
-            // messageBox.ShowModal(_desktop);
-        // };
-
-        // var grid = _container.GetInstance<Grid>();
-        // new UIFactory(grid,
-        //         new Label { Id = "label", Text = "Hello, World!" },
-        //         combo,
-        //         button,
-        //         new SpinButton { Width = 100, Nullable = true })
-        //     .Build();
-        // ---
-
-        _desktop = _container.GetInstance<Desktop>();
-    }
+    private void RegisterMyraUI() => _desktop = _container.GetInstance<Desktop>();
 }

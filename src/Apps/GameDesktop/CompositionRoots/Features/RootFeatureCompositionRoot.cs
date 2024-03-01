@@ -141,6 +141,12 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         // UI
         serviceRegistry.RegisterSingleton(_ => new Panel());
         serviceRegistry.RegisterSingleton(factory =>
+        {
+            var filter = factory.GetInstance<World>().Filter.With<InventoryComponent>().Build();
+            ref var inventory = ref filter.First().GetComponent<InventoryComponent>();
+            return new Inventory(factory.GetInstance<Panel>(), ref inventory);
+        });
+        serviceRegistry.RegisterSingleton(factory =>
             new Counter(factory.GetInstance<Panel>(),
                 new Label
                 {
@@ -161,7 +167,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 Left = -30,
                 Top = -20,
                 TextAlign = TextHorizontalAlignment.Right,
-                Text = "Pre-alpha v0.2.1"
+                Text = "Pre-alpha v0.2.2"
             }));
         serviceRegistry.RegisterSingleton<Func<GameVersion>>(factory => factory.GetInstance<GameVersion>);
 
@@ -175,6 +181,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             Desktop desktop = new();
             desktop.Root = factory.GetInstance<Panel>();
 
+            factory.GetInstance<Inventory>();
             factory.GetInstance<MainScreen>();
 
             return desktop;

@@ -146,7 +146,8 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             Slot[] slots = new Slot[count];
 
             // Put items in slots like that:
-            // slots[0].Item = ItemId.Rock;
+            slots[3].Item = ItemId.Rock;
+            slots[3].Amount = 3;
 
             return new InventoryComponent(slots);
         });
