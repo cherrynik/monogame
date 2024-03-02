@@ -52,7 +52,7 @@ public class PlayerEntityFactory(
         e.AddComponent(name);
         e.AddComponent(transform);
         e.AddComponent(rectangleCollider);
-        // e.AddComponent(inventory);
+        e.AddComponent(inventory);
     }
 
     protected override void AddRender(Entity e)

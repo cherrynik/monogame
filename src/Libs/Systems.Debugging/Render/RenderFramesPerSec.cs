@@ -32,8 +32,6 @@ public class RenderFramesPerSec(Scellecs.Morpeh.World world) : IRenderSystem
 }
 
 // TODO: Tiles, save system, understand the fps logic
-// UI Debug: entities inspector, memory graph, fps setter/limiter
-// Testing ECS, workflow cleanup
+// UI Debug: memory graph, fps setter/limiter, viewports
 // camera zoom, pause, scenes (menu, game), content (mechanics: quests, dialogues, details, tree chopping, etc)
-// optimization, collisions, events, UI styling
-// shaders
+// optimization, UI styling, shaders

@@ -4,10 +4,8 @@ using Scellecs.Morpeh;
 
 namespace Components.Data;
 
-// TODO: Camera is a system and not a component,
-// So, the system would have a target as a dependency,
-// And exist only in the current world,
-// As well, the system has its own behaviour
+// Camera is a system and not a component, so the system has a target as a dependency,
+// and exists only in the current world, as well the system has its own behaviour
 public struct CameraComponent(Viewport viewport) : IComponent
 {
     public Viewport Viewport = viewport;

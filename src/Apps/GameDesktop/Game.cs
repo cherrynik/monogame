@@ -24,7 +24,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     // TODO: Frames updating
     // TODO: Player position & other things debug showing, input, etc
-    // TODO: Nez has cool physics & other projects libs to use as deps
+    // TODO: Nez has cool physics & other projects libs to use as deps, ImGUI viewports, solutions, etc.
 
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
