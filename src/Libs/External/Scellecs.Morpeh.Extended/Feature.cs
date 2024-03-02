@@ -1,92 +1,57 @@
 ﻿namespace Scellecs.Morpeh.Extended;
 
-public abstract class Feature
+public class Feature(World world, SystemsEngine systemsEngine)
 {
-    public World World { get; set; }
+    public World World { get; set; } = world;
 
-    private readonly List<Feature> _features = new();
-    private readonly SystemsGroup _initializers;
-    private readonly SystemsGroup _systems;
-    private readonly SystemsGroup _fixedSystems;
-    private readonly SystemsGroup _lateSystems;
-    private readonly SystemsGroup _cleanupSystems;
-    private readonly SystemsGroup _renderSystems;
+    public Feature(World world, SystemsEngine systemsEngine, params IInitializer[] systems) : this(world, systemsEngine)
+    {
+        foreach (var system in systems) Add(system);
+    }
 
     public void OnAwake()
     {
-        _initializers.Initialize();
-
-        foreach (Feature feature in _features) feature._initializers.Initialize();
+        systemsEngine.Initializers.Initialize();
+        systemsEngine.Systems.Initialize();
+        systemsEngine.FixedSystems.Initialize();
+        systemsEngine.CleanupSystems.Initialize();
+        systemsEngine.LateSystems.Initialize();
+        systemsEngine.RenderSystems.Initialize();
     }
 
-    public virtual void OnUpdate(float deltaTime)
+    public void OnUpdate(float deltaTime) => systemsEngine.Systems.Update(deltaTime);
+
+    public void OnFixedUpdate(float deltaTime) => systemsEngine.FixedSystems.FixedUpdate(deltaTime);
+
+    public void OnLateUpdate(float deltaTime)
     {
-        _systems.Update(deltaTime);
-
-        foreach (Feature feature in _features) feature._systems.Update(deltaTime);
+        systemsEngine.LateSystems.LateUpdate(deltaTime);
+        systemsEngine.CleanupSystems.CleanupUpdate(deltaTime);
     }
 
-    public virtual void OnFixedUpdate(float deltaTime)
-    {
-        _fixedSystems.FixedUpdate(deltaTime);
-
-        foreach (Feature feature in _features) feature._fixedSystems.FixedUpdate(deltaTime);
-    }
-
-    public virtual void OnLateUpdate(float deltaTime)
-    {
-        _lateSystems.LateUpdate(deltaTime);
-        _cleanupSystems.CleanupUpdate(deltaTime);
-
-        foreach (Feature feature in _features)
-        {
-            feature._lateSystems.LateUpdate(deltaTime);
-            feature._cleanupSystems.CleanupUpdate(deltaTime);
-        }
-    }
-
-    public virtual void OnRender(float deltaTime)
-    {
-        _renderSystems.Update(deltaTime);
-
-        foreach (Feature feature in _features) feature._renderSystems.Update(deltaTime);
-    }
-
-    protected Feature(World world)
-    {
-        World = world;
-
-        _initializers = world.CreateSystemsGroup();
-        _systems = world.CreateSystemsGroup();
-        _fixedSystems = world.CreateSystemsGroup();
-        _lateSystems = world.CreateSystemsGroup();
-        _cleanupSystems = world.CreateSystemsGroup();
-        _renderSystems = world.CreateSystemsGroup();
-    }
-
-    protected void Add(Feature feature) => _features.Add(feature);
+    public void OnRender(float deltaTime) => systemsEngine.RenderSystems.Update(deltaTime);
 
     protected void Add(IInitializer initializer)
     {
         switch (initializer)
         {
             case IRenderSystem renderSystem:
-                _renderSystems.AddSystem(renderSystem);
+                systemsEngine.RenderSystems.AddSystem(renderSystem);
                 break;
             case ICleanupSystem cleanupSystem:
-                _cleanupSystems.AddSystem(cleanupSystem);
+                systemsEngine.CleanupSystems.AddSystem(cleanupSystem);
                 break;
             case ILateSystem lateSystem:
-                _lateSystems.AddSystem(lateSystem);
+                systemsEngine.LateSystems.AddSystem(lateSystem);
                 break;
             case IFixedSystem fixedSystem:
-                _fixedSystems.AddSystem(fixedSystem);
+                systemsEngine.FixedSystems.AddSystem(fixedSystem);
                 break;
             case ISystem system:
-                _systems.AddSystem(system);
+                systemsEngine.Systems.AddSystem(system);
                 break;
             default:
-                _initializers.AddInitializer(initializer);
+                systemsEngine.Initializers.AddInitializer(initializer);
                 break;
         }
     }

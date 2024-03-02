@@ -31,8 +31,20 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     private static void RegisterDataComponents(IServiceRegistry serviceRegistry)
     {
         RegisterTransformComponent(serviceRegistry);
-        RegisterRectangleCollisionComponent(serviceRegistry);
+        RegisterRectangleColliderComponent(serviceRegistry);
+        RegisterItemComponent(serviceRegistry);
         RegisterInventoryComponent(serviceRegistry);
+    }
+
+    private static void RegisterItemComponent(IServiceRegistry serviceRegistry)
+    {
+        // TODO: make this accessible globally? So, the name, etc. of an item are reused between classes easily
+        // Dictionary<ItemId, Item> items = new()
+        //  {
+        //      { ItemId.Rock, new Item(name: "Rock", isStackable: true, maximumInStack: 16) }
+        //  };
+
+        serviceRegistry.RegisterSingleton(_ => new ItemComponent(ItemId.Rock), ItemsTable.Items[ItemId.Rock].Name);
     }
 
     private static void RegisterTagComponents(IServiceRegistry serviceRegistry)
@@ -55,7 +67,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterCameraComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new Viewport(0, 0, 800, 480), "CameraComponent");
+        serviceRegistry.RegisterSingleton(_ => new Viewport(0, 0, 801, 480), "CameraComponent");
         serviceRegistry.RegisterSingleton(factory =>
             new CameraComponent(factory.GetInstance<Viewport>("CameraComponent")));
     }
@@ -77,7 +89,12 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             AnimatedSprite defaultSprite = idle[Direction.Down];
 
             return new SpriteComponent(defaultSprite);
-        });
+        }, "Player");
+
+        // serviceRegistry.RegisterSingleton(factory =>
+        // {
+        // TODO: add the sprite of a rock
+        // })
     }
 
     private static void RegisterMovementAnimationsComponent(IServiceRegistry serviceRegistry)
@@ -103,18 +120,37 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
         serviceRegistry.RegisterSingleton(_ =>
             new TransformComponent { Position = new(300, 100) }, "DummyEntity");
+
+        serviceRegistry.RegisterSingleton(_ =>
+            new TransformComponent { Position = new(180, 50) }, "RockEntity");
     }
 
-    private static void RegisterRectangleCollisionComponent(IServiceRegistry serviceRegistry)
+    private static void RegisterRectangleColliderComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterTransient(_ =>
-            new RectangleCollisionComponent { Size = new(0, 0, 8, 8) });
+        serviceRegistry.RegisterSingleton(_ =>
+            new RectangleColliderComponent
+            {
+                Size = new(0, 0, 8, 8),
+                IsTrigger = true
+            }, "DummyEntity");
+
+        serviceRegistry.RegisterSingleton(_ =>
+            new RectangleColliderComponent { Size = new(0, 0, 8, 8) }, "PlayerEntity");
     }
 
     private static void RegisterInventoryComponent(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterTransient(_ =>
-            new InventoryComponent([]));
+        {
+            const int count = 9;
+            Slot[] slots = new Slot[count];
+
+            // Put items in slots like that:
+            slots[3].Item = ItemId.Rock;
+            slots[3].Amount = 3;
+
+            return new InventoryComponent(slots);
+        });
     }
 
     private static void RegisterCharacterAnimatorComponent(IServiceRegistry serviceRegistry)

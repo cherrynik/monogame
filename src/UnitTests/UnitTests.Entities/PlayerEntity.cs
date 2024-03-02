@@ -1,14 +1,16 @@
 using System.Numerics;
 using Components.Data;
 using Components.Render.Animation;
+using Components.Render.Static;
 using Components.Tags;
 using Entities.Factories.Characters;
+using Entities.Factories.Items;
 using Entities.Factories.Meta;
 using Features;
-using Implementations;
 using Microsoft.Xna.Framework.Graphics;
 using Moq;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 using Services.Movement;
 using Systems;
 
@@ -33,11 +35,13 @@ public class Tests
     [Test]
     public void PlayerEntity_IsCreatedInTheWorld()
     {
-        Entity playerEntity = new PlayerEntityFactory(new InputMovableComponent(),
+        Entity playerEntity = new PlayerEntityFactory(
+                new NameComponent("Player"),
+                new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
-                new RectangleCollisionComponent(),
+                new RectangleColliderComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent(),
                 new InventoryComponent())
@@ -53,11 +57,13 @@ public class Tests
     [Test]
     public void PlayerEntity_HasComponents()
     {
-        Entity playerEntity = new PlayerEntityFactory(new InputMovableComponent(),
+        Entity playerEntity = new PlayerEntityFactory(
+                new NameComponent("Player"),
+                new InputMovableComponent(),
                 new MovableComponent(),
                 new TransformComponent(),
                 new CameraComponent(),
-                new RectangleCollisionComponent(),
+                new RectangleColliderComponent(),
                 new MovementAnimationsComponent(),
                 new CharacterAnimatorComponent(),
                 new InventoryComponent())
@@ -79,18 +85,27 @@ public class Tests
         var mockInputScanner = new Mock<IInputScanner>();
         mockInputScanner.Setup(p => p.GetDirection()).Returns(Vector2.One);
 
+        var systemsEngine = new SystemsEngine(_world);
+
+        var movementFeature = new Feature(_world, systemsEngine, new InputSystem(_world, mockInputScanner.Object),
+            new MovementSystem(_world, new SimpleMovement()));
+
         var rootFeature = new RootFeature(_world,
-            new WorldInitializer(_world, new WorldEntityFactory(new WorldComponent()),
-                new PlayerEntityFactory(new InputMovableComponent(), new MovableComponent(), new TransformComponent(),
-                    new CameraComponent(new Viewport(0, 0, 640, 480)), new RectangleCollisionComponent(),
-                    new InventoryComponent()),
-                new DummyEntityFactory(new TransformComponent(), new RectangleCollisionComponent())),
-            new MovementFeature(_world, new InputSystem(_world, mockInputScanner.Object),
-                new MovementSystem(_world, new SimpleMovement())));
+            systemsEngine,
+            new WorldInitializer(_world, new WorldEntityFactory(new WorldMetaComponent()),
+                new PlayerEntityFactory(
+                    new NameComponent("Player"), new InputMovableComponent(), new MovableComponent(),
+                    new TransformComponent(), new CameraComponent(new Viewport(0, 0, 640, 480)),
+                    new RectangleColliderComponent(), new InventoryComponent()),
+                new DummyEntityFactory(new NameComponent("Dummy"), new TransformComponent(),
+                    new RectangleColliderComponent()),
+                new RockEntityFactory(new NameComponent("Rock"), new ItemComponent(ItemId.Rock),
+                    new TransformComponent())));
 
         rootFeature.OnAwake();
-
+        rootFeature.OnFixedUpdate(It.IsAny<float>());
         rootFeature.OnUpdate(It.IsAny<float>());
+        rootFeature.OnLateUpdate(It.IsAny<float>());
 
         mockInputScanner.Verify(p => p.GetDirection(), Times.Once);
     }

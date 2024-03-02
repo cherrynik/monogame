@@ -1,21 +1,13 @@
 using Components;
 using Components.Data;
 using Components.Tags;
-using Implementations;
 using Scellecs.Morpeh;
 
 namespace Systems;
 
-public class InputSystem : ISystem
+public class InputSystem(World world, IInputScanner inputScanner) : IFixedSystem
 {
-    private readonly IInputScanner _inputScanner;
-    public World World { get; set; }
-
-    public InputSystem(World world, IInputScanner inputScanner)
-    {
-        World = world;
-        _inputScanner = inputScanner;
-    }
+    public World World { get; set; } = world;
 
     public void OnAwake()
     {
@@ -31,7 +23,7 @@ public class InputSystem : ISystem
         foreach (Entity e in filter)
         {
             ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
-            transform.Velocity = _inputScanner.GetDirection();
+            transform.Velocity = inputScanner.GetDirection();
         }
     }
 

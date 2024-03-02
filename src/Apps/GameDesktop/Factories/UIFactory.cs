@@ -2,28 +2,13 @@
 
 namespace GameDesktop.Factories;
 
-public class UIFactory
+public class UIFactory(Grid grid, Label label, ComboBox comboBox, Button button, SpinButton spinButton)
 {
-    private readonly Grid _grid;
-    private readonly Label _label;
-    private readonly ComboBox _comboBox;
-    private readonly Button _button;
-    private readonly SpinButton _spinButton;
-
-    public UIFactory(Grid grid, Label label, ComboBox comboBox, Button button, SpinButton spinButton)
-    {
-        // Stylesheet.Current.ButtonStyle = new ButtonStyle
-        // {
-        //     Background = new ColoredRegion(new TextureRegion(pixel, new Rectangle(0, 0, 15, 15)), Color.Gold),
-        //     Padding = new Thickness(5, 5),
-        // };
-
-        _grid = grid;
-        _label = label;
-        _comboBox = comboBox;
-        _button = button;
-        _spinButton = spinButton;
-    }
+    // Stylesheet.Current.ButtonStyle = new ButtonStyle
+    // {
+    //     Background = new ColoredRegion(new TextureRegion(pixel, new Rectangle(0, 0, 15, 15)), Color.Gold),
+    //     Padding = new Thickness(5, 5),
+    // };
 
     public void Build()
     {
@@ -36,27 +21,27 @@ public class UIFactory
 
     private void BuildComboBox()
     {
-        Grid.SetColumn(_comboBox, 1);
-        Grid.SetRow(_comboBox, 0);
+        Grid.SetColumn(comboBox, 1);
+        Grid.SetRow(comboBox, 0);
     }
 
     private void BuildButton()
     {
-        Grid.SetColumn(_button, 0);
-        Grid.SetRow(_button, 1);
+        Grid.SetColumn(button, 0);
+        Grid.SetRow(button, 1);
     }
 
     private void BuildSpinButton()
     {
-        Grid.SetColumn(_spinButton, 1);
-        Grid.SetRow(_spinButton, 1);
+        Grid.SetColumn(spinButton, 1);
+        Grid.SetRow(spinButton, 1);
     }
 
     private void Initialize()
     {
-        _grid.Widgets.Add(_label);
-        _grid.Widgets.Add(_comboBox);
-        _grid.Widgets.Add(_button);
-        _grid.Widgets.Add(_spinButton);
+        grid.Widgets.Add(label);
+        grid.Widgets.Add(comboBox);
+        grid.Widgets.Add(button);
+        grid.Widgets.Add(spinButton);
     }
 }

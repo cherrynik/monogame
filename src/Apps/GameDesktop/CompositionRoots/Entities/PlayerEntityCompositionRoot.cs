@@ -1,8 +1,6 @@
 ﻿using Components.Data;
 using Components.Render.Animation;
 using Components.Tags;
-using Entities;
-using Entities.Factories;
 using Entities.Factories.Characters;
 using LightInject;
 
@@ -17,11 +15,12 @@ internal class PlayerEntityCompositionRoot : ICompositionRoot
 
     private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterTransient(factory => new PlayerEntityFactory(
+            new NameComponent("Player"), // factory.GetInstance<NameComponent>("Player"),
             factory.GetInstance<InputMovableComponent>(),
             factory.GetInstance<MovableComponent>(),
             factory.GetInstance<TransformComponent>("PlayerEntity"),
             factory.GetInstance<CameraComponent>(),
-            factory.GetInstance<RectangleCollisionComponent>(),
+            factory.GetInstance<RectangleColliderComponent>("PlayerEntity"),
             factory.GetInstance<MovementAnimationsComponent>(),
             factory.GetInstance<CharacterAnimatorComponent>("PlayerEntity"),
             factory.GetInstance<InventoryComponent>()));

@@ -1,13 +1,6 @@
 ﻿namespace Services.Factories;
 
-public class AbstractFactory<T>
+public class AbstractFactory<T>(Func<T> factory)
 {
-    private readonly Func<T> _factory;
-
-    public AbstractFactory(Func<T> factory)
-    {
-        _factory = factory;
-    }
-
-    public T Create() => _factory();
+    public T Create() => factory();
 }
