@@ -82,6 +82,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory => new CollisionSystem(factory.GetInstance<World>()));
         serviceRegistry.RegisterSingleton(factory =>
             new TriggerSystem(factory.GetInstance<World>(), factory.GetInstance<CollisionSystem>()));
+        serviceRegistry.RegisterSingleton(factory => new InventorySystem(factory.GetInstance<World>()));
 
         // ECS
         serviceRegistry.RegisterSingleton(_ => World.Create());
@@ -97,6 +98,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
                 factory.GetInstance<CollisionSystem>(),
                 factory.GetInstance<TriggerSystem>(),
+                factory.GetInstance<InventorySystem>(),
                 new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
 
             var preRender = new Feature(factory.GetInstance<World>(),
@@ -141,11 +143,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         // UI
         serviceRegistry.RegisterSingleton(_ => new Panel());
         serviceRegistry.RegisterSingleton(factory =>
-        {
-            var filter = factory.GetInstance<World>().Filter.With<InventoryComponent>().Build();
-            ref var inventory = ref filter.First().GetComponent<InventoryComponent>();
-            return new Inventory(factory.GetInstance<Panel>(), ref inventory);
-        });
+            new Inventory(factory.GetInstance<Panel>(), factory.GetInstance<InventorySystem>()));
         serviceRegistry.RegisterSingleton(factory =>
             new Counter(factory.GetInstance<Panel>(),
                 new Label

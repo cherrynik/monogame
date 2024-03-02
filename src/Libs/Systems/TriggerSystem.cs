@@ -10,10 +10,10 @@ public class TriggerSystem : IFixedSystem
     public TriggerSystem(World world, CollisionSystem collisionSystem)
     {
         World = world;
-        collisionSystem.RaiseTriggerIntersect += HandleTriggerIntersect;
+        collisionSystem.RaiseTriggerIntersect += OnTriggerIntersect;
     }
 
-    private void HandleTriggerIntersect(Entity sender, CustomEventArgs e)
+    private void OnTriggerIntersect(Entity sender, CustomEventArgs e)
     {
     }
 

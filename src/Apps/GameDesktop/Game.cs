@@ -61,16 +61,15 @@ public class Game : Microsoft.Xna.Framework.Game
         // TODO: Error handling
         _logger.ForContext<Game>().Verbose("LoadContent(): start");
 
-        _rootFeature.OnAwake();
-
-        // Register UIs after systems initialization, because they have initialized,
-        // thus we can make the first queries to the world like:
-        // World.Filter.With<>() -> ref e.GetComponent<> -> Pass-through in UI
+        // Register UIs before systems onAwake, because we subscribe on systems' events:
+        // System ctor() -> UI ctor(System) -> System onAwake & event raise -> UI onEvent
 #if DEBUG
         RegisterImGuiRenderer();
 #endif
         RegisterMyraUIEnvironment();
         RegisterMyraUI();
+
+        _rootFeature.OnAwake();
 
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }

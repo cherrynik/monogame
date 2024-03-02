@@ -49,22 +49,18 @@ public class CollisionSystem(World world) : IFixedSystem
                 // TODO: OnEnter, OnStay, OnExit
                 if (leftCollider.IsTrigger || rightCollider.IsTrigger)
                     OnRaiseTriggerIntersect(other, new CustomEventArgs("Intersect"));
-                else HandleCollision(ref leftTransform, ref rightTransform);
+                else OnCollision(ref leftTransform, ref rightTransform);
             }
         }
     }
 
     private void OnRaiseTriggerIntersect(Entity sender, CustomEventArgs customEventArgs)
     {
-        var raiseEvent = RaiseTriggerIntersect;
-
-        if (raiseEvent is null) return;
-
         customEventArgs.Message += $" at {DateTime.Now}";
-        raiseEvent(sender, customEventArgs);
+        RaiseTriggerIntersect?.Invoke(sender, customEventArgs);
     }
 
-    private static void HandleCollision(ref TransformComponent left, ref TransformComponent right)
+    private static void OnCollision(ref TransformComponent left, ref TransformComponent right)
     {
         left.Velocity = Vector2.Zero;
         right.Velocity = Vector2.Zero;

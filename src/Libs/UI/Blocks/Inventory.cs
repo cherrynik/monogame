@@ -1,12 +1,25 @@
 ﻿using Components.Data;
 using FontStashSharp.RichText;
 using Myra.Graphics2D.UI;
+using Scellecs.Morpeh;
+using Systems;
 
 namespace UI.Blocks;
 
 public class Inventory
 {
-    public Inventory(Container container, ref InventoryComponent inventory)
+    private readonly Container _container;
+    private readonly InventorySystem _inventorySystem;
+
+    public Inventory(Container container, InventorySystem inventorySystem)
+    {
+        _container = container;
+        _inventorySystem = inventorySystem;
+
+        _inventorySystem.RaiseInventoryInitialized += OnInventoryInitialized;
+    }
+
+    private void OnInventoryInitialized(Entity sender, ref InventoryComponent inventory)
     {
         var title = new Label
         {
@@ -17,7 +30,7 @@ public class Inventory
             Top = 20,
             Left = 30,
         };
-        container.Widgets.Add(title);
+        _container.Widgets.Add(title);
 
         for (int i = 0; i < inventory.Slots.Length; i++)
         {
@@ -31,7 +44,7 @@ public class Inventory
                 Top = 50 + 18 * i,
                 Left = 30,
             };
-            container.Widgets.Add(label);
+            _container.Widgets.Add(label);
         }
     }
 }
