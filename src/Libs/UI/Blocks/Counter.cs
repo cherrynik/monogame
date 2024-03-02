@@ -12,4 +12,9 @@ public class Counter(Label counterLabel)
         container.Widgets.Add(_counterLabel);
 
     public void UpdateText() => _counterLabel.Text = $"Count: {Count}";
+
+    // Test methods
+    public void SayEntered() => _counterLabel.Text = "Entered";
+
+    public void SayExited() => _counterLabel.Text = "Exited";
 }

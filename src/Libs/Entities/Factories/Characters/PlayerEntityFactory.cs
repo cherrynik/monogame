@@ -12,20 +12,20 @@ namespace Entities.Factories.Characters;
 // But also, for the factory, ig, the view of the entities class will change.
 // For now, Imma keep it as it is.
 public class PlayerEntityFactory(
-    NameComponent nameComponent,
+    NameComponent name,
     InputMovableComponent inputMovable,
     MovableComponent movable,
     TransformComponent transform,
     CameraComponent cameraComponent,
     RectangleColliderComponent rectangleCollider,
-    InventoryComponent inventoryComponent)
+    InventoryComponent inventory)
     : EntityFactory
 {
     private readonly MovementAnimationsComponent _movementAnimations;
     private readonly CharacterAnimatorComponent _characterAnimator;
 
     public PlayerEntityFactory(
-        NameComponent nameComponent,
+        NameComponent name,
         InputMovableComponent inputMovable,
         MovableComponent movable,
         TransformComponent transform,
@@ -33,8 +33,8 @@ public class PlayerEntityFactory(
         RectangleColliderComponent rectangleCollider,
         MovementAnimationsComponent movementAnimations,
         CharacterAnimatorComponent characterAnimator,
-        InventoryComponent inventoryComponent) : this(nameComponent, inputMovable, movable, transform, cameraComponent,
-        rectangleCollider, inventoryComponent)
+        InventoryComponent inventory) : this(name, inputMovable, movable, transform, cameraComponent, rectangleCollider,
+        inventory)
     {
         _movementAnimations = movementAnimations;
         _characterAnimator = characterAnimator;
@@ -49,10 +49,10 @@ public class PlayerEntityFactory(
 
     protected override void AddData(Entity e)
     {
-        e.AddComponent(nameComponent);
+        e.AddComponent(name);
         e.AddComponent(transform);
         e.AddComponent(rectangleCollider);
-        e.AddComponent(inventoryComponent);
+        // e.AddComponent(inventory);
     }
 
     protected override void AddRender(Entity e)

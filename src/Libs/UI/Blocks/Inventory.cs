@@ -16,7 +16,7 @@ public class Inventory
         _container = container;
         _inventorySystem = inventorySystem;
 
-        _inventorySystem.RaiseInventoryInitialized += OnInventoryInitialized;
+        _inventorySystem.InventoryInitialized += OnInventoryInitialized;
     }
 
     private void OnInventoryInitialized(Entity sender, ref InventoryComponent inventory)

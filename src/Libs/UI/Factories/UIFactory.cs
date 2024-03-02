@@ -14,11 +14,16 @@ public class UIFactory(
 
         counter.UpdateText();
 
-        collisionSystem.RaiseTriggerIntersect += (_, _) =>
-        {
-            ++counter.Count;
-            counter.UpdateText();
-        };
+        // collisionSystem.Stay += (_, _, isTriggerEvent) =>
+        // {
+        //     if (!isTriggerEvent) return;
+        //
+        //     ++counter.Count;
+        //     counter.UpdateText();
+        // };
+
+        collisionSystem.Entered += (_, _, _) => counter.SayEntered();
+        collisionSystem.Exited += (_, _) => counter.SayExited();
 
         return this;
     }

@@ -165,7 +165,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 Left = -30,
                 Top = -20,
                 TextAlign = TextHorizontalAlignment.Right,
-                Text = "Pre-alpha v0.2.2"
+                Text = "Pre-alpha v0.2.4"
             }));
         serviceRegistry.RegisterSingleton<Func<GameVersion>>(factory => factory.GetInstance<GameVersion>);
 

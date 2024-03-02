@@ -5,15 +5,24 @@ namespace Systems;
 public class TriggerSystem : IFixedSystem
 {
     public World World { get; set; }
-    // TODO: List/Dictionary of intersecting colliders, so we can know who entered, staying, exited
 
     public TriggerSystem(World world, CollisionSystem collisionSystem)
     {
         World = world;
-        collisionSystem.RaiseTriggerIntersect += OnTriggerIntersect;
+        collisionSystem.Entered += OnTriggerEntered;
+        collisionSystem.Stay += OnTriggerStay;
+        collisionSystem.Exited += OnTriggerExited;
     }
 
-    private void OnTriggerIntersect(Entity sender, CustomEventArgs e)
+    private void OnTriggerEntered(Entity sender, Entity with, bool isTriggerEvent)
+    {
+    }
+
+    private void OnTriggerStay(Entity sender, Entity with, bool isTriggerEvent)
+    {
+    }
+
+    private void OnTriggerExited(Entity sender, Entity with)
     {
     }
 

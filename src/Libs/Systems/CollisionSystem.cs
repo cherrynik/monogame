@@ -16,9 +16,18 @@ public class CollisionSystem(World world) : IFixedSystem
 {
     public World World { get; set; } = world;
 
-    public delegate void TriggerHandler(Entity sender, CustomEventArgs args);
+    // TODO: Use graph instead (e.g. QuikGraph library), so will be handled the cases of relations like (combinatorics):
+    // { 1: [2, 3] }, { 2: [1, 2] }, { 3: [1] }, { 4: [] }
+    private (EntityId, EntityId)[] _activeIntersect = [];
 
-    public event TriggerHandler? RaiseTriggerIntersect;
+    public delegate void OutsideHandler(Entity sender, Entity with);
+
+    public delegate void InsideHandler(Entity sender, Entity with, bool isTriggerEvent);
+
+    // https://stackoverflow.com/questions/803242/understanding-events-and-event-handlers-in-c-sharp#:~:text=For%20completeness%27%20sake,fun%22%20NullReferenceException%20there.
+    public event InsideHandler? Entered;
+    public event InsideHandler? Stay;
+    public event OutsideHandler? Exited;
 
     public void OnAwake()
     {
@@ -43,22 +52,42 @@ public class CollisionSystem(World world) : IFixedSystem
                 ref var rightTransform = ref other.GetComponent<TransformComponent>();
                 ref var rightCollider = ref other.GetComponent<RectangleColliderComponent>();
 
-                if (!Intersect(new(leftTransform, leftCollider),
-                        new(rightTransform, rightCollider))) continue;
+                var intersect = Intersect(new(leftTransform, leftCollider),
+                    new(rightTransform, rightCollider));
+                var entities = (e.ID, other.ID);
+                if (!intersect)
+                {
+                    if (_activeIntersect.Contains(entities))
+                    {
+                        _activeIntersect = _activeIntersect
+                            .TakeWhile(x => x != entities)
+                            .ToArray();
 
-                // TODO: OnEnter, OnStay, OnExit
-                if (leftCollider.IsTrigger || rightCollider.IsTrigger)
-                    OnRaiseTriggerIntersect(other, new CustomEventArgs("Intersect"));
-                else OnCollision(ref leftTransform, ref rightTransform);
+                        Exited?.Invoke(e, other);
+                    }
+
+                    continue;
+                }
+
+                var isTriggerEvent = leftCollider.IsTrigger || rightCollider.IsTrigger;
+                if (!isTriggerEvent) OnCollision(ref leftTransform, ref rightTransform);
+
+                if (_activeIntersect.Contains(entities) || _activeIntersect.Contains((entities.Item2, entities.Item1)))
+                {
+                    Stay?.Invoke(e, other, isTriggerEvent);
+                    continue;
+                }
+
+                _activeIntersect = _activeIntersect
+                    .TakeWhile(x => x != entities || x != (entities.Item2, entities.Item1))
+                    .Append(entities)
+                    .ToArray();
+
+                Entered?.Invoke(e, other, isTriggerEvent);
             }
         }
     }
 
-    private void OnRaiseTriggerIntersect(Entity sender, CustomEventArgs customEventArgs)
-    {
-        customEventArgs.Message += $" at {DateTime.Now}";
-        RaiseTriggerIntersect?.Invoke(sender, customEventArgs);
-    }
 
     private static void OnCollision(ref TransformComponent left, ref TransformComponent right)
     {
