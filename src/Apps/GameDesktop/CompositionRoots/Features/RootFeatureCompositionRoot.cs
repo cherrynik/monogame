@@ -80,8 +80,8 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
     private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterSingleton(factory => new CollisionSystem(factory.GetInstance<World>()));
-        serviceRegistry.RegisterSingleton(factory =>
-            new TriggerSystem(factory.GetInstance<World>(), factory.GetInstance<CollisionSystem>()));
+        // serviceRegistry.RegisterSingleton(factory =>
+        // new TriggerSystem(factory.GetInstance<World>(), factory.GetInstance<CollisionSystem>()));
         serviceRegistry.RegisterSingleton(factory => new InventorySystem(factory.GetInstance<World>()));
 
         // ECS
@@ -97,7 +97,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
                 new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
                 factory.GetInstance<CollisionSystem>(),
-                factory.GetInstance<TriggerSystem>(),
+                // factory.GetInstance<TriggerSystem>(),
                 factory.GetInstance<InventorySystem>(),
                 new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
 
@@ -111,7 +111,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
                     factory.GetInstance<SpriteBatch>()));
 #if DEBUG
-            const int w = 3, h = 3;
+            const int w = 2, h = 2;
             Texture2D pivotPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
             pivotPixel.SetData(Enumerable.Repeat(Color.Red, w * h).ToArray());
 
@@ -126,8 +126,8 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 new FrameCounter(factory.GetInstance<World>()),
                 new RenderFramesPerSec(factory.GetInstance<World>()),
                 new RectangleColliderRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
-                    colliderPixel),
-                new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pivotPixel)
+                    colliderPixel)
+                // new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pivotPixel)
             );
 #endif
 

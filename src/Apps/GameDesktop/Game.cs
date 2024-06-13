@@ -1,6 +1,8 @@
-﻿using Features;
+﻿using System;
+using Features;
 using GameDesktop.CompositionRoots.Features;
 using GameDesktop.Factories;
+using GameDesktop.Resources.Internal;
 using ImGuiNET;
 using JetBrains.Annotations;
 using MonoGame.ImGuiNet;
@@ -10,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Serilog;
 using Myra.Graphics2D.UI;
+using TiledCS;
 
 namespace GameDesktop;
 
@@ -21,6 +24,7 @@ public class Game : Microsoft.Xna.Framework.Game
     [CanBeNull] private ImGuiRenderer _imGuiRenderer;
     private SpriteBatch _spriteBatch;
     private Desktop _desktop;
+
 
     // TODO: Frames updating
     // TODO: Player position & other things debug showing, input, etc
@@ -63,6 +67,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
         // Register UIs before systems onAwake, because we subscribe on systems' events:
         // System ctor() -> UI ctor(System) -> System onAwake & event raise -> UI onEvent
+        RegisterTiled();
 #if DEBUG
         RegisterImGuiRenderer();
 #endif
@@ -72,6 +77,22 @@ public class Game : Microsoft.Xna.Framework.Game
         _rootFeature.OnAwake();
 
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
+    }
+
+    private void RegisterTiled()
+    {
+        // Docs: https://github.com/TheBoneJarmer/TiledCS
+        // Example 1: https://github.com/Temeez/TiledCS-MonoGame-Example
+        // Example 2: https://github.com/ironcutter24/TiledCS-example-MonoGame
+
+        // For loading maps in XML format
+        var map = new TiledMap(System.IO.Path.Join(
+            Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
+            "Content/Maps/Test.tmx"));
+        var tileset = new TiledTileset(System.IO.Path.Join(
+            Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
+            "Content/TileSets/LegacyOfThought.tsx"));
+        Console.WriteLine("Done.");
     }
 
     protected override void BeginRun()

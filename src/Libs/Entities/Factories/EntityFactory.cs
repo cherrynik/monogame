@@ -1,7 +1,9 @@
 ﻿using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories;
 
+// TODO: refactor to the right factory, so an entity is instantiated using IServiceContainer
 public abstract class EntityFactory
 {
     public Entity CreateEntity(World @in)

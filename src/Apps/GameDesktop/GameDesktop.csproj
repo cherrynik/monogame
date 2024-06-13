@@ -26,6 +26,12 @@
     <None Update="Content\SpriteSheets\Player.aseprite">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\Maps\Test.tmx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\TileSets\LegacyOfThought.tsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -63,6 +69,7 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="TiledCS" Version="3.3.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Components\Components.csproj" />
