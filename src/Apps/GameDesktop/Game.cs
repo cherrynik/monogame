@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Features;
 using GameDesktop.CompositionRoots.Features;
 using GameDesktop.Factories;
@@ -33,6 +35,8 @@ public class Game : Microsoft.Xna.Framework.Game
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
     private RootFeature _rootFeature;
+    private TiledMap _map;
+    private Dictionary<int, TiledTileset> _tilesets;
 
     public Game(ILogger logger, IServiceContainer container)
     {
@@ -85,14 +89,14 @@ public class Game : Microsoft.Xna.Framework.Game
         // Example 1: https://github.com/Temeez/TiledCS-MonoGame-Example
         // Example 2: https://github.com/ironcutter24/TiledCS-example-MonoGame
 
-        // For loading maps in XML format
-        var map = new TiledMap(System.IO.Path.Join(
+        var filePath = Path.Join(
             Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
-            "Content/Maps/Test.tmx"));
-        var tileset = new TiledTileset(System.IO.Path.Join(
-            Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
-            "Content/TileSets/LegacyOfThought.tsx"));
-        Console.WriteLine("Done.");
+            "Content/TileMaps/Test.tmx"
+        );
+        _map = new TiledMap(filePath);
+
+        var workingDir = $"{Path.GetDirectoryName(filePath)}/";
+        _tilesets = _map.GetTiledTilesets(workingDir);
     }
 
     protected override void BeginRun()
