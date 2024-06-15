@@ -9,7 +9,7 @@ using FontStashSharp.RichText;
 using LightInject;
 using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
-using Ldtk;
+using LDtk;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
@@ -106,12 +106,12 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             var preRender = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
                 new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
-                new CameraFollowingSystem(factory.GetInstance<World>()),
-                new TilesRenderingSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
-                    factory.GetInstance<LdtkData>()));
+                new CameraFollowingSystem(factory.GetInstance<World>()));
 
             var render = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
+                new TilesRenderingSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
+                    factory.GetInstance<LDtkFile>()),
                 new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
                     factory.GetInstance<SpriteBatch>()));
 #if DEBUG
@@ -169,7 +169,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 Left = -30,
                 Top = -20,
                 TextAlign = TextHorizontalAlignment.Right,
-                Text = "Pre-alpha v0.2.4"
+                Text = "Pre-alpha v0.3.0"
             }));
         serviceRegistry.RegisterSingleton<Func<GameVersion>>(factory => factory.GetInstance<GameVersion>);
 

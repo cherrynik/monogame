@@ -8,7 +8,6 @@ using GameDesktop.Factories;
 using GameDesktop.Resources.Internal;
 using ImGuiNET;
 using JetBrains.Annotations;
-using Ldtk;
 using MonoGame.ImGuiNet;
 using LightInject;
 using Microsoft.Xna.Framework;
@@ -19,21 +18,6 @@ using Myra.Graphics2D.UI;
 
 namespace GameDesktop;
 
-[Flags]
-enum Transform
-{
-    None = 0,
-    Flip_H = 1 << 0,
-    Flip_V = 1 << 1,
-    Flip_D = 1 << 2,
-
-    Rotate_90 = Flip_D | Flip_H,
-    Rotate_180 = Flip_H | Flip_V,
-    Rotate_270 = Flip_V | Flip_D,
-
-    Rotate_90AndFlip_H = Flip_H | Flip_V | Flip_D,
-}
-
 public class Game : Microsoft.Xna.Framework.Game
 {
     private readonly ILogger _logger;
@@ -42,7 +26,6 @@ public class Game : Microsoft.Xna.Framework.Game
     [CanBeNull] private ImGuiRenderer _imGuiRenderer;
     private SpriteBatch _spriteBatch;
     private Desktop _desktop;
-    private LdtkData _ldtkData;
 
     // TODO: Frames updating
     // TODO: Player position & other things debug showing, input, etc
@@ -138,7 +121,7 @@ public class Game : Microsoft.Xna.Framework.Game
         // For zoom: transformMatrix: Matrix.CreateScale(scaleFactor, scaleFactor, 1f);
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _rootFeature.OnRender(deltaTime);
-        
+
         _spriteBatch.End();
 
         _desktop.Render();

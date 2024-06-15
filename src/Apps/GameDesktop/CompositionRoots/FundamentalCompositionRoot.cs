@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using GameDesktop.Resources.Internal;
-using Ldtk;
+using LDtk;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -29,9 +30,9 @@ internal class FundamentalCompositionRoot : ICompositionRoot
                 Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
                 "Content/TileMaps/Test.ldtk"
             );
-            var ldtkJson = File.ReadAllText(fileName);
 
-            return LdtkData.FromJson(ldtkJson);
+            var file = LDtkFile.FromFile(fileName);
+            return file;
         });
     }
 
