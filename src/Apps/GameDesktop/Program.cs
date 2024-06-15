@@ -14,6 +14,9 @@ Environment.SetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory,
     Directory.GetParent(AppContext.BaseDirectory)!.FullName);
 
 using Logger logger = LogFactory.Create(configuration);
+Log.Logger = logger;
+// To disable logging, use this instead:
+// ILogger logger = Logger.None;
 
 logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) initialized");
 

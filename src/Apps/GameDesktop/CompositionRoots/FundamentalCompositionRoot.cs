@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using GameDesktop.Resources.Internal;
+using Ldtk;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,8 +16,23 @@ internal class FundamentalCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
+        RegisterLdtk(serviceRegistry);
         RegisterAnimationsFactory(serviceRegistry);
         serviceRegistry.RegisterSingleton(typeof(AbstractFactory<>));
+    }
+
+    private static void RegisterLdtk(IServiceRegistry serviceRegistry)
+    {
+        serviceRegistry.RegisterSingleton(_ =>
+        {
+            var fileName = Path.Join(
+                Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
+                "Content/TileMaps/Test.ldtk"
+            );
+            var ldtkJson = File.ReadAllText(fileName);
+
+            return LdtkData.FromJson(ldtkJson);
+        });
     }
 
     private static void RegisterAnimationsFactory(IServiceRegistry serviceRegistry)

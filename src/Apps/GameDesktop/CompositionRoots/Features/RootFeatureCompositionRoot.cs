@@ -9,21 +9,20 @@ using FontStashSharp.RichText;
 using LightInject;
 using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
+using Ldtk;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Myra;
 using Myra.Graphics2D.UI;
-using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
 using Services.Movement;
 using Systems;
 using Systems.Debugging.Diagnostics;
 using Systems.Debugging.World;
 using Systems.Render;
-using UI;
 using UI.Blocks;
 using UI.Factories;
 using UI.Feature;
+using World = Scellecs.Morpeh.World;
 #if DEBUG
 using Systems.Debugging.Render;
 using GameDesktop.CompositionRoots.DebugFeatures;
@@ -56,8 +55,11 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         RegisterEntryPoint(serviceRegistry);
     }
 
-    private static void RegisterFundamental(IServiceRegistry serviceRegistry) =>
+
+    private static void RegisterFundamental(IServiceRegistry serviceRegistry)
+    {
         serviceRegistry.RegisterFrom<FundamentalCompositionRoot>();
+    }
 
     private static void RegisterComponents(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterFrom<ComponentsCompositionRoot>();
@@ -104,7 +106,9 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             var preRender = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
                 new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
-                new CameraFollowingSystem(factory.GetInstance<World>()));
+                new CameraFollowingSystem(factory.GetInstance<World>()),
+                new TilesRenderingSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
+                    factory.GetInstance<LdtkData>()));
 
             var render = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),

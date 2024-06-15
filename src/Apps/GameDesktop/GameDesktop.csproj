@@ -68,6 +68,9 @@
     <None Update="Content\Objects\Tree.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Content\TileMaps\Test.ldtk">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
@@ -105,12 +108,12 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    <PackageReference Include="TiledCS" Version="3.3.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Components\Components.csproj" />
     <ProjectReference Include="..\..\Libs\External\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj" />
     <ProjectReference Include="..\..\Libs\Features\Features.csproj" />
+    <ProjectReference Include="..\..\Libs\Ldtk\Ldtk.csproj" />
     <ProjectReference Include="..\..\Libs\Services\Services.csproj" />
     <ProjectReference Include="..\..\Libs\Systems.Debugging\Systems.Debugging.csproj" />
     <ProjectReference Include="..\..\Libs\UI\UI.csproj" />

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Features;
 using GameDesktop.CompositionRoots.Features;
 using GameDesktop.Factories;
 using GameDesktop.Resources.Internal;
 using ImGuiNET;
 using JetBrains.Annotations;
+using Ldtk;
 using MonoGame.ImGuiNet;
 using LightInject;
 using Microsoft.Xna.Framework;
@@ -14,9 +16,23 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Serilog;
 using Myra.Graphics2D.UI;
-using TiledCS;
 
 namespace GameDesktop;
+
+[Flags]
+enum Transform
+{
+    None = 0,
+    Flip_H = 1 << 0,
+    Flip_V = 1 << 1,
+    Flip_D = 1 << 2,
+
+    Rotate_90 = Flip_D | Flip_H,
+    Rotate_180 = Flip_H | Flip_V,
+    Rotate_270 = Flip_V | Flip_D,
+
+    Rotate_90AndFlip_H = Flip_H | Flip_V | Flip_D,
+}
 
 public class Game : Microsoft.Xna.Framework.Game
 {
@@ -26,17 +42,16 @@ public class Game : Microsoft.Xna.Framework.Game
     [CanBeNull] private ImGuiRenderer _imGuiRenderer;
     private SpriteBatch _spriteBatch;
     private Desktop _desktop;
-
+    private LdtkData _ldtkData;
 
     // TODO: Frames updating
     // TODO: Player position & other things debug showing, input, etc
     // TODO: Nez has cool physics & other projects libs to use as deps, ImGUI viewports, solutions, etc.
 
+
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
     private RootFeature _rootFeature;
-    private TiledMap _map;
-    private Dictionary<int, TiledTileset> _tilesets;
 
     public Game(ILogger logger, IServiceContainer container)
     {
@@ -71,7 +86,6 @@ public class Game : Microsoft.Xna.Framework.Game
 
         // Register UIs before systems onAwake, because we subscribe on systems' events:
         // System ctor() -> UI ctor(System) -> System onAwake & event raise -> UI onEvent
-        RegisterTiled();
 #if DEBUG
         RegisterImGuiRenderer();
 #endif
@@ -83,21 +97,6 @@ public class Game : Microsoft.Xna.Framework.Game
         _logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
 
-    private void RegisterTiled()
-    {
-        // Docs: https://github.com/TheBoneJarmer/TiledCS
-        // Example 1: https://github.com/Temeez/TiledCS-MonoGame-Example
-        // Example 2: https://github.com/ironcutter24/TiledCS-example-MonoGame
-
-        var filePath = Path.Join(
-            Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
-            "Content/TileMaps/Test.tmx"
-        );
-        _map = new TiledMap(filePath);
-
-        var workingDir = $"{Path.GetDirectoryName(filePath)}/";
-        _tilesets = _map.GetTiledTilesets(workingDir);
-    }
 
     protected override void BeginRun()
     {
@@ -135,8 +134,11 @@ public class Game : Microsoft.Xna.Framework.Game
         _imGuiRenderer?.BeginLayout(gameTime);
 
         // ImGui.ShowMetricsWindow();
+
+        // For zoom: transformMatrix: Matrix.CreateScale(scaleFactor, scaleFactor, 1f);
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         _rootFeature.OnRender(deltaTime);
+        
         _spriteBatch.End();
 
         _desktop.Render();
