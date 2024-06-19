@@ -42,7 +42,7 @@ internal class FundamentalCompositionRoot : ICompositionRoot
         // binding off of implementation overloading, if you wanna pass through a string as an arg.
         // So, such resolving won't work either: Func<string, T>, as it'll get it as your string argument is a
         // service name. Thus, I use 3 type args here.
-        serviceRegistry.Register<string, string, Dictionary<Direction, AnimatedSprite>>((factory, path, action) =>
+        serviceRegistry.Register<string, string, Dictionary<Sector, AnimatedSprite>>((factory, path, action) =>
         {
             GraphicsDevice graphicsDevice = factory.GetInstance<GraphicsDeviceManager>().GraphicsDevice;
             SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, path);

@@ -27,8 +27,10 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
             .First()
             .GetComponent<CameraComponent>();
 
+        // FIXME: Duplicated at WorldInitializer
         var world = ldtkFile.LoadWorld(ldtkFile.Worlds.First().Iid);
         var level = world.LoadLevel(0);
+
         RenderLevel(level, camera);
         // foreach (Entity e in entities)
         // {

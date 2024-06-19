@@ -140,7 +140,8 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 new WorldInitializer(factory.GetInstance<World>(), new WorldEntityFactory(new WorldMetaComponent()),
                     factory.GetInstance<PlayerEntityFactory>(),
                     factory.GetInstance<DummyEntityFactory>(),
-                    factory.GetInstance<RockEntityFactory>())
+                    factory.GetInstance<RockEntityFactory>(),
+                    factory.GetInstance<LDtkFile>())
             );
         });
 

@@ -1,15 +1,21 @@
-﻿using Scellecs.Morpeh;
-using Scellecs.Morpeh.Extended.Extensions;
+﻿using LDtk;
+using Scellecs.Morpeh;
 
 namespace Entities.Factories;
 
 // TODO: refactor to the right factory, so an entity is instantiated using IServiceContainer
 public abstract class EntityFactory
 {
+    private readonly Dictionary<string, Func<Entity>> _entityCreators = new()
+    {
+        // { "Player", () => PlayerEntityFactory.CreateEntity(World.Default) },
+        // { "Rock", () => RockEntityFactory.CreateEntity(World.Default) },
+    };
+
     public Entity CreateEntity(World @in)
     {
         Entity e = @in.CreateEntity();
-        
+
         AddTags(e);
         AddData(e);
         AddRender(e);

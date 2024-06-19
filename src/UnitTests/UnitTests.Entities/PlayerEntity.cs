@@ -7,6 +7,7 @@ using Entities.Factories.Characters;
 using Entities.Factories.Items;
 using Entities.Factories.Meta;
 using Features;
+using LDtk;
 using Microsoft.Xna.Framework.Graphics;
 using Moq;
 using Scellecs.Morpeh;
@@ -100,7 +101,8 @@ public class Tests
                 new DummyEntityFactory(new NameComponent("Dummy"), new TransformComponent(),
                     new RectangleColliderComponent()),
                 new RockEntityFactory(new NameComponent("Rock"), new ItemComponent(ItemId.Rock),
-                    new TransformComponent())));
+                    new TransformComponent()),
+                new LDtkFile()));
 
         rootFeature.OnAwake();
         rootFeature.OnFixedUpdate(It.IsAny<float>());

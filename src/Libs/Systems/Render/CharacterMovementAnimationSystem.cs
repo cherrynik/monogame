@@ -55,10 +55,10 @@ public class CharacterMovementAnimationSystem(World world) : ISystem
             ? animations.IdleAnimations[animator.Facing]
             : animations.WalkingAnimations[animator.Facing];
 
-    private static Direction GetDirection(TransformComponent transform, CharacterAnimatorComponent animator) =>
+    private static Sector GetDirection(TransformComponent transform, CharacterAnimatorComponent animator) =>
         transform.Velocity.Equals(Vector2.Zero)
             ? animator.Facing
-            : MathUtils.Rad8DirYFlipped(transform.Velocity);
+            : MathUtils.VectorToSectorYFlipped(transform.Velocity);
 
     public void Dispose()
     {

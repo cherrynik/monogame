@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 using Scellecs.Morpeh;
-using Pivot = Services.Math.Direction;
+using Services.Math;
 
 namespace Components.Data;
 
@@ -8,7 +8,7 @@ public struct TransformComponent : IComponent
 {
     public Vector2 Position;
     public Vector2 Velocity;
-    public Pivot Pivot;
+    public Sector Pivot;
 }
 
 // Input Scan System -> Write Velocity

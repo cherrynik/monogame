@@ -84,9 +84,9 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory =>
         {
             var getAnimations =
-                factory.GetInstance<Func<string, string, Dictionary<Direction, AnimatedSprite>>>("Character");
-            Dictionary<Direction, AnimatedSprite> idle = getAnimations(PlayerSpriteSheetPath, "Idle");
-            AnimatedSprite defaultSprite = idle[Direction.Down];
+                factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>("Character");
+            Dictionary<Sector, AnimatedSprite> idle = getAnimations(PlayerSpriteSheetPath, "Idle");
+            AnimatedSprite defaultSprite = idle[Sector.Down];
 
             return new SpriteComponent(defaultSprite);
         }, "Player");
@@ -102,7 +102,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterTransient(factory =>
         {
             var getAnimations =
-                factory.GetInstance<Func<string, string, Dictionary<Direction, AnimatedSprite>>>("Character");
+                factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>("Character");
 
             return new MovementAnimationsComponent(getAnimations(PlayerSpriteSheetPath, "Idle"),
                 getAnimations(PlayerSpriteSheetPath, "Walking"));
@@ -158,7 +158,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory =>
         {
             var movementAnimations = factory.GetInstance<MovementAnimationsComponent>("PlayerEntity");
-            const Direction facing = Direction.Right;
+            const Sector facing = Sector.Right;
 
             return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing]);
         }, "PlayerEntity");

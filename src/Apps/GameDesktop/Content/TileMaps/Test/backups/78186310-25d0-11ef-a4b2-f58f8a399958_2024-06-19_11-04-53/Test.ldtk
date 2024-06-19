@@ -1832,7 +1832,7 @@
 			"maxCount": 0,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
-			"pivotX": 0.5,
+			"pivotX": 0,
 			"pivotY": 1,
 			"fieldDefs": []
 		},
@@ -2393,7 +2393,7 @@
 						{
 							"__identifier": "Blue_Flower",
 							"__grid": [0,11],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 64, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#E43B44",
@@ -2409,7 +2409,7 @@
 						{
 							"__identifier": "Blue_Flower",
 							"__grid": [6,1],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 64, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#E43B44",
@@ -2457,7 +2457,7 @@
 						{
 							"__identifier": "Blue_Flower",
 							"__grid": [7,12],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 64, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#E43B44",

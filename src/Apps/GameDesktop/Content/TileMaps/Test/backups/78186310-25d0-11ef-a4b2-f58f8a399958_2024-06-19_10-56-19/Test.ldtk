@@ -1447,8 +1447,8 @@
 			"maxCount": 0,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
-			"pivotX": 0.5,
-			"pivotY": 1,
+			"pivotX": 0,
+			"pivotY": 0.5,
 			"fieldDefs": []
 		},
 		{
@@ -1832,7 +1832,7 @@
 			"maxCount": 0,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
-			"pivotX": 0.5,
+			"pivotX": 0,
 			"pivotY": 1,
 			"fieldDefs": []
 		},
@@ -1867,7 +1867,7 @@
 			"maxCount": 0,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
-			"pivotX": 0.5,
+			"pivotX": 0,
 			"pivotY": 1,
 			"fieldDefs": []
 		}
@@ -1992,8 +1992,8 @@
 					"entityInstances": [
 						{
 							"__identifier": "Tree",
-							"__grid": [3,1],
-							"__pivot": [0.5,1],
+							"__grid": [3,2],
+							"__pivot": [0,0.5],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 144, "y": 0, "w": 48, "h": 96 },
 							"__smartColor": "#63C74D",
@@ -2008,8 +2008,8 @@
 						},
 						{
 							"__identifier": "Tree",
-							"__grid": [8,1],
-							"__pivot": [0.5,1],
+							"__grid": [8,2],
+							"__pivot": [0,0.5],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 144, "y": 0, "w": 48, "h": 96 },
 							"__smartColor": "#63C74D",
@@ -2024,8 +2024,8 @@
 						},
 						{
 							"__identifier": "Tree",
-							"__grid": [13,1],
-							"__pivot": [0.5,1],
+							"__grid": [13,2],
+							"__pivot": [0,0.5],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 144, "y": 0, "w": 48, "h": 96 },
 							"__smartColor": "#63C74D",
@@ -2040,8 +2040,8 @@
 						},
 						{
 							"__identifier": "Tree",
-							"__grid": [1,4],
-							"__pivot": [0.5,1],
+							"__grid": [1,5],
+							"__pivot": [0,0.5],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 144, "y": 0, "w": 48, "h": 96 },
 							"__smartColor": "#63C74D",
@@ -2056,8 +2056,8 @@
 						},
 						{
 							"__identifier": "Tree",
-							"__grid": [13,6],
-							"__pivot": [0.5,1],
+							"__grid": [13,7],
+							"__pivot": [0,0.5],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 144, "y": 0, "w": 48, "h": 96 },
 							"__smartColor": "#63C74D",
@@ -2328,8 +2328,8 @@
 						},
 						{
 							"__identifier": "Tree",
-							"__grid": [4,11],
-							"__pivot": [0.5,1],
+							"__grid": [4,12],
+							"__pivot": [0,0.5],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 144, "y": 0, "w": 48, "h": 96 },
 							"__smartColor": "#63C74D",
@@ -2344,8 +2344,8 @@
 						},
 						{
 							"__identifier": "Tree",
-							"__grid": [14,14],
-							"__pivot": [0.5,1],
+							"__grid": [14,15],
+							"__pivot": [0,0.5],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 144, "y": 0, "w": 48, "h": 96 },
 							"__smartColor": "#63C74D",
@@ -2393,7 +2393,7 @@
 						{
 							"__identifier": "Blue_Flower",
 							"__grid": [0,11],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 64, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#E43B44",
@@ -2409,7 +2409,7 @@
 						{
 							"__identifier": "Blue_Flower",
 							"__grid": [6,1],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 64, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#E43B44",
@@ -2457,7 +2457,7 @@
 						{
 							"__identifier": "Blue_Flower",
 							"__grid": [7,12],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 64, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#E43B44",
@@ -2473,7 +2473,7 @@
 						{
 							"__identifier": "Pink_Flower",
 							"__grid": [15,7],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 48, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#FF989E",
@@ -2489,7 +2489,7 @@
 						{
 							"__identifier": "Pink_Flower",
 							"__grid": [9,1],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 48, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#FF989E",
@@ -2617,7 +2617,7 @@
 						{
 							"__identifier": "Pink_Flower",
 							"__grid": [2,9],
-							"__pivot": [0.5,1],
+							"__pivot": [0,1],
 							"__tags": [ "Transform", "Vegetation" ],
 							"__tile": { "tilesetUid": 3, "x": 48, "y": 112, "w": 16, "h": 16 },
 							"__smartColor": "#FF989E",
