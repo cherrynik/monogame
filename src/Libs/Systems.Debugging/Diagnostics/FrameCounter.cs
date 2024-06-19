@@ -17,16 +17,21 @@ public class FrameCounter(Scellecs.Morpeh.World world) : ISystem
 
     public void OnUpdate(float deltaTime)
     {
+        Filter filter = World.Filter
+            .With<WorldMetaComponent>()
+            .Build();
+
+        if (filter.IsEmpty()) return;
+
         ++_framesCount;
         _elapsedTime += deltaTime;
 
         if (_elapsedTime < UpdateFrequencyInSec) return;
 
-        ref WorldMetaComponent worldMeta = ref World.Filter
-            .With<WorldMetaComponent>()
-            .Build()
+        ref WorldMetaComponent worldMeta = ref filter
             .First()
             .GetComponent<WorldMetaComponent>();
+
         worldMeta.FramesPerSec = _framesCount / _elapsedTime;
 
         _framesCount = 0;

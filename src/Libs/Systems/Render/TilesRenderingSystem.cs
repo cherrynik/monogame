@@ -21,9 +21,13 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
 
     public void OnUpdate(float deltaTime)
     {
-        var camera = World.Filter
+        Filter filter = World.Filter
             .With<CameraComponent>()
-            .Build()
+            .Build();
+
+        if (filter.IsEmpty()) return;
+
+        var camera = filter
             .First()
             .GetComponent<CameraComponent>();
 
@@ -108,7 +112,7 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
                     }
 
                     break;
-                
+
                 case LayerType.Entities:
                     break;
             }

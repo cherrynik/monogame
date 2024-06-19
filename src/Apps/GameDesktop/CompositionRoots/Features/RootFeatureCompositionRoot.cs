@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Components.Data;
+using Entities.Factories;
 using Entities.Factories.Characters;
 using Entities.Factories.Items;
 using Entities.Factories.Meta;
@@ -51,6 +52,11 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 #if DEBUG
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
 #endif
+
+        serviceRegistry.RegisterSingleton<PebbleFactory>();
+        serviceRegistry.RegisterSingleton<RockFactory>();
+
+        serviceRegistry.RegisterSingleton<AbstractEntityFactory>();
 
         RegisterEntryPoint(serviceRegistry);
     }
@@ -137,10 +143,12 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
             return new RootFeature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
-                new WorldInitializer(factory.GetInstance<World>(), new WorldEntityFactory(new WorldMetaComponent()),
-                    factory.GetInstance<PlayerEntityFactory>(),
-                    factory.GetInstance<DummyEntityFactory>(),
-                    factory.GetInstance<RockEntityFactory>(),
+                new WorldInitializer(factory.GetInstance<World>(),
+                    // new WorldEntityFactory(new WorldMetaComponent()),
+                    // factory.GetInstance<PlayerEntityFactory>(),
+                    // factory.GetInstance<DummyEntityFactory>(),
+                    // factory.GetInstance<RockEntityFactory>(),
+                    factory.GetInstance<AbstractEntityFactory>(),
                     factory.GetInstance<LDtkFile>())
             );
         });

@@ -35,6 +35,8 @@ try
         });
 
     container.RegisterInstance<IServiceContainer>(container);
+    container.RegisterInstance<IServiceFactory>(container);
+
     container.RegisterInstance<IConfiguration>(configuration);
     container.RegisterInstance<ILogger>(logger);
 

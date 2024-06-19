@@ -27,9 +27,15 @@ public class RectangleColliderRenderSystem(
             .With<TransformComponent>()
             .Build();
 
-        var camera = World.Filter
+        if (filter.IsEmpty()) return;
+
+        var cameraFilter = World.Filter
             .With<CameraComponent>()
-            .Build()
+            .Build();
+
+        if (cameraFilter.IsEmpty()) return;
+
+        var camera = cameraFilter
             .First()
             .GetComponent<CameraComponent>();
 

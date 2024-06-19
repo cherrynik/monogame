@@ -115,6 +115,8 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterTransformComponent(IServiceRegistry serviceRegistry)
     {
+        serviceRegistry.RegisterSingleton(_ => new TransformComponent());
+
         serviceRegistry.RegisterSingleton(_ =>
             new TransformComponent { Position = new(316, 116) }, "PlayerEntity");
 
@@ -128,11 +130,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     private static void RegisterRectangleColliderComponent(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterSingleton(_ =>
-            new RectangleColliderComponent
-            {
-                Size = new(0, 0, 8, 8),
-                IsTrigger = true
-            }, "DummyEntity");
+            new RectangleColliderComponent { Size = new(0, 0, 8, 8), IsTrigger = true }, "DummyEntity");
 
         serviceRegistry.RegisterSingleton(_ =>
             new RectangleColliderComponent { Size = new(0, 0, 8, 8) }, "PlayerEntity");

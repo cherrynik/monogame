@@ -15,4 +15,10 @@
       <PackageReference Include="LDtkMonogame" Version="1.3.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="LightInject">
+        <HintPath>..\..\..\..\..\.nuget\packages\lightinject\6.6.4\lib\net6.0\LightInject.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

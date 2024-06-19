@@ -15,7 +15,11 @@ public class RenderFramesPerSec(Scellecs.Morpeh.World world) : IRenderSystem
 
     public void OnUpdate(float deltaTime)
     {
-        var world = World.Filter.With<WorldMetaComponent>().Build().First().GetComponent<WorldMetaComponent>();
+        Filter filter = World.Filter.With<WorldMetaComponent>().Build();
+
+        if (filter.IsEmpty()) return;
+
+        var world = filter.First().GetComponent<WorldMetaComponent>();
 
         ImGui.Begin("Diagnostics",
             ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking);

@@ -1,33 +1,19 @@
-﻿using System.Numerics;
-using Components.Data;
-using Entities.Factories;
-using Entities.Factories.Characters;
-using Entities.Factories.Items;
-using Entities.Factories.Meta;
+﻿using Entities.Factories;
 using LDtk;
 using Scellecs.Morpeh;
-using Services.Math;
 
 namespace Systems;
 
 public class WorldInitializer(
     World world,
-    WorldEntityFactory worldEntityFactory,
-    PlayerEntityFactory playerEntityFactory,
-    DummyEntityFactory dummyEntityFactory,
-    RockEntityFactory rockEntityFactory,
-    LDtkFile ldtkFile) // TODO: Convert ctor's params into (...EntityFactory entityFactories) (?)
+    AbstractEntityFactory abstractEntityFactory,
+    LDtkFile ldtkFile)
     : IInitializer
 {
     public World World { get; set; } = world;
 
     public void OnAwake()
     {
-        worldEntityFactory.CreateEntity(@in: World);
-        playerEntityFactory.CreateEntity(@in: World);
-        // dummyEntityFactory.CreateEntity(@in: World);
-        // rockEntityFactory.CreateEntity(@in: World);
-
         // FIXME: Duplicated at TilesRenderingSystem
         var ldtkWorld = ldtkFile.LoadWorld(ldtkFile.Worlds.First().Iid);
         var level = ldtkWorld.LoadLevel(0);
@@ -57,6 +43,7 @@ public class WorldInitializer(
 
             foreach (var entity in layer.EntityInstances)
             {
+                abstractEntityFactory.CreateEntity(entity, world);
                 // var e = rockEntityFactory.CreateEntity(World);
                 // ref var transform = ref e.GetComponent<TransformComponent>();
 

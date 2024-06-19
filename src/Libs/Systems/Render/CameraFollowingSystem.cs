@@ -28,7 +28,12 @@ public class CameraFollowingSystem(World world) : ILateSystem
         //     _camera.Render(e);
         // }
 
-        Entity e = World.Filter.With<CameraComponent>().Build().First();
+        Filter filter = World.Filter.With<CameraComponent>().Build();
+
+        if (filter.IsEmpty())
+            return;
+
+        Entity e = filter.First();
 
         ref var transform = ref e.GetComponent<TransformComponent>();
         ref var camera = ref e.GetComponent<CameraComponent>();

@@ -19,15 +19,20 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
 
     public void OnUpdate(float deltaTime)
     {
-        Filter filter = World.Filter.With<TransformComponent>().Build();
-        
-        var camera = World.Filter
+        Filter transformFilter = World.Filter.With<TransformComponent>().Build();
+
+        if (transformFilter.IsEmpty()) return;
+
+        Filter cameraFilter = World.Filter
             .With<CameraComponent>()
-            .Build()
-            .First()
+            .Build();
+
+        if (cameraFilter.IsEmpty()) return;
+
+        var camera = cameraFilter.First()
             .GetComponent<CameraComponent>();
 
-        IEnumerable<Entity> entities = SortEntitiesByYPosition(filter);
+        IEnumerable<Entity> entities = SortEntitiesByYPosition(transformFilter);
 
         foreach (Entity e in entities)
         {
