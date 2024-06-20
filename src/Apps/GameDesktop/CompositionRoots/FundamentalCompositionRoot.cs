@@ -33,8 +33,7 @@ internal class FundamentalCompositionRoot : ICompositionRoot
                 "Content/TileMaps/Test.ldtk"
             );
 
-            var file = LDtkFile.FromFile(fileName);
-            return file;
+            return LDtkFile.FromFile(fileName);
         });
     }
 

@@ -1,4 +1,6 @@
 ﻿using Components.Data;
+using Components.Render.Animation;
+using Components.Tags;
 using LDtk;
 using LightInject;
 using Scellecs.Morpeh;
@@ -14,19 +16,28 @@ public interface IEntityFactory
 
 public interface IAbstractEntityFactory
 {
-    Entity CreateEntity(EntityInstance entity, World @in);
+    Entity? CreateEntity(EntityInstance entity, World @in);
 }
 
 public class AbstractEntityFactory(IServiceFactory serviceFactory) : IAbstractEntityFactory
 {
     private readonly Dictionary<string, IAbstractEntityFactory> _factories = new()
     {
-        // { "Tree", () => (IEntityFactory)serviceProvider.GetService(typeof(RockFactory)) },
-        { "Rock", serviceFactory.GetInstance<RockFactory>() }, { "Default", null }
+        // { "Tree", null },
+        { "Player", serviceFactory.GetInstance<PlayerFactory>() },
+        { "Rock", serviceFactory.GetInstance<RockFactory>() },
+        // { "Default", null }
     };
 
-    public Entity CreateEntity(EntityInstance entity, World @in)
+    public Entity? CreateEntity(EntityInstance entity, World @in)
     {
+        {
+            if (_factories.TryGetValue(entity._Identifier, out var factory))
+            {
+                return factory.CreateEntity(entity, @in);
+            }
+        }
+
         foreach (var tag in entity._Tags)
         {
             if (_factories.TryGetValue(tag, out var factory))
@@ -35,9 +46,9 @@ public class AbstractEntityFactory(IServiceFactory serviceFactory) : IAbstractEn
             }
         }
 
-        // throw new ArgumentException($"{entity.Iid} has an unknown tag: {(string.Join(", ", entity._Tags))}");
-        // return _factories["Default"].CreateEntity(entity, @in);
         return null;
+        // throw new ArgumentException(
+        // $"{entity._Identifier} ({entity.Iid}) has unknown tag(-s): {(string.Join(", ", entity._Tags))}");
     }
 }
 
@@ -58,14 +69,14 @@ public class PebbleFactory(IServiceFactory serviceProvider) : EntityFactory
     }
 }
 
-public class RockFactory(IServiceFactory serviceProvider, World @in) : IAbstractEntityFactory
+public class RockFactory(IServiceFactory serviceFactory, World @in) : IAbstractEntityFactory
 {
     private readonly Dictionary<string, Func<Entity>> _createRock = new()
     {
-        { "Pebble", () => serviceProvider.GetInstance<PebbleFactory>().CreateEntity(@in) },
+        { "Pebble", () => serviceFactory.GetInstance<PebbleFactory>().CreateEntity(@in) },
     };
 
-    public Entity CreateEntity(EntityInstance entity, World @in)
+    public Entity? CreateEntity(EntityInstance entity, World @in)
     {
         if (_createRock.TryGetValue(entity._Identifier, out var createRock))
         {
@@ -74,6 +85,32 @@ public class RockFactory(IServiceFactory serviceProvider, World @in) : IAbstract
 
         // throw new ArgumentException($"{entity.Iid} has an unknown tag: {entity._Tags}");
         return null;
+    }
+}
+
+public class PlayerFactory(IServiceFactory serviceFactory) : EntityFactory, IAbstractEntityFactory
+{
+    public Entity CreateEntity(EntityInstance entity, World @in) => this.CreateEntity(@in);
+
+    protected override void AddTags(Entity e)
+    {
+        e.AddComponent(serviceFactory.GetInstance<CameraComponent>());
+        e.AddComponent(serviceFactory.GetInstance<InputMovableComponent>());
+        e.AddComponent(serviceFactory.GetInstance<MovableComponent>());
+    }
+
+    protected override void AddData(Entity e)
+    {
+        e.AddComponent(serviceFactory.GetInstance<string, NameComponent>("Player"));
+        e.AddComponent(serviceFactory.GetInstance<TransformComponent>("PlayerEntity"));
+        e.AddComponent(serviceFactory.GetInstance<RectangleColliderComponent>("PlayerEntity"));
+        e.AddComponent(serviceFactory.GetInstance<InventoryComponent>());
+    }
+
+    protected override void AddRender(Entity e)
+    {
+        e.AddComponent(serviceFactory.GetInstance<MovementAnimationsComponent>("PlayerEntity"));
+        e.AddComponent(serviceFactory.GetInstance<CharacterAnimatorComponent>("PlayerEntity"));
     }
 }
 
@@ -91,6 +128,8 @@ public abstract class EntityFactory : IEntityFactory
     }
 
     protected abstract void AddTags(Entity e);
+
     protected abstract void AddData(Entity e);
+
     protected abstract void AddRender(Entity e);
 }

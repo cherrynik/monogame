@@ -54,6 +54,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 #if DEBUG
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
 #endif
+        serviceRegistry.RegisterSingleton<PlayerFactory>();
 
         serviceRegistry.RegisterSingleton<PebbleFactory>();
         serviceRegistry.RegisterSingleton<RockFactory>();

@@ -1,6 +1,9 @@
-﻿using Entities.Factories;
+﻿using System.Numerics;
+using Components.Data;
+using Entities.Factories;
 using LDtk;
 using Scellecs.Morpeh;
+using Services.Math;
 
 namespace Systems;
 
@@ -43,12 +46,16 @@ public class WorldInitializer(
 
             foreach (var entity in layer.EntityInstances)
             {
-                abstractEntityFactory.CreateEntity(entity, world);
-                // var e = rockEntityFactory.CreateEntity(World);
-                // ref var transform = ref e.GetComponent<TransformComponent>();
+                var e = abstractEntityFactory.CreateEntity(entity, world);
 
-                // transform.Pivot = MathUtils.LdtkPivotToSector(new Vector2(entity._Pivot.X, entity._Pivot.Y));
-                // var pivotOffset = MathUtils.SectorToVector(transform.Pivot);
+                if (e is null) continue;
+
+                ref var transform = ref e.GetComponent<TransformComponent>();
+
+                transform.Pivot = MathUtils.LdtkPivotToSector(new Vector2(entity._Pivot.X, entity._Pivot.Y));
+                var pivotOffset = MathUtils.SectorToVector(transform.Pivot);
+
+                transform.Position = new Vector2((float)entity._WorldX, (float)entity._WorldY);
             }
         }
     }

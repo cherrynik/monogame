@@ -495,4 +495,4 @@ dependensee.html
 # Jenny & CSharp
 *.userproperties
 Generated/
-src/Libs/External/MonoGame.ImGuiNet
+src/Apps/GameDesktop/Content/**/*/backups
