@@ -1,5 +1,6 @@
 ﻿using Entities.Factories.Characters;
 using Entities.Factories.Items.Rocks;
+using Entities.Factories.Items.Trees;
 using LDtk;
 using LightInject;
 using Scellecs.Morpeh;
@@ -10,9 +11,9 @@ public class AbstractEntityFactory(IServiceFactory serviceFactory) : IAbstractEn
 {
     private readonly Dictionary<string, IAbstractEntityFactory> _factories = new()
     {
-        // { "Tree", null },
         { "Player", serviceFactory.GetInstance<PlayerFactory>() },
         { "Rock", serviceFactory.GetInstance<AbstractRockFactory>() },
+        { "Tree", serviceFactory.GetInstance<AbstractTreeFactory>() },
         // { "Default", null }
     };
 

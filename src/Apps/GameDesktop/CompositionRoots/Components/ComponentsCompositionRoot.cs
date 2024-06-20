@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Components.Data;
 using Components.Render.Animation;
 using Components.Render.Static;
 using Components.Tags;
 using GameDesktop.Resources.Internal;
 using LightInject;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Aseprite;
 using MonoGame.Aseprite.Sprites;
 using Services.Math;
 
@@ -33,6 +36,31 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterDataComponents(IServiceRegistry serviceRegistry)
     {
+        serviceRegistry.Register<string, Texture2D>((factory, path) =>
+        {
+            var fileName = Path.Join(
+                Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
+                path
+            );
+            return Texture2D.FromFile(factory.GetInstance<GraphicsDeviceManager>().GraphicsDevice, fileName);
+        });
+
+        // TODO: Automatically get texture & its rect from a tile set (by aseprite?)
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            var texture = factory.GetInstance<string, Texture2D>("Content/SpriteSheets/Main.png");
+            var sprite = new Sprite("Pebble", new TextureRegion("Pebble", texture, new(208, 48, 16, 16)));
+
+            return new SpriteComponent(sprite);
+        }, "Pebble");
+
+        serviceRegistry.RegisterSingleton(factory =>
+        {
+            var texture = factory.GetInstance<string, Texture2D>("Content/SpriteSheets/Main.png");
+            var sprite = new Sprite("Tree", new TextureRegion("Tree", texture, new(144, 0, 48, 96)));
+
+            return new SpriteComponent(sprite);
+        }, "Tree");
         RegisterTransformComponent(serviceRegistry);
         RegisterRectangleColliderComponent(serviceRegistry);
         RegisterItemComponent(serviceRegistry);

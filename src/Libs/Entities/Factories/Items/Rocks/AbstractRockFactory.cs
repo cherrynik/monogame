@@ -6,13 +6,13 @@ namespace Entities.Factories.Items.Rocks;
 
 public class AbstractRockFactory(IServiceFactory serviceFactory) : IAbstractEntityFactory
 {
-    private readonly Dictionary<string, ConcreteEntityFactory> _createRock = new()
+    private readonly Dictionary<string, ConcreteEntityFactory> _factories = new()
     {
         { "Pebble", serviceFactory.GetInstance<PebbleFactory>() },
     };
 
     public Entity? CreateEntity(EntityInstance entity, World @in) =>
-        _createRock.TryGetValue(entity._Identifier, out var factory)
+        _factories.TryGetValue(entity._Identifier, out var factory)
             ? factory.CreateEntity(@in)
             : null;
 }

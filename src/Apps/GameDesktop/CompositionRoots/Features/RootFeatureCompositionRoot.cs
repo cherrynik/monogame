@@ -5,6 +5,7 @@ using Entities.Factories;
 using Entities.Factories.Characters;
 using Entities.Factories.Items;
 using Entities.Factories.Items.Rocks;
+using Entities.Factories.Items.Trees;
 using Entities.Factories.Meta;
 using Features;
 using FontStashSharp.RichText;
@@ -56,6 +57,9 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
 #endif
         serviceRegistry.RegisterSingleton<PlayerFactory>();
+
+        serviceRegistry.RegisterSingleton<TreeFactory>();
+        serviceRegistry.RegisterSingleton<AbstractTreeFactory>();
 
         serviceRegistry.RegisterSingleton<PebbleFactory>();
         serviceRegistry.RegisterSingleton<AbstractRockFactory>();
@@ -182,7 +186,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 Left = -30,
                 Top = -20,
                 TextAlign = TextHorizontalAlignment.Right,
-                Text = "Pre-alpha v0.3.0"
+                Text = "Pre-alpha v0.3.2"
             }));
         serviceRegistry.RegisterSingleton<Func<GameVersion>>(factory => factory.GetInstance<GameVersion>);
 
