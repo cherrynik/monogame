@@ -10,15 +10,15 @@ public class RockEntityCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        RegisterEntity(serviceRegistry);
+        // RegisterEntity(serviceRegistry);
     }
 
 
-    private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
-        serviceRegistry.RegisterTransient(factory => new RockEntityFactory(
-            new NameComponent("Rock"), // factory.GetInstance<NameComponent>("Rock")
-            factory.GetInstance<ItemComponent>("Rock"),
-            factory.GetInstance<TransformComponent>("RockEntity"),
-            factory.GetInstance<SpriteComponent>() //factory.GetInstance<SpriteComponent>("Rock")
-        ));
+    // private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
+        // serviceRegistry.RegisterTransient(factory => new RockEntityFactory(
+        //     new NameComponent("Rock"), // factory.GetInstance<NameComponent>("Rock")
+        //     factory.GetInstance<ItemComponent>("Rock"),
+        //     factory.GetInstance<TransformComponent>("RockEntity"),
+        //     factory.GetInstance<SpriteComponent>() //factory.GetInstance<SpriteComponent>("Rock")
+        // ));
 }

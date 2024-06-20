@@ -4,6 +4,7 @@ using Components.Data;
 using Entities.Factories;
 using Entities.Factories.Characters;
 using Entities.Factories.Items;
+using Entities.Factories.Items.Rocks;
 using Entities.Factories.Meta;
 using Features;
 using FontStashSharp.RichText;
@@ -57,7 +58,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton<PlayerFactory>();
 
         serviceRegistry.RegisterSingleton<PebbleFactory>();
-        serviceRegistry.RegisterSingleton<RockFactory>();
+        serviceRegistry.RegisterSingleton<AbstractRockFactory>();
 
         serviceRegistry.RegisterSingleton<AbstractEntityFactory>();
 

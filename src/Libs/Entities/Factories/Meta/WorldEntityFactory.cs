@@ -4,7 +4,7 @@ using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Meta;
 
-public class WorldEntityFactory(WorldMetaComponent worldMetaComponent) : EntityFactory
+public class WorldEntityFactory(WorldMetaComponent worldMetaComponent) : ConcreteEntityFactory
 {
     protected override void AddTags(Entity e)
     {
