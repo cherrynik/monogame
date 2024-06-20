@@ -1,7 +1,9 @@
 ﻿// using Features.Debugging;
+
 using LightInject;
 using MonoGame.ImGuiNet;
 
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.DebugFeatures.DebugRootFeatureCompositionRoot))]
 namespace GameDesktop.CompositionRoots.DebugFeatures;
 
 internal class DebugRootFeatureCompositionRoot : ICompositionRoot
@@ -16,10 +18,10 @@ internal class DebugRootFeatureCompositionRoot : ICompositionRoot
     {
         // serviceRegistry.RegisterSingleton(factory =>
         // {
-            // return new DrawRectangleCollisionComponentsSystem(factory.GetInstance<ILogger>());
+        // return new DrawRectangleCollisionComponentsSystem(factory.GetInstance<ILogger>());
         // });
     }
 
     // private static void RegisterFeature(IServiceRegistry serviceRegistry) =>
-        // serviceRegistry.RegisterSingleton<DebugRootFeature>();
+    // serviceRegistry.RegisterSingleton<DebugRootFeature>();
 }

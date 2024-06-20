@@ -29,6 +29,8 @@ using Systems.Debugging.Render;
 using GameDesktop.CompositionRoots.DebugFeatures;
 #endif
 
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Features.RootFeatureCompositionRoot))]
+
 namespace GameDesktop.CompositionRoots.Features;
 
 internal class RootFeatureCompositionRoot : ICompositionRoot

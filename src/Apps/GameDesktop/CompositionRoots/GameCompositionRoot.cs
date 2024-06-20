@@ -4,6 +4,8 @@ using LightInject;
 using Microsoft.Xna.Framework;
 using Serilog;
 
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.GameCompositionRoot))]
+
 namespace GameDesktop.CompositionRoots;
 
 internal class GameCompositionRoot : ICompositionRoot

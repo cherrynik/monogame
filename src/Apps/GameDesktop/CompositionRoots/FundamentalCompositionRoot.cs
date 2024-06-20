@@ -11,6 +11,8 @@ using MonoGame.Aseprite.Sprites;
 using Services.Factories;
 using Services.Math;
 
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.FundamentalCompositionRoot))]
+
 namespace GameDesktop.CompositionRoots;
 
 internal class FundamentalCompositionRoot : ICompositionRoot

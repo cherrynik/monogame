@@ -3,6 +3,7 @@ using Components.Render.Static;
 using Entities.Factories.Items;
 using LightInject;
 
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Entities.RockEntityCompositionRoot))]
 namespace GameDesktop.CompositionRoots.Entities;
 
 public class RockEntityCompositionRoot : ICompositionRoot

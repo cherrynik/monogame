@@ -4,6 +4,8 @@ using Components.Tags;
 using Entities.Factories.Characters;
 using LightInject;
 
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Entities.PlayerEntityCompositionRoot))]
+
 namespace GameDesktop.CompositionRoots.Entities;
 
 internal class PlayerEntityCompositionRoot : ICompositionRoot

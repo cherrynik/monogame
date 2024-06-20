@@ -22,8 +22,7 @@ public class AbstractEntityFactory(IServiceFactory serviceFactory) : IAbstractEn
     private readonly Dictionary<string, IAbstractEntityFactory> _factories = new()
     {
         // { "Tree", () => (IEntityFactory)serviceProvider.GetService(typeof(RockFactory)) },
-        { "Rock", serviceFactory.GetInstance<RockFactory>() },
-        { "Default", null }
+        { "Rock", serviceFactory.GetInstance<RockFactory>() }, { "Default", null }
     };
 
     public Entity CreateEntity(EntityInstance entity, World @in)
@@ -50,8 +49,8 @@ public class PebbleFactory(IServiceFactory serviceProvider) : EntityFactory
 
     protected override void AddData(Entity e)
     {
-        // ref var name = ref e.AddComponent(serviceProvider.GetInstance<NameComponent>());
-        ref var transform = ref e.AddComponent(serviceProvider.GetInstance<TransformComponent>());
+        e.AddComponent(serviceProvider.GetInstance<string, NameComponent>("Pebble"));
+        e.AddComponent(serviceProvider.GetInstance<TransformComponent>());
     }
 
     protected override void AddRender(Entity e)

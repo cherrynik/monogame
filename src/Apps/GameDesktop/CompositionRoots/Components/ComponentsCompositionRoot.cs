@@ -10,6 +10,9 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services.Math;
 
+
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Components.ComponentsCompositionRoot))]
+
 namespace GameDesktop.CompositionRoots.Components;
 
 internal class ComponentsCompositionRoot : ICompositionRoot
@@ -115,7 +118,8 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
     private static void RegisterTransformComponent(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new TransformComponent());
+        serviceRegistry.Register<string, NameComponent>((factory, name) => new NameComponent(name));
+        serviceRegistry.RegisterTransient(_ => new TransformComponent());
 
         serviceRegistry.RegisterSingleton(_ =>
             new TransformComponent { Position = new(316, 116) }, "PlayerEntity");

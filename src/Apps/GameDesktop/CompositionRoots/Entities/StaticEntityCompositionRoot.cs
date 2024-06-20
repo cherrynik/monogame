@@ -3,6 +3,8 @@ using Components.Render.Static;
 using Entities.Factories.Characters;
 using LightInject;
 
+[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Entities.StaticEntityCompositionRoot))]
+
 namespace GameDesktop.CompositionRoots.Entities;
 
 internal class StaticEntityCompositionRoot : ICompositionRoot
