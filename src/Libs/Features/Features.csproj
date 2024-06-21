@@ -4,7 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>default</LangVersion>
+    <LangVersion>preview</LangVersion>
     <IsDebug Condition="'$(Configuration)' == 'Debug'">true</IsDebug>
     <IsRelease Condition="'$(Configuration)' == 'Release'">true</IsRelease>
   </PropertyGroup>

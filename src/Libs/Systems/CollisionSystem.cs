@@ -18,7 +18,7 @@ public class CollisionSystem(World world) : IFixedSystem
 
     // TODO: Use graph instead (e.g. QuikGraph library), so will be handled the cases of relations like (combinatorics):
     // { 1: [2, 3] }, { 2: [1, 2] }, { 3: [1] }, { 4: [] }
-    private (EntityId, EntityId)[] _activeIntersect = [];
+    private (EntityId, EntityId)[] _activeIntersect = Array.Empty<(EntityId, EntityId)>();
 
     public delegate void OutsideHandler(Entity sender, Entity with);
 

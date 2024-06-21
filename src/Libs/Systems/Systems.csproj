@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
     <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>default</LangVersion>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="LDtkMonogame" Version="1.3.2" />
