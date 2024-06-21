@@ -11,6 +11,13 @@ public class SectorTest
     }
 
     [Test]
+    public void VectorZeroIsSectorRight()
+    {
+        Sector sector = MathUtils.VectorToSector(Vector2.Zero);
+        Assert.That(sector, Is.EqualTo(Sector.Right));
+    }
+
+    [Test]
     public void Right()
     {
         Vector2 right = new(.5f, 0);
@@ -18,7 +25,8 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.Right));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(right.X), float.Sign(right.Y))));
+        Vector2 expected = new Vector2(1, 0);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 
     [Test]
@@ -29,7 +37,8 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.UpRight));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(upRight.X), float.Sign(upRight.Y))));
+        Vector2 expected = new Vector2(1, 1);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 
     [Test]
@@ -40,7 +49,8 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.Up));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(up.X), float.Sign(up.Y))));
+        Vector2 expected = new Vector2(0, 1);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 
     [Test]
@@ -51,7 +61,8 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.UpLeft));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(upLeft.X), float.Sign(upLeft.Y))));
+        Vector2 expected = new Vector2(-1, 1);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 
     [Test]
@@ -62,7 +73,8 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.Left));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(left.X), float.Sign(left.Y))));
+        Vector2 expected = new Vector2(-1, 0);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 
     [Test]
@@ -73,7 +85,8 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.DownLeft));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(downLeft.X), float.Sign(downLeft.Y))));
+        Vector2 expected = new Vector2(-1, -1);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 
 
@@ -85,7 +98,8 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.Down));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(down.X), float.Sign(down.Y))));
+        Vector2 expected = new Vector2(0, -1);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 
     [Test]
@@ -96,6 +110,7 @@ public class SectorTest
         Assert.That(sector, Is.EqualTo(Sector.DownRight));
 
         Vector2 inverted = MathUtils.SectorToVector(sector);
-        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(downRight.X), float.Sign(downRight.Y))));
+        Vector2 expected = new Vector2(1, -1);
+        Assert.That(inverted, Is.EqualTo(expected));
     }
 }

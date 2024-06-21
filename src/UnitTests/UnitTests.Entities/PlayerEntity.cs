@@ -1,23 +1,7 @@
-using System.Numerics;
-using Components.Data;
-using Components.Render.Animation;
-using Components.Render.Static;
-using Components.Tags;
 using Entities.Factories;
-using Entities.Factories.Characters;
-using Entities.Factories.Items;
 using Entities.Factories.Items.Rocks;
-using Entities.Factories.Meta;
-using Features;
-using LDtk;
 using LightInject;
-using Microsoft.Xna.Framework.Graphics;
-using Moq;
 using Scellecs.Morpeh;
-using Scellecs.Morpeh.Extended;
-using Services.Factories;
-using Services.Movement;
-using Systems;
 
 namespace UnitTests.Entities;
 

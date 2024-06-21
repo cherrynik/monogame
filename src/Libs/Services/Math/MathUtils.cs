@@ -18,17 +18,6 @@ public enum Sector
 
 public static class MathUtils
 {
-    private static double GetRadianSector(float x, float y, int sectors)
-    {
-        double radians = System.Math.Atan2(System.Math.Sign(y), System.Math.Sign(x));
-
-        // Normalize the angle to the range [0, 2π)
-        radians %= 2 * System.Math.PI;
-        if (radians < 0) radians += 2 * System.Math.PI;
-
-        return System.Math.Floor(radians / (2 * System.Math.PI) * sectors);
-    }
-
     public static Vector2 SectorToVector(Sector sector)
     {
         const int sectors = 8;
@@ -42,11 +31,13 @@ public static class MathUtils
 
     public static Sector VectorToSector(Vector2 dir) => (Sector)GetRadianSector(dir.X, dir.Y, sectors: 8);
 
+
     // Useful as MonoGame has Y-flipped coordinate system
 
     public static Sector VectorToSectorYFlipped(Vector2 dir) => (Sector)GetRadianSector(dir.X, -dir.Y, sectors: 8);
 
     public static Sector VectorTo4Sector(Vector2 dir) => (Sector)GetRadianSector(dir.X, dir.Y, sectors: 4);
+
 
     // Useful as MonoGame has Y-flipped coordinate system
 
@@ -58,6 +49,17 @@ public static class MathUtils
         return entityPivot.Equals(Vector2.Zero)
             ? Sector.Center
             : VectorToSectorYFlipped(new Vector2(entityPivot.X - .5f, entityPivot.Y - .5f));
+    }
+
+    private static double GetRadianSector(float x, float y, int sectors)
+    {
+        double radians = System.Math.Atan2(System.Math.Sign(y), System.Math.Sign(x));
+
+        // Normalize the angle to the range [0, 2π)
+        radians %= 2 * System.Math.PI;
+        if (radians < 0) radians += 2 * System.Math.PI;
+
+        return System.Math.Floor(radians / (2 * System.Math.PI) * sectors);
     }
 
     private static Vector2 RadiansToVector(double radians)
