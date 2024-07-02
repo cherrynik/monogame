@@ -27,8 +27,11 @@ public class MovementSystem(World world, IMovement movement) : ISystem
         foreach (Entity e in filter)
         {
             ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
+            ref MovableComponent movableComponent = ref e.GetComponent<MovableComponent>();
 
-            transform.Position = movement.Move(from: transform.Position, by: transform.Velocity);
+            // TODO: make frame independent, make able to change the speed
+            transform.Position =
+                movement.Move(from: transform.Position, by: transform.Velocity * deltaTime * movableComponent.Speed);
         }
     }
 

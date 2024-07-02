@@ -11,10 +11,14 @@ public class SectorTest
     }
 
     [Test]
-    public void VectorZeroIsSectorRight()
+    public void Center()
     {
-        Sector sector = MathUtils.VectorToSector(Vector2.Zero);
+        Vector2 center = new(0, 0);
+        Sector sector = MathUtils.VectorToSector(center);
         Assert.That(sector, Is.EqualTo(Sector.Right));
+
+        Vector2 inverted = MathUtils.SectorToVector(Sector.Center);
+        Assert.That(inverted, Is.EqualTo(new Vector2(float.Sign(center.X), float.Sign(center.Y))));
     }
 
     [Test]

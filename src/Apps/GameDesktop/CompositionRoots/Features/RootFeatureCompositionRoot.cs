@@ -131,7 +131,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 #if DEBUG
             const int w = 2, h = 2;
             Texture2D pivotPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
-            pivotPixel.SetData(Enumerable.Repeat(Color.Red, w * h).ToArray());
+            pivotPixel.SetData(Enumerable.Repeat(Color.Khaki, w * h).ToArray());
 
             Texture2D colliderPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
             colliderPixel.SetData(Enumerable.Repeat(Color.LawnGreen, w * h).ToArray());

@@ -51,7 +51,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             var texture = factory.GetInstance<string, Texture2D>("Content/SpriteSheets/Main.png");
             var sprite = new Sprite("Pebble", new TextureRegion("Pebble", texture, new(208, 48, 16, 16)));
 
-            return new SpriteComponent(sprite);
+            return new SpriteComponent(sprite, factory.GetInstance<TransformComponent>());
         }, "Pebble");
 
         serviceRegistry.RegisterSingleton(factory =>
@@ -59,7 +59,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             var texture = factory.GetInstance<string, Texture2D>("Content/SpriteSheets/Main.png");
             var sprite = new Sprite("Tree", new TextureRegion("Tree", texture, new(144, 0, 48, 96)));
 
-            return new SpriteComponent(sprite);
+            return new SpriteComponent(sprite, factory.GetInstance<TransformComponent>());
         }, "Tree");
         RegisterTransformComponent(serviceRegistry);
         RegisterRectangleColliderComponent(serviceRegistry);
@@ -106,7 +106,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     private static void RegisterPlayerMovementComponent(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterSingleton(_ => new InputMovableComponent());
-        serviceRegistry.RegisterSingleton(_ => new MovableComponent());
+        serviceRegistry.RegisterSingleton(_ => new MovableComponent(5f));
     }
 
     private static void RegisterSpriteComponent(IServiceRegistry serviceRegistry)
@@ -119,7 +119,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             Dictionary<Sector, AnimatedSprite> idle = getAnimations(PlayerSpriteSheetPath, "Idle");
             AnimatedSprite defaultSprite = idle[Sector.Down];
 
-            return new SpriteComponent(defaultSprite);
+            return new SpriteComponent(defaultSprite, factory.GetInstance<TransformComponent>());
         }, "Player");
 
         // serviceRegistry.RegisterSingleton(factory =>
@@ -150,7 +150,10 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterTransient(_ => new TransformComponent());
 
         serviceRegistry.RegisterSingleton(_ =>
-            new TransformComponent { Position = new(316, 116) }, "PlayerEntity");
+            new TransformComponent { Position = new(0, 4) }, "PlayerAnimations");
+
+        serviceRegistry.RegisterSingleton(_ =>
+            new TransformComponent { Position = new(316, 116), Pivot = Sector.Up }, "PlayerEntity");
 
         serviceRegistry.RegisterSingleton(_ =>
             new TransformComponent { Position = new(300, 100) }, "DummyEntity");
@@ -190,7 +193,8 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             var movementAnimations = factory.GetInstance<MovementAnimationsComponent>("PlayerEntity");
             const Sector facing = Sector.Right;
 
-            return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing]);
+            return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing],
+                factory.GetInstance<TransformComponent>("PlayerAnimations"));
         }, "PlayerEntity");
     }
 }

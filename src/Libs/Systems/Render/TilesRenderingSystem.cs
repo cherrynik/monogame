@@ -83,15 +83,15 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
             switch (layer._Type)
             {
                 case LayerType.Tiles:
-                    foreach (TileInstance tile in layer.GridTiles.Where(_ => layer._TilesetDefUid.HasValue))
-                    {
-                        Vector2 tilePos = new(tile.Px.X + layer._PxTotalOffsetX, tile.Px.Y + layer._PxTotalOffsetY);
-                        var position = camera.WorldToScreen(tilePos);
-                        Rectangle rect = new(tile.Src.X, tile.Src.Y, layer._GridSize, layer._GridSize);
-                        SpriteEffects mirror = (SpriteEffects)tile.F;
-                        spriteBatch.Draw(texture, position, rect, new Color(1f, 1f, 1f, layer._Opacity), 0,
-                            Vector2.Zero, 1f, mirror, 0);
-                    }
+                    // foreach (TileInstance tile in layer.GridTiles.Where(_ => layer._TilesetDefUid.HasValue))
+                    // {
+                    //     Vector2 tilePos = new(tile.Px.X + layer._PxTotalOffsetX, tile.Px.Y + layer._PxTotalOffsetY);
+                    //     var position = camera.WorldToScreen(tilePos);
+                    //     Rectangle rect = new(tile.Src.X, tile.Src.Y, layer._GridSize, layer._GridSize);
+                    //     SpriteEffects mirror = (SpriteEffects)tile.F;
+                    //     spriteBatch.Draw(texture, position, rect, new Color(1f, 1f, 1f, layer._Opacity), 0,
+                    //         new Vector2(0, 0), 1f, mirror, 0);
+                    // }
 
                     break;
 

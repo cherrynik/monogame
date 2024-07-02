@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
+using Services.Math;
 
 namespace Systems.Debugging.Render;
 
@@ -44,7 +45,10 @@ public class RectangleColliderRenderSystem(
             ref var transform = ref e.GetComponent<TransformComponent>();
             ref var rectCollider = ref e.GetComponent<RectangleColliderComponent>();
 
-            DrawRectangleBorders(camera.WorldToScreen(transform.Position), rectCollider.Size);
+            DrawRectangleBorders(
+                camera.WorldToScreen(transform.Position) + rectCollider.LocalTransform.Position -
+                transform.GetOffPivot(rectCollider.Size.Width, rectCollider.Size.Height),
+                rectCollider.Size);
         }
     }
 

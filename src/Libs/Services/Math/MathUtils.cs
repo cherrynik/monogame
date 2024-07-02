@@ -20,6 +20,11 @@ public static class MathUtils
 {
     public static Vector2 SectorToVector(Sector sector)
     {
+        if (sector is Sector.Center)
+        {
+            return Vector2.Zero;
+        }
+
         const int sectors = 8;
 
         var angle = 360.0 / sectors * (int)sector;

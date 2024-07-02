@@ -98,6 +98,7 @@ public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
             ref TransformComponent transformComponent = ref e.GetComponent<TransformComponent>();
 
             ImGui.SliderFloat2("Position", ref transformComponent.Position, 0, 300);
+            ImGui.Text($"Pivot: {transformComponent.Pivot.ToString()}");
         }
         else if (component == typeof(InventoryComponent))
         {

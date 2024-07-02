@@ -51,13 +51,29 @@ public class WorldInitializer(
                 if (e is null) continue;
 
                 ref var transform = ref e.GetComponent<TransformComponent>();
-
-                transform.Pivot = MathUtils.LdtkPivotToSector(new Vector2(entity._Pivot.X, entity._Pivot.Y));
-                var pivotOffset = MathUtils.SectorToVector(transform.Pivot);
+                var mappedLDtkPivot = MapAndFlip(new Vector2(entity._Pivot.X, entity._Pivot.Y));
+                transform.Pivot = MathUtils.VectorToSector(mappedLDtkPivot);
+                // var pivotOffset = MathUtils.SectorToVector(transform.Pivot);
 
                 transform.Position = new Vector2((float)entity._WorldX, (float)entity._WorldY);
             }
         }
+    }
+
+    private static Vector2 MapAndFlip(Vector2 v)
+    {
+        // Define the mapping and flipping logic
+        float[] mapping = [-1, 0, 1];
+
+        // Map x component to the corresponding index in mapping array
+        int indexX = (int)(v.X * (mapping.Length - 1));
+        float mappedX = mapping[indexX];
+
+        // Map y component to the corresponding index in mapping array and flip y
+        int indexY = (int)(v.Y * (mapping.Length - 1));
+        float mappedY = -mapping[indexY];
+
+        return new Vector2(mappedX, mappedY);
     }
 
     public void Dispose()

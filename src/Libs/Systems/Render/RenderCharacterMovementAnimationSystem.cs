@@ -5,6 +5,7 @@ using Components.Tags;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
+using Services.Math;
 
 namespace Systems.Render;
 
@@ -42,15 +43,19 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
             if (e.Has<CharacterAnimatorComponent>())
             {
                 ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
+                var pivotOffset = animator.GetOffPivot(transform);
+                var localTransform = animator.LocalTransform;
 
-                animator.Animation.Draw(spriteBatch, at);
+                animator.Animation.Draw(spriteBatch, at + localTransform.Position - pivotOffset);
             }
 
             if (e.Has<SpriteComponent>())
             {
                 ref var sprite = ref e.GetComponent<SpriteComponent>();
+                var pivotOffset = sprite.GetOffPivot(transform);
+                var localTransform = sprite.LocalTransform;
 
-                sprite.Sprite.Draw(spriteBatch, at);
+                sprite.Sprite.Draw(spriteBatch, at + localTransform.Position - pivotOffset);
             }
         }
     }
@@ -71,6 +76,24 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
         return entities.OrderBy(x =>
         {
             ref var transform = ref x.GetComponent<TransformComponent>();
+
+            // if (x.Has<SpriteComponent>())
+            // {
+            //     ref var sprite = ref x.GetComponent<SpriteComponent>();
+            //     var localTransform = sprite.LocalTransform;
+            //     return transform.Position.Y + localTransform.Position.Y -
+            //            transform.GetOffPivot(sprite.Sprite.Width, sprite.Sprite.Height).Y;
+            // }
+            //
+            // if (x.Has<CharacterAnimatorComponent>())
+            // {
+            //     ref var animator = ref x.GetComponent<CharacterAnimatorComponent>();
+            //     var localTransform = animator.LocalTransform;
+            //
+            //     return transform.Position.Y + localTransform.Position.Y -
+            //            transform.GetOffPivot(animator.Animation.Width, animator.Animation.Height).Y;
+            // }
+
             return transform.Position.Y;
         });
     }

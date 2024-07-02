@@ -2,4 +2,7 @@
 
 namespace Components.Tags;
 
-public struct MovableComponent : IComponent;
+public struct MovableComponent(float speed) : IComponent
+{
+    public float Speed = speed;
+};
