@@ -29,7 +29,6 @@ public class WorldInitializer(
                 throw new Exception("Level has no layers.");
         }
 
-
         for (int i = level.LayerInstances.Length - 1; i >= 0; --i)
         {
             LayerInstance layer = level.LayerInstances[i];
@@ -56,6 +55,12 @@ public class WorldInitializer(
                 // var pivotOffset = MathUtils.SectorToVector(transform.Pivot);
 
                 transform.Position = new Vector2((float)entity._WorldX, (float)entity._WorldY);
+
+                if (e.Has<CameraComponent>())
+                {
+                    ref var camera = ref e.GetComponent<CameraComponent>();
+                    camera.Position = camera.GetCenteredPosition(camera.Viewport, transform.Position);
+                }
             }
         }
     }

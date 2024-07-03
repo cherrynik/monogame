@@ -1,13 +1,15 @@
-﻿using System.Numerics;
-using Components.Data;
+﻿using Components.Data;
 using Components.Render.Animation;
 using Components.Render.Static;
 using Components.Tags;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Systems.Render;
 
+// issue: https://gamedev.stackexchange.com/questions/46963/how-to-avoid-texture-bleeding-in-a-texture-atlas
 public class CameraFollowingSystem(World world) : ILateSystem
 {
     // private readonly ICamera _camera;
@@ -38,27 +40,20 @@ public class CameraFollowingSystem(World world) : ILateSystem
         ref var transform = ref e.GetComponent<TransformComponent>();
         ref var camera = ref e.GetComponent<CameraComponent>();
 
-        camera.Position = GetCenteredPosition(camera.Viewport, off: transform.Position);
+        camera.Position = Vector2.Lerp(camera.Position, GetCenteredPosition(camera.Viewport, off: transform.Position),
+            .25f);
+        // camera.Position = Vector2.Lerp(camera.Position, transform.Position, .2f);
     }
 
-    private static Vector2 GetCenteredPosition(Viewport viewport, Vector2 off) => new(
-        off.X - viewport.Width / 2,
-        off.Y - viewport.Height / 2);
-
-    private static IEnumerable<Entity> SortEntitiesByYPosition(Filter filter)
+    private static Vector2 GetCenteredPosition(Viewport viewport, Vector2 off)
     {
-        List<Entity> entities = new List<Entity>();
+        var cameraX = off.X - (float)viewport.Width / 2;
+        var cameraY = off.Y - (float)viewport.Height / 2;
 
-        foreach (Entity e in filter)
-        {
-            entities.Add(e);
-        }
+        cameraX = MathHelper.Clamp(cameraX, 0, 900 - viewport.Width);
+        cameraY = MathHelper.Clamp(cameraY, 0, 600 - viewport.Height);
 
-        return entities.OrderBy(x =>
-        {
-            ref var transform = ref x.GetComponent<TransformComponent>();
-            return transform.Position.Y;
-        });
+        return new Vector2(cameraX, cameraY);
     }
 
     public void Dispose()

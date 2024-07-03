@@ -103,10 +103,13 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
                         {
                             Vector2 tilePos = new(tile.Px.X + layer._PxTotalOffsetX,
                                 tile.Px.Y + layer._PxTotalOffsetY);
-                            var position = camera.WorldToScreen(tilePos);
+                            var camPos = camera.WorldToScreen(tilePos);
+                            // casting to int for pixel perfect matching
+                            var position = new Microsoft.Xna.Framework.Vector2((int)Math.Round(camPos.X),
+                                (int)Math.Round(camPos.Y));
                             Rectangle rect = new(tile.Src.X, tile.Src.Y, layer._GridSize, layer._GridSize);
                             SpriteEffects mirror = (SpriteEffects)tile.F;
-                            spriteBatch.Draw(texture, position, rect, new Color(1f, 1f, 1f, layer._Opacity), 0,
+                            spriteBatch.Draw(texture, position, rect, new Color(Color.White, layer._Opacity), 0,
                                 Vector2.Zero, 1f, mirror, 0);
                         }
                     }

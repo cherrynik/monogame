@@ -2360,7 +2360,7 @@
 						},
 						{
 							"__identifier": "Player",
-							"__grid": [5,5],
+							"__grid": [26,13],
 							"__pivot": [0.5,1],
 							"__tags": ["Transform"],
 							"__tile": { "tilesetUid": 3, "x": 48, "y": 128, "w": 32, "h": 32 },
@@ -2369,10 +2369,10 @@
 							"width": 32,
 							"height": 32,
 							"defUid": 120,
-							"px": [88,96],
+							"px": [424,224],
 							"fieldInstances": [],
-							"__worldX": 88,
-							"__worldY": 96
+							"__worldX": 424,
+							"__worldY": 224
 						},
 						{
 							"__identifier": "Red_Flower",

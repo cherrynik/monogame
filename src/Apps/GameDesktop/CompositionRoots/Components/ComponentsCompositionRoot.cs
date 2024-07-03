@@ -150,7 +150,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterTransient(_ => new TransformComponent());
 
         serviceRegistry.RegisterSingleton(_ =>
-            new TransformComponent { Position = new(0, 4) }, "PlayerAnimations");
+            new TransformComponent { Position = new(0, 3) }, "PlayerAnimationsOffset");
 
         serviceRegistry.RegisterSingleton(_ =>
             new TransformComponent { Position = new(316, 116), Pivot = Sector.Up }, "PlayerEntity");
@@ -194,7 +194,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
             const Sector facing = Sector.Right;
 
             return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing],
-                factory.GetInstance<TransformComponent>("PlayerAnimations"));
+                factory.GetInstance<TransformComponent>("PlayerAnimationsOffset"));
         }, "PlayerEntity");
     }
 }
