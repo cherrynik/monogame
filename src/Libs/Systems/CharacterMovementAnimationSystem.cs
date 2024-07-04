@@ -5,7 +5,7 @@ using MonoGame.Aseprite.Sprites;
 using Scellecs.Morpeh;
 using Services.Math;
 
-namespace Systems.Render;
+namespace Systems;
 
 public class CharacterMovementAnimationSystem(World world) : ISystem
 {

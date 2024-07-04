@@ -1,8 +1,11 @@
 ﻿using Components.Data;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging.Diagnostics;
 
+// Note:
+// ISystem shows FPS of Update; IFixedSystem of FixedUpdate; IRenderSystem of Draw
 public class FrameCounter(Scellecs.Morpeh.World world) : ISystem
 {
     private const float UpdateFrequencyInSec = .0875f;

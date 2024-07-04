@@ -1,16 +1,20 @@
 ﻿using Components.Data;
+using Entities.Factories.Meta;
 using ImGuiNET;
+using LightInject;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging.Render;
 
-public class RenderFramesPerSec(Scellecs.Morpeh.World world) : IRenderSystem
+public class RenderFramesPerSec(Scellecs.Morpeh.World world, IServiceFactory serviceFactory) : IRenderSystem
 {
     public Scellecs.Morpeh.World World { get; set; } = world;
 
     public void OnAwake()
     {
+        var worldEntityFactory = serviceFactory.GetInstance<WorldEntityFactory>();
+        worldEntityFactory.CreateEntity(World);
     }
 
     public void OnUpdate(float deltaTime)

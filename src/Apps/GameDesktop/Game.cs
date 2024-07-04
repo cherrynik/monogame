@@ -29,11 +29,14 @@ namespace GameDesktop;
 // Пофиксить при движении по диагонали полосы между тайлами
 public class Game : Microsoft.Xna.Framework.Game
 {
+    private const bool IsWindowResizable = true;
+
     private readonly ILogger _logger;
     private readonly IServiceContainer _container;
 
     [CanBeNull] private ImGuiRenderer _imGuiRenderer;
     private SpriteBatch _spriteBatch;
+    private GraphicsDeviceManager _graphicsDeviceManager;
     private Desktop _desktop;
 
     // TODO: Frames updating
@@ -44,6 +47,7 @@ public class Game : Microsoft.Xna.Framework.Game
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
     private RootFeature _rootFeature;
+    private float _fixedDeltaTime;
 
     public Game(ILogger logger, IServiceContainer container)
     {
@@ -57,8 +61,10 @@ public class Game : Microsoft.Xna.Framework.Game
     {
         _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
         _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialization...");
+        RegisterGraphicsDeviceManager();
         RegisterSpriteBatch();
         _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialized");
+        RegisterWindowSettings();
 
         _logger.ForContext<Game>().Verbose("Game services initialization...");
         RegisterRootFeature();
@@ -111,9 +117,14 @@ public class Game : Microsoft.Xna.Framework.Game
     protected override void Update(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        _rootFeature.OnFixedUpdate(deltaTime);
-
         _rootFeature.OnUpdate(deltaTime);
+
+        _fixedDeltaTime += deltaTime;
+        while (_fixedDeltaTime >= TargetElapsedTime.TotalSeconds)
+        {
+            _rootFeature.OnFixedUpdate(_fixedDeltaTime);
+            _fixedDeltaTime -= (float)TargetElapsedTime.TotalSeconds;
+        }
 
         _rootFeature.OnLateUpdate(deltaTime);
     }
@@ -145,6 +156,16 @@ public class Game : Microsoft.Xna.Framework.Game
         base.Dispose(disposing);
 
         _logger.ForContext<Game>().Verbose("Disposed");
+    }
+
+    private void RegisterWindowSettings()
+    {
+        Window.AllowUserResizing = IsWindowResizable;
+    }
+
+    private void RegisterGraphicsDeviceManager()
+    {
+        _graphicsDeviceManager = _container.GetInstance<GraphicsDeviceManager>();
     }
 
     private void RegisterSpriteBatch()

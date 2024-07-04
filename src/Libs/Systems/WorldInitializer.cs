@@ -17,7 +17,7 @@ public class WorldInitializer(
 
     public void OnAwake()
     {
-        // FIXME: Duplicated at TilesRenderingSystem
+        // // FIXME: Duplicated at TilesRenderingSystem
         var ldtkWorld = ldtkFile.LoadWorld(ldtkFile.Worlds.First().Iid);
         var level = ldtkWorld.LoadLevel(0);
 

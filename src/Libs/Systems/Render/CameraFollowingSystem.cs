@@ -5,12 +5,14 @@ using Components.Tags;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
+using Scellecs.Morpeh.Extended;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Systems.Render;
 
 // issue: https://gamedev.stackexchange.com/questions/46963/how-to-avoid-texture-bleeding-in-a-texture-atlas
-public class CameraFollowingSystem(World world) : ILateSystem
+// scaling, viewport & matrix: https://www.youtube.com/watch?v=BVSSQKlYipo&ab_channel=AristurtleDev
+public class CameraFollowingSystem(World world, GraphicsDeviceManager graphicsDeviceManager) : IRenderSystem
 {
     // private readonly ICamera _camera;
     public World World { get; set; } = world;
@@ -40,9 +42,12 @@ public class CameraFollowingSystem(World world) : ILateSystem
         ref var transform = ref e.GetComponent<TransformComponent>();
         ref var camera = ref e.GetComponent<CameraComponent>();
 
-        camera.Position = Vector2.Lerp(camera.Position, GetCenteredPosition(camera.Viewport, off: transform.Position),
-            .25f);
-        // camera.Position = Vector2.Lerp(camera.Position, transform.Position, .2f);
+        // https://community.monogame.net/t/jittering-with-lerping-camera/15899/9
+        camera.Position = Vector2.Lerp(camera.Position,
+            GetCenteredPosition(
+                new(0, 0, graphicsDeviceManager.GraphicsDevice.Viewport.Width,
+                    graphicsDeviceManager.GraphicsDevice.Viewport.Height), off: transform.Position),
+            .2f);
     }
 
     private static Vector2 GetCenteredPosition(Viewport viewport, Vector2 off)
@@ -50,8 +55,8 @@ public class CameraFollowingSystem(World world) : ILateSystem
         var cameraX = off.X - (float)viewport.Width / 2;
         var cameraY = off.Y - (float)viewport.Height / 2;
 
-        cameraX = MathHelper.Clamp(cameraX, 0, 900 - viewport.Width);
-        cameraY = MathHelper.Clamp(cameraY, 0, 600 - viewport.Height);
+        cameraX = MathHelper.Clamp(cameraX, 0, 50_000 - viewport.Width);
+        cameraY = MathHelper.Clamp(cameraY, 0, 50_000 - viewport.Height);
 
         return new Vector2(cameraX, cameraY);
     }

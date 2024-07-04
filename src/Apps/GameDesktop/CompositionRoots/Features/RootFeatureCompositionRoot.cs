@@ -55,6 +55,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
 #if DEBUG
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
+        serviceRegistry.RegisterSingleton<WorldEntityFactory>();
 #endif
         serviceRegistry.RegisterSingleton<PlayerFactory>();
 
@@ -120,7 +121,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
             var preRender = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
                 new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
-                new CameraFollowingSystem(factory.GetInstance<World>()));
+                new CameraFollowingSystem(factory.GetInstance<World>(), factory.GetInstance<GraphicsDeviceManager>()));
 
             var render = new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
@@ -142,7 +143,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                     factory.GetInstance<SystemsEngine>()),
                 new EntitiesList(factory.GetInstance<World>()),
                 new FrameCounter(factory.GetInstance<World>()),
-                new RenderFramesPerSec(factory.GetInstance<World>()),
+                new RenderFramesPerSec(factory.GetInstance<World>(), factory.GetInstance<IServiceFactory>()),
                 new RectangleColliderRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
                     colliderPixel)
                 // new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pivotPixel)

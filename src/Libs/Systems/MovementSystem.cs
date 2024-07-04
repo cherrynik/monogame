@@ -1,17 +1,14 @@
-using System.Numerics;
-using Components;
 using Components.Data;
 using Components.Tags;
 using Scellecs.Morpeh;
-using Services;
 using Services.Movement;
-using Vector2 = System.Numerics.Vector2;
 
 namespace Systems;
 
-public class MovementSystem(World world, IMovement movement) : ISystem
+public class MovementSystem(World world, IMovement movement) : IFixedSystem
 {
     public World World { get; set; } = world;
+    private const float SpeedMultiplier = 10f;
 
     public void OnAwake()
     {
@@ -29,9 +26,9 @@ public class MovementSystem(World world, IMovement movement) : ISystem
             ref TransformComponent transform = ref e.GetComponent<TransformComponent>();
             ref MovableComponent movableComponent = ref e.GetComponent<MovableComponent>();
 
-            // TODO: make frame independent, make able to change the speed
-            transform.Position =
-                movement.Move(from: transform.Position, by: transform.Velocity * deltaTime * movableComponent.Speed);
+            transform.Position = movement.Move(from: transform.Position,
+                by: transform.Velocity,
+                speed: SpeedMultiplier * deltaTime * movableComponent.Speed);
         }
     }
 

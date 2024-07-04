@@ -65,6 +65,10 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         RegisterRectangleColliderComponent(serviceRegistry);
         RegisterItemComponent(serviceRegistry);
         RegisterInventoryComponent(serviceRegistry);
+
+#if DEBUG
+        serviceRegistry.RegisterSingleton<WorldMetaComponent>();
+#endif
     }
 
     private static void RegisterItemComponent(IServiceRegistry serviceRegistry)
@@ -106,7 +110,8 @@ internal class ComponentsCompositionRoot : ICompositionRoot
     private static void RegisterPlayerMovementComponent(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterSingleton(_ => new InputMovableComponent());
-        serviceRegistry.RegisterSingleton(_ => new MovableComponent(5f));
+        // If 7.5f -> Math.Ceiling fixes this, else Math.Round
+        serviceRegistry.RegisterSingleton(_ => new MovableComponent(7f));
     }
 
     private static void RegisterSpriteComponent(IServiceRegistry serviceRegistry)
