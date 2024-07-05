@@ -1,6 +1,5 @@
 ﻿using Components.Data;
 using Components.Render.Static;
-using Entities.Factories.Characters;
 using LightInject;
 
 [assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Entities.StaticEntityCompositionRoot))]

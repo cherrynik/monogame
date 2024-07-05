@@ -16,6 +16,7 @@ public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
 
     static readonly Dictionary<Type, string> Types = new()
     {
+        // TODO: Auto-generated
         { typeof(InventoryComponent), "Inventory" },
         { typeof(TransformComponent), "Transform" },
         { typeof(CameraComponent), "Camera" },

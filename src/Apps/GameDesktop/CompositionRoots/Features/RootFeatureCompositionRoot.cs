@@ -65,7 +65,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton<PebbleFactory>();
         serviceRegistry.RegisterSingleton<AbstractRockFactory>();
 
-        serviceRegistry.RegisterSingleton<AbstractEntityFactory>();
+        serviceRegistry.RegisterSingleton<EntitiesFactory>();
 
         RegisterEntryPoint(serviceRegistry);
     }
@@ -157,7 +157,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                     // factory.GetInstance<PlayerEntityFactory>(),
                     // factory.GetInstance<DummyEntityFactory>(),
                     // factory.GetInstance<RockEntityFactory>(),
-                    factory.GetInstance<AbstractEntityFactory>(),
+                    factory.GetInstance<EntitiesFactory>(),
                     factory.GetInstance<LDtkFile>())
             );
         });

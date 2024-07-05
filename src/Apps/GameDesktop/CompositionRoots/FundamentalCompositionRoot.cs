@@ -8,7 +8,7 @@ using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
-using Services.Factories;
+using Services.Builders;
 using Services.Math;
 
 [assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.FundamentalCompositionRoot))]
@@ -21,7 +21,6 @@ internal class FundamentalCompositionRoot : ICompositionRoot
     {
         RegisterLdtk(serviceRegistry);
         RegisterAnimationsFactory(serviceRegistry);
-        serviceRegistry.RegisterSingleton(typeof(AbstractFactory<>));
     }
 
     private static void RegisterLdtk(IServiceRegistry serviceRegistry)
@@ -39,6 +38,7 @@ internal class FundamentalCompositionRoot : ICompositionRoot
 
     private static void RegisterAnimationsFactory(IServiceRegistry serviceRegistry)
     {
+        serviceRegistry.RegisterTransient<AsepriteAnimatedCharactersBuilder>();
         // Warning: binding to <string, T> where T is any type, is dangerous and you should have a different
         // binding off of implementation overloading, if you wanna pass through a string as an arg.
         // So, such resolving won't work either: Func<string, T>, as it'll get it as your string argument is a
@@ -46,9 +46,11 @@ internal class FundamentalCompositionRoot : ICompositionRoot
         serviceRegistry.Register<string, string, Dictionary<Sector, AnimatedSprite>>((factory, path, action) =>
         {
             GraphicsDevice graphicsDevice = factory.GetInstance<GraphicsDeviceManager>().GraphicsDevice;
-            SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, path);
 
-            return AnimatedCharactersFactory.CreateAnimations(spriteSheet, action);
+            return factory.GetInstance<AsepriteAnimatedCharactersBuilder>()
+                .LoadSpriteSheet(graphicsDevice, path)
+                .CreateAnimations(action)
+                .Animations;
         }, "Character");
     }
 }

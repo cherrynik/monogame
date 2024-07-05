@@ -7,7 +7,7 @@ using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Characters;
 
-public class PlayerFactory(IServiceFactory serviceFactory) : ConcreteEntityFactory
+public class PlayerFactory(IServiceFactory serviceFactory) : EntityFactory
 {
     protected override void AddTags(Entity e)
     {

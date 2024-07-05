@@ -1,7 +1,6 @@
 ﻿using Components.Data;
 using Components.Render.Animation;
 using Components.Tags;
-using Entities.Factories.Characters;
 using LightInject;
 
 [assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Entities.PlayerEntityCompositionRoot))]

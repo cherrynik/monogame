@@ -6,7 +6,7 @@ using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Items.Rocks;
 
-public class PebbleFactory(IServiceFactory serviceProvider) : ConcreteEntityFactory
+public class PebbleFactory(IServiceFactory serviceProvider) : EntityFactory
 {
     protected override void AddTags(Entity e)
     {

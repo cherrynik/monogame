@@ -15,12 +15,7 @@
       <ProjectReference Include="..\Components\Components.csproj" />
       <ProjectReference Include="..\Entities\Entities.csproj" />
       <ProjectReference Include="..\External\MonoGame.ImGuiNet\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="LightInject">
-        <HintPath>..\..\..\..\..\.nuget\packages\lightinject\6.6.4\lib\net6.0\LightInject.dll</HintPath>
-      </Reference>
+      <PackageReference Include="LightInject" Version="6.6.4" />
     </ItemGroup>
 
 </Project>

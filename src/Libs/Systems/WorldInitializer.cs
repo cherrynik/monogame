@@ -9,7 +9,7 @@ namespace Systems;
 
 public class WorldInitializer(
     World world,
-    AbstractEntityFactory abstractEntityFactory,
+    EntitiesFactory entitiesFactory,
     LDtkFile ldtkFile)
     : IInitializer
 {
@@ -45,7 +45,7 @@ public class WorldInitializer(
 
             foreach (var entity in layer.EntityInstances)
             {
-                var e = abstractEntityFactory.CreateEntity(entity, world);
+                var e = entitiesFactory.CreateEntity(entity, World);
 
                 if (e is null) continue;
 

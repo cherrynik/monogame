@@ -5,6 +5,7 @@ using Scellecs.Morpeh;
 
 namespace UnitTests.Entities;
 
+// Research: https://github.com/MonoGame/MonoGame/tree/develop/Tests
 public class Tests
 {
     private World _world;
@@ -25,7 +26,7 @@ public class Tests
 
         _serviceContainer.RegisterInstance((IServiceFactory)_serviceContainer);
 
-        _serviceContainer.RegisterSingleton<AbstractEntityFactory>();
+        _serviceContainer.RegisterSingleton<EntitiesFactory>();
         _serviceContainer.RegisterSingleton<AbstractRockFactory>();
     }
 

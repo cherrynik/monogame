@@ -7,7 +7,7 @@ using Services.Math;
 
 namespace Entities.Factories.Items.Trees;
 
-public class TreeFactory(IServiceFactory serviceProvider) : ConcreteEntityFactory
+public class TreeFactory(IServiceFactory serviceProvider) : EntityFactory
 {
     protected override void AddTags(Entity e)
     {

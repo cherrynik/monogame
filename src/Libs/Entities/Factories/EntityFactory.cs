@@ -3,7 +3,7 @@ using Scellecs.Morpeh;
 
 namespace Entities.Factories;
 
-public abstract class ConcreteEntityFactory : IConcreteEntityFactory
+public abstract class EntityFactory : IEntityFactory
 {
     public Entity CreateEntity(World @in)
     {
@@ -15,8 +15,6 @@ public abstract class ConcreteEntityFactory : IConcreteEntityFactory
 
         return e;
     }
-
-    public virtual Entity CreateEntity(EntityInstance entity, World @in) => this.CreateEntity(@in);
 
     protected abstract void AddTags(Entity e);
 

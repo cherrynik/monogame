@@ -2,7 +2,7 @@
 
 namespace Entities.Factories;
 
-public interface IConcreteEntityFactory : IAbstractEntityFactory
+public interface IEntityFactory
 {
     Entity CreateEntity(World @in);
 }
