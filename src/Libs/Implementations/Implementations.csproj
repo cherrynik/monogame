@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="MonoGame.Framework">
+        <HintPath>..\..\..\..\..\.nuget\packages\monogame.framework.desktopgl\3.8.1.303\lib\net6.0\MonoGame.Framework.dll</HintPath>
+      </Reference>
+      <Reference Include="Scellecs.Morpeh">
+        <HintPath>..\..\..\..\..\.nuget\packages\scellecs.morpeh\2023.1.0\lib\netstandard2.1\Scellecs.Morpeh.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Components\Components.csproj" />
+    </ItemGroup>
+
+</Project>

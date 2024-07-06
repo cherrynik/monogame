@@ -1,5 +1,5 @@
-using Entities.Factories;
-using Entities.Factories.Items.Rocks;
+using Entities;
+using Entities.Items.Rocks;
 using LightInject;
 using Scellecs.Morpeh;
 

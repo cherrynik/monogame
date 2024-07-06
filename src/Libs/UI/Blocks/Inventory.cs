@@ -40,7 +40,7 @@ public class Inventory
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
                 TextAlign = TextHorizontalAlignment.Left,
-                Text = $"{i + 1}: {slot.GetInfo().Name}, {slot.Amount}",
+                Text = $"{i + 1}: {slot.GetItemInfo().Name}, {slot.Amount}",
                 Top = 50 + 18 * i,
                 Left = 30,
             };

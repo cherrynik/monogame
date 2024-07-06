@@ -7,13 +7,13 @@ using CompositionRoots.Features;
 using CompositionRoots.Helpers;
 using CompositionRoots.Systems;
 using Constants;
-using Entities.Factories;
+using Entities;
 using Features;
 using FontStashSharp.RichText;
 using LightInject;
 using Myra.Graphics2D.UI;
 using Scellecs.Morpeh.Extended;
-using Services.Helpers;
+using Services.Resolvers;
 using Systems;
 using UI.Blocks;
 using UI.Factories;
@@ -40,7 +40,6 @@ public class RootFeatureCompositionRoot : ICompositionRoot
             .RegisterFrom<TextureResolverModule>();
 
         serviceRegistry.RegisterFrom<NameModule>();
-        serviceRegistry.RegisterFrom<CameraModule>();
 
         serviceRegistry.RegisterFrom<TransformModule>();
 
@@ -52,17 +51,16 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterFrom<EntityFactoriesCompositionRoot>();
 
         serviceRegistry.RegisterSingleton(_ => World.Create());
-        RegisterEntryPoint(serviceRegistry);
-        RegisterUI(serviceRegistry);
-    }
-
-    private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
-    {
         serviceRegistry.RegisterFrom<CollisionSystemModule>()
             .RegisterFrom<InventorySystemModule>()
-            .RegisterFrom<SystemsEngineModule>();
+            .RegisterFrom<InputSystemModule>()
+            .RegisterFrom<MovementSystemModule>()
+            .RegisterFrom<SystemsEngineModule>()
+            .RegisterFrom<CameraSystemModule>();
 
-        serviceRegistry.RegisterFrom<MovementFeatureModule>()
+        serviceRegistry
+            // .RegisterFrom<InitializeFeatureModule>()
+            .RegisterFrom<UpdateFeatureModule>()
             .RegisterFrom<PreRenderFeatureModule>()
             .RegisterFrom<RenderFeatureModule>()
             .RegisterFrom<DebugFeatureModule>();
@@ -70,12 +68,13 @@ public class RootFeatureCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory =>
         {
             // ⚠ Order-sensitive zone ⚠ 
-            factory.GetInstance<Feature>(DINames.Features.Movement);
-            factory.GetInstance<Feature>(DINames.Features.PreRender);
-            factory.GetInstance<Feature>(DINames.Features.Render);
+            // factory.GetInstance<Feature>(DiContainerNames.Features.Initialize);
+            factory.GetInstance<Feature>(DiContainerNames.Features.Update);
+            factory.GetInstance<Feature>(DiContainerNames.Features.PreRender);
+            factory.GetInstance<Feature>(DiContainerNames.Features.Render);
 
 #if DEBUG
-            factory.GetInstance<Feature>(DINames.Features.Debug);
+            factory.GetInstance<Feature>(DiContainerNames.Features.Debug);
 #endif
 
             return new RootFeature(factory.GetInstance<World>(),
@@ -85,6 +84,7 @@ public class RootFeatureCompositionRoot : ICompositionRoot
                     LdtkResolver.ResolveFromApp(Contents.TileMaps.Test))
             );
         });
+        RegisterUI(serviceRegistry);
     }
 
     private static void RegisterUI(IServiceRegistry serviceRegistry)

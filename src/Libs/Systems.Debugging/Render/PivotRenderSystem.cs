@@ -1,6 +1,5 @@
 ﻿using Components.Data;
-using Components.Render.Animation;
-using Components.Render.Static;
+using Components.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;

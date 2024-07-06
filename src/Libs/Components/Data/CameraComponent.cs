@@ -6,7 +6,7 @@ using Vector2 = System.Numerics.Vector2;
 namespace Components.Data;
 
 // The Camera is a system and not a component, so the system has a target as a dependency,
-// and exists only in the current world, as well the system has its own behaviour
+// and exists only in the current world, as well the system has its own behavior
 public struct CameraComponent(Viewport viewport) : IComponent
 {
     public Viewport Viewport = viewport;

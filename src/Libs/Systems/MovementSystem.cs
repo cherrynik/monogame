@@ -1,7 +1,7 @@
 using Components.Data;
 using Components.Tags;
 using Scellecs.Morpeh;
-using Services.Implementations.Movement;
+using Implementations.Movement;
 
 namespace Systems;
 
@@ -17,7 +17,7 @@ public class MovementSystem(World world, IMovement movement) : IFixedSystem
     public void OnUpdate(float deltaTime)
     {
         Filter filter = World.Filter
-            .With<InputMovableComponent>()
+            .With<InputMovableTagComponent>()
             .With<TransformComponent>()
             .Build();
 

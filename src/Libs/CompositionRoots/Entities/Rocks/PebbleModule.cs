@@ -1,5 +1,5 @@
 ﻿using Components.Data;
-using Components.Render.Static;
+using Components.Render;
 using Constants;
 using LightInject;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,9 +16,9 @@ public class PebbleModule : ICompositionRoot
         {
             var texture = factory.GetInstance<string, Texture2D>(Contents.Textures.Main);
             // TODO: Automatically get texture & its rect from a tile set (by aseprite?)
-            var sprite = new Sprite(DINames.Pebble, new TextureRegion(DINames.Pebble, texture, new(208, 48, 16, 16)));
+            var sprite = new Sprite(DiContainerNames.Pebble, new TextureRegion(DiContainerNames.Pebble, texture, new(208, 48, 16, 16)));
 
             return new SpriteComponent(sprite, factory.GetInstance<TransformComponent>());
-        }, DINames.Pebble);
+        }, DiContainerNames.Pebble);
     }
 }

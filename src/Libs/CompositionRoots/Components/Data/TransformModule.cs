@@ -10,6 +10,6 @@ public class TransformModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterTransient(_ => new TransformComponent());
+        serviceRegistry.RegisterTransient<TransformComponent>();
     }
 }

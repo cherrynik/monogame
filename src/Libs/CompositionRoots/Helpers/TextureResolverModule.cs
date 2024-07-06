@@ -2,7 +2,7 @@
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Services.Helpers;
+using Services.Resolvers;
 
 namespace CompositionRoots.Helpers;
 
@@ -15,6 +15,6 @@ public class TextureResolverModule : ICompositionRoot
             var fileName = FileResolver.ResolveFromApp(path);
 
             return Texture2D.FromFile(factory.GetInstance<GraphicsDeviceManager>().GraphicsDevice, fileName);
-        }, DINames.Helpers.TextureResolver);
+        }, DiContainerNames.Helpers.TextureResolver);
     }
 }

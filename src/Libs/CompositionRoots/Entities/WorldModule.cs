@@ -1,5 +1,5 @@
 ﻿using Components.Data;
-using Entities.Factories.Meta;
+using Entities.Meta;
 using LightInject;
 
 namespace CompositionRoots.Entities;

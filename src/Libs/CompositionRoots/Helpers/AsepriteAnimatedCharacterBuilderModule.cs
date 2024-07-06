@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services.Builders;
-using Services.Implementations.Math;
+using Services.Math;
 
 namespace CompositionRoots.Helpers;
 
@@ -26,6 +26,6 @@ public class AsepriteAnimatedCharacterBuilderModule : ICompositionRoot
                 .LoadSpriteSheet(graphicsDevice, path)
                 .CreateAnimations(action)
                 .Animations;
-        }, DINames.Helpers.AsepriteAnimatedCharacterBuilder);
+        }, DiContainerNames.Helpers.AsepriteAnimatedCharacterBuilder);
     }
 }

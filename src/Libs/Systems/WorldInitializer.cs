@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using Components.Data;
-using Entities.Factories;
+using Entities;
 using LDtk;
 using Scellecs.Morpeh;
-using Services.Implementations.Math;
+using Services.Math;
 
 namespace Systems;
 

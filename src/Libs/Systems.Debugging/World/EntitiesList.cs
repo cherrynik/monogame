@@ -1,6 +1,5 @@
 ﻿using Components.Data;
-using Components.Render.Animation;
-using Components.Render.Static;
+using Components.Render;
 using Components.Tags;
 using ImGuiNET;
 using Scellecs.Morpeh;
@@ -24,9 +23,9 @@ public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
         { typeof(CharacterAnimatorComponent), "Character Animator" },
         { typeof(MovementAnimationsComponent), "Movement Animations" },
         { typeof(SpriteComponent), "Sprite" },
-        { typeof(InputMovableComponent), "Input Movable" },
+        { typeof(InputMovableTagComponent), "Input Movable" },
         { typeof(MovableComponent), "Movable" },
-        { typeof(RenderableComponent), "Renderable" },
+        { typeof(RenderableTagComponent), "Renderable" },
     };
 
     public void OnAwake()
@@ -109,7 +108,7 @@ public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
             for (var i = 0; i < inventoryComponent.Slots.Length; i++)
             {
                 var slot = inventoryComponent.Slots[i];
-                ImGui.TextWrapped($"{i + 1}: {slot.GetInfo().Name}");
+                ImGui.TextWrapped($"{i + 1}: {slot.GetItemInfo().Name}");
             }
         }
     }

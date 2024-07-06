@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 using Components.Data;
-using Components.Render.Animation;
+using Components.Render;
 using MonoGame.Aseprite.Sprites;
 using Scellecs.Morpeh;
-using Services.Implementations.Math;
+using Services.Math;
 
 namespace Systems;
 

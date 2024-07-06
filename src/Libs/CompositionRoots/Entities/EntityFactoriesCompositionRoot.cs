@@ -1,7 +1,7 @@
 ﻿using CompositionRoots.Entities;
-using Entities.Factories;
-using Entities.Factories.Items.Rocks;
-using Entities.Factories.Items.Trees;
+using Entities;
+using Entities.Items.Rocks;
+using Entities.Items.Trees;
 using LightInject;
 
 [assembly: CompositionRootType(typeof(EntityFactoriesCompositionRoot))]

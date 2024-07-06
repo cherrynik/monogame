@@ -1,13 +1,12 @@
 ﻿using Components.Data;
-using Components.Render.Animation;
-using Components.Render.Static;
+using Components.Render;
 using Components.Tags;
 using Constants;
-using Entities.Factories.Characters;
+using Entities.Characters;
 using LightInject;
 using MonoGame.Aseprite.Sprites;
-using Services.Helpers;
-using Services.Implementations.Math;
+using Services.Resolvers;
+using Services.Math;
 
 namespace CompositionRoots.Entities;
 
@@ -18,24 +17,23 @@ public class PlayerModule : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new InputMovableComponent(), DINames.Player);
+        serviceRegistry.RegisterSingleton(_ => new InputMovableTagComponent(), DiContainerNames.Player);
         serviceRegistry.RegisterSingleton(_ =>
-            new TransformComponent { Position = new(316, 116), Pivot = Sector.Up }, DINames.Player);
+            new TransformComponent { Position = new(316, 116), Pivot = Sector.Up }, DiContainerNames.Player);
         serviceRegistry.RegisterSingleton(_ =>
-            new TransformComponent { Position = new(0, 3) }, DINames.PlayerAnimationsOffset);
+            new TransformComponent { Position = new(0, 3) }, DiContainerNames.PlayerAnimationsOffset);
         serviceRegistry.RegisterSingleton(_ =>
             new MovableComponent(7f)); // If 7.5f -> Math.Ceiling fixes this, else Math.Round
         RegisterVisuals(serviceRegistry);
         serviceRegistry.RegisterSingleton(_ =>
-            new RectangleColliderComponent { Size = new(0, 0, 8, 8) }, DINames.Player);
+            new RectangleColliderComponent { Size = new(0, 0, 8, 8) }, DiContainerNames.Player);
         serviceRegistry.RegisterTransient(_ =>
         {
             const int count = 9;
             Slot[] slots = new Slot[count];
 
             // Put items in slots like that:
-            slots[3].Item = ItemId.Rock;
-            slots[3].Amount = 3;
+            slots[3].Put(ItemId.Rock, 3);
 
             return new InventoryComponent(slots);
         });
@@ -49,7 +47,7 @@ public class PlayerModule : ICompositionRoot
         {
             var getAnimations =
                 factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>(
-                    DINames.Helpers.AsepriteAnimatedCharacterBuilder);
+                    DiContainerNames.Helpers.AsepriteAnimatedCharacterBuilder);
 
             var path = FileResolver.ResolveFromApp(Contents.SpriteSheets.Player);
 
@@ -57,28 +55,28 @@ public class PlayerModule : ICompositionRoot
             AnimatedSprite defaultSprite = idle[Sector.Down];
 
             return new SpriteComponent(defaultSprite, factory.GetInstance<TransformComponent>());
-        }, DINames.Player);
+        }, DiContainerNames.Player);
 
         serviceRegistry.RegisterTransient(factory =>
         {
             var getAnimations =
                 factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>(
-                    DINames.Helpers.AsepriteAnimatedCharacterBuilder);
+                    DiContainerNames.Helpers.AsepriteAnimatedCharacterBuilder);
 
             var path = FileResolver.ResolveFromApp(Contents.SpriteSheets.Player);
 
             return new MovementAnimationsComponent(
                 getAnimations(path, AsepriteIdleTag),
                 getAnimations(path, AsepriteWalkingTag));
-        }, DINames.Player);
+        }, DiContainerNames.Player);
 
         serviceRegistry.RegisterSingleton(factory =>
         {
-            var movementAnimations = factory.GetInstance<MovementAnimationsComponent>(DINames.Player);
+            var movementAnimations = factory.GetInstance<MovementAnimationsComponent>(DiContainerNames.Player);
             const Sector facing = Sector.Right;
-            var transform = factory.GetInstance<TransformComponent>(DINames.PlayerAnimationsOffset);
+            var transform = factory.GetInstance<TransformComponent>(DiContainerNames.PlayerAnimationsOffset);
 
             return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing], transform);
-        }, DINames.Player);
+        }, DiContainerNames.Player);
     }
 }

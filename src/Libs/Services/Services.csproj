@@ -16,8 +16,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Constants\Constants.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Implementations\" />
-  </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 ﻿using Constants;
 using LDtk;
 using LightInject;
-using Services.Helpers;
+using Services.Resolvers;
 
 namespace CompositionRoots.Helpers;
 

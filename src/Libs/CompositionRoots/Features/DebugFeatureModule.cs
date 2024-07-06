@@ -34,6 +34,6 @@ public class DebugFeatureModule : ICompositionRoot
                     colliderPixel)
                 // new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pivotPixel)
             );
-        }, DINames.Features.Debug);
+        }, DiContainerNames.Features.Debug);
     }
 }

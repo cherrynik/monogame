@@ -16,7 +16,7 @@ public class InputSystem(World world, IInputScanner inputScanner) : IFixedSystem
     public void OnUpdate(float deltaTime)
     {
         Filter filter = World.Filter
-            .With<InputMovableComponent>()
+            .With<InputMovableTagComponent>()
             .With<TransformComponent>()
             .Build();
 

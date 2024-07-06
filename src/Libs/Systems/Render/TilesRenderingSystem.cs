@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
-using Serilog;
-using Serilog.Core;
 using Vector2 = System.Numerics.Vector2;
 using World = Scellecs.Morpeh.World;
 
@@ -105,8 +103,8 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
                                 tile.Px.Y + layer._PxTotalOffsetY);
                             var camPos = camera.WorldToScreen(tilePos);
                             // casting to int for pixel perfect matching
-                            var position = new Microsoft.Xna.Framework.Vector2((int)Math.Round(camPos.X),
-                                (int)Math.Round(camPos.Y));
+                            var position = new Microsoft.Xna.Framework.Vector2((int)System.Math.Round(camPos.X),
+                                (int)System.Math.Round(camPos.Y));
                             Rectangle rect = new(tile.Src.X, tile.Src.Y, layer._GridSize, layer._GridSize);
                             SpriteEffects mirror = (SpriteEffects)tile.F;
                             spriteBatch.Draw(texture, position, rect, new Color(Color.White, layer._Opacity), 0,

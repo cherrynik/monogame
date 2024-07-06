@@ -3,8 +3,9 @@ using LightInject;
 using Microsoft.Xna.Framework;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
-using Services.Implementations.Movement;
+using Implementations.Movement;
 using Systems;
+using Implementations.Camera;
 using Systems.Render;
 
 namespace CompositionRoots.Features;
@@ -13,12 +14,13 @@ public class PreRenderFeatureModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
+        serviceRegistry.RegisterSingleton<CharacterMovementAnimationSystem>();
+
         serviceRegistry.RegisterSingleton(factory => new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
-                new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
-                new CameraFollowingSystem(factory.GetInstance<World>(),
-                    factory.GetInstance<GraphicsDeviceManager>())),
-            DINames.Features.PreRender
+                factory.GetInstance<CharacterMovementAnimationSystem>(),
+                factory.GetInstance<CameraFollowingSystem>()),
+            DiContainerNames.Features.PreRender
         );
     }
 }

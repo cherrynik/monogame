@@ -2,7 +2,7 @@
 using MonoGame.Aseprite;
 using MonoGame.Aseprite.Content.Processors;
 using MonoGame.Aseprite.Sprites;
-using Services.Implementations.Math;
+using Services.Math;
 
 namespace Services.Builders;
 

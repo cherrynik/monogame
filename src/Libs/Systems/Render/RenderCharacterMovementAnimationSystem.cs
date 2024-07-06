@@ -1,7 +1,5 @@
 ﻿using Components.Data;
-using Components.Render.Animation;
-using Components.Render.Static;
-using Components.Tags;
+using Components.Render;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
@@ -49,7 +47,7 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
 
                 // casting to int for pixel perfect matching
                 animator.Animation.Draw(spriteBatch,
-                    new Vector2((int)Math.Round(position.X), (int)Math.Round(position.Y)));
+                    new Vector2((int)System.Math.Round(position.X), (int)System.Math.Round(position.Y)));
             }
 
             if (e.Has<SpriteComponent>())
@@ -60,7 +58,7 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
                 var position = at + localTransform.Position - pivotOffset;
 
                 // casting to int for pixel perfect matching
-                sprite.Sprite.Draw(spriteBatch, new Vector2((int)Math.Round(position.X), (int)Math.Round(position.Y)));
+                sprite.Sprite.Draw(spriteBatch, new Vector2((int)System.Math.Round(position.X), (int)System.Math.Round(position.Y)));
             }
         }
     }
