@@ -6,7 +6,7 @@ using LightInject;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended.Extensions;
 
-namespace Entities.Characters;
+namespace Entities;
 
 public class PlayerFactory(IServiceFactory serviceFactory) : EntityFactory
 {

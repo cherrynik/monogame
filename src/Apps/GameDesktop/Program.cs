@@ -14,22 +14,20 @@ Environment.SetEnvironmentVariable(EnvironmentNames.AppBaseDirectory,
     Directory.GetParent(AppContext.BaseDirectory)!.FullName);
 
 using Logger logger = LoggerBuilder.Create(configuration);
-Log.Logger = Logger.None;
-// To disable logging, use this instead:
-// ILogger logger = Logger.None;
+Log.Logger = logger; // To disable logging, use this instead: Logger.None;
 
-logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) initialized");
+Log.Logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) initialized");
 
 try
 {
-    // "Using" keyword should be used either with the container, or with the game instance.
-    // Otherwise, you'll get the double-disposing behaviour.
+    // "Using" keyword should be used either with the container or with the game instance.
+    // Otherwise, you'll get the double-disposing behavior.
     ServiceContainer container = new(
         new ContainerOptions
         {
             EnablePropertyInjection = false,
             EnableCurrentScope = false,
-            LogFactory = _ => entry => logger
+            LogFactory = _ => entry => Log.Logger
                 .ForContext<ServiceContainer>()
                 .Verbose($"{entry.Message}"),
         });
@@ -51,6 +49,6 @@ catch (Exception e)
     if (e.Message.Contains(Errors.FailedToCreateGraphicsDevice)) Environment.Exit(0);
 #endif
 
-    logger.ForContext<Program>().Fatal(e.ToString());
+    Log.Logger.ForContext<Program>().Fatal(e.ToString());
     Environment.Exit(1);
 }

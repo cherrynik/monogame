@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Serilog;
 using Myra.Graphics2D.UI;
+using Serilog.Core;
 
 namespace GameDesktop;
 
@@ -25,7 +26,6 @@ public class Game : Microsoft.Xna.Framework.Game
 {
     private const bool IsWindowResizable = true;
 
-    private readonly ILogger _logger;
     private readonly IServiceContainer _container;
 
     [CanBeNull] private ImGuiRenderer _imGuiRenderer;
@@ -38,40 +38,38 @@ public class Game : Microsoft.Xna.Framework.Game
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
     private RootFeature _rootFeature;
-    private float _fixedDeltaTime;
+    private float _passedSinceDeltaTime;
 
-    public Game(ILogger logger, IServiceContainer container)
+    public Game(IServiceContainer container)
     {
-        _logger = logger;
         _container = container;
 
-        _logger.ForContext<Game>().Verbose("ctor");
+        Log.Logger.ForContext<Game>().Verbose("ctor");
     }
 
     protected override void Initialize()
     {
-        _logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
-        _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialization...");
+        Log.Logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
+        Log.Logger.ForContext<Game>().Verbose("Circular dependencies (external) initialization...");
         RegisterGraphicsDeviceManager();
         RegisterSpriteBatch();
-        _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialized");
+        Log.Logger.ForContext<Game>().Verbose("Circular dependencies (external) initialized");
         RegisterWindowSettings();
 
-        _logger.ForContext<Game>().Verbose("Game services initialization...");
+        Log.Logger.ForContext<Game>().Verbose("Game services initialization...");
         RegisterRootFeature();
-        _logger.ForContext<Game>().Verbose("Game services initialized");
+        Log.Logger.ForContext<Game>().Verbose("Game services initialized");
 
         base.Initialize();
 
-        _logger.ForContext<Game>().Verbose("Initialize(): end");
+        Log.Logger.ForContext<Game>().Verbose("Initialize(): end");
     }
 
     protected override void LoadContent()
     {
         // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
-        // todo: pass tru logger & log places
         // TODO: Error handling
-        _logger.ForContext<Game>().Verbose("LoadContent(): start");
+        Log.Logger.ForContext<Game>().Verbose("LoadContent(): start");
 
         // Register UIs before systems onAwake, because we subscribe on systems' events:
         // System ctor() -> UI ctor(System) -> System onAwake & event raise -> UI onEvent
@@ -83,26 +81,26 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _rootFeature.OnAwake();
 
-        _logger.ForContext<Game>().Verbose("LoadContent(): end");
+        Log.Logger.ForContext<Game>().Verbose("LoadContent(): end");
     }
 
 
     protected override void BeginRun()
     {
-        _logger.ForContext<Game>().Verbose("Beginning to run...");
+        Log.Logger.ForContext<Game>().Verbose("Beginning to run...");
 
         base.BeginRun();
 
-        _logger.ForContext<Game>().Verbose("Running");
+        Log.Logger.ForContext<Game>().Verbose("Running");
     }
 
     protected override void EndRun()
     {
-        _logger.ForContext<Game>().Verbose("Ending run...");
+        Log.Logger.ForContext<Game>().Verbose("Ending run...");
 
         base.EndRun();
 
-        _logger.ForContext<Game>().Verbose("Ended");
+        Log.Logger.ForContext<Game>().Verbose("Ended");
     }
 
     protected override void Update(GameTime gameTime)
@@ -117,11 +115,12 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private void FixedUpdate(float deltaTime)
     {
-        _fixedDeltaTime += deltaTime;
-        while (_fixedDeltaTime >= TargetElapsedTime.TotalSeconds)
+        // Solution: https://stackoverflow.com/questions/55066052/frame-rate-independent-fixedupdate-vs-update
+        _passedSinceDeltaTime += deltaTime;
+        while (_passedSinceDeltaTime >= TargetElapsedTime.TotalSeconds)
         {
-            _rootFeature.OnFixedUpdate(_fixedDeltaTime);
-            _fixedDeltaTime -= (float)TargetElapsedTime.TotalSeconds;
+            _rootFeature.OnFixedUpdate((float)TargetElapsedTime.TotalSeconds);
+            _passedSinceDeltaTime -= (float)TargetElapsedTime.TotalSeconds;
         }
     }
 
@@ -147,11 +146,11 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void Dispose(bool disposing)
     {
-        _logger.ForContext<Game>().Verbose("Disposing...");
+        Log.Logger.ForContext<Game>().Verbose("Disposing...");
 
         base.Dispose(disposing);
 
-        _logger.ForContext<Game>().Verbose("Disposed");
+        Log.Logger.ForContext<Game>().Verbose("Disposed");
     }
 
     private void RegisterWindowSettings()

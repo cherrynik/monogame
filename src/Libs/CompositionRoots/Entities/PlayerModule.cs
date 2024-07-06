@@ -2,11 +2,13 @@
 using Components.Render;
 using Components.Tags;
 using Constants;
-using Entities.Characters;
+using Entities;
 using LightInject;
+using Microsoft.Xna.Framework;
 using MonoGame.Aseprite.Sprites;
 using Services.Resolvers;
 using Services.Math;
+using Vector2 = System.Numerics.Vector2;
 
 namespace CompositionRoots.Entities;
 
@@ -14,25 +16,27 @@ public class PlayerModule : ICompositionRoot
 {
     private const string AsepriteIdleTag = "Idle";
     private const string AsepriteWalkingTag = "Walking";
+    private static readonly Vector2 DefaultPosition = new(316, 116); // Overwritten by Ldtk at the WorldInitializer
+    private static readonly Rectangle Collider = new(0, 0, 8, 8);
+    private const float MovementSpeed = 7.5f; // If 7.5f -> Math.Ceiling fixes this, else Math.Round
+    private const int InventorySlotsCount = 9;
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterSingleton(_ => new InputMovableTagComponent(), DiContainerNames.Player);
         serviceRegistry.RegisterSingleton(_ =>
-            new TransformComponent { Position = new(316, 116), Pivot = Sector.Up }, DiContainerNames.Player);
+            new TransformComponent { Position = DefaultPosition, Pivot = Sector.Up }, DiContainerNames.Player);
         serviceRegistry.RegisterSingleton(_ =>
             new TransformComponent { Position = new(0, 3) }, DiContainerNames.PlayerAnimationsOffset);
         serviceRegistry.RegisterSingleton(_ =>
-            new MovableComponent(7f)); // If 7.5f -> Math.Ceiling fixes this, else Math.Round
+            new MovableComponent(MovementSpeed));
         RegisterVisuals(serviceRegistry);
         serviceRegistry.RegisterSingleton(_ =>
-            new RectangleColliderComponent { Size = new(0, 0, 8, 8) }, DiContainerNames.Player);
+            new RectangleColliderComponent { Size = Collider }, DiContainerNames.Player);
         serviceRegistry.RegisterTransient(_ =>
         {
-            const int count = 9;
-            Slot[] slots = new Slot[count];
+            Slot[] slots = new Slot[InventorySlotsCount];
 
-            // Put items in slots like that:
             slots[3].Put(ItemId.Rock, 3);
 
             return new InventoryComponent(slots);

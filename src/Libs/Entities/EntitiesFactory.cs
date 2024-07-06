@@ -1,5 +1,4 @@
 ﻿using Entities;
-using Entities.Characters;
 using Entities.Items.Rocks;
 using Entities.Items.Trees;
 using LDtk;

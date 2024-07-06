@@ -13,8 +13,7 @@ namespace GameDesktop;
 internal class GameCompositionRoot : ICompositionRoot
 {
     private const float SecondInMs = 1_000.0f;
-
-    private const float TargetFramesPerSecond = 120.0f;
+    private const float TargetFramesPerSecond = 60.0f; // Mainly used for FixedUpdate
     private const bool IsFixedTimeStep = false;
     private const bool IsVSyncOn = false;
 
@@ -25,14 +24,12 @@ internal class GameCompositionRoot : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        ServiceRegistration[] services = serviceRegistry.AvailableServices.ToArray();
-
-        var logger =
-            (ILogger)services.First(r => r.ServiceType == typeof(ILogger)).Value;
         var container =
-            (IServiceContainer)services.First(r => r.ServiceType == typeof(IServiceContainer)).Value;
+            serviceRegistry
+                .AvailableServices
+                .First(r => r.ServiceType == typeof(IServiceContainer)).Value as IServiceContainer;
 
-        Game game = new(logger, container)
+        Game game = new(container)
         {
             IsMouseVisible = IsMouseVisible,
             IsFixedTimeStep = IsFixedTimeStep,
