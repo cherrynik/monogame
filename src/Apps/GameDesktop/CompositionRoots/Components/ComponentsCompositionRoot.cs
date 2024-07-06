@@ -20,7 +20,7 @@ namespace GameDesktop.CompositionRoots.Components;
 
 internal class ComponentsCompositionRoot : ICompositionRoot
 {
-    private static readonly string PlayerSpriteSheetPath = System.IO.Path.Join(
+    private static readonly string PlayerSpriteSheetPath = Path.Join(
         Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
         Resources.SpriteSheet.Player);
 
