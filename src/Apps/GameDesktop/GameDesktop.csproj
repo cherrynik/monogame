@@ -26,18 +26,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico"/>
     <EmbeddedResource Include="Icon.bmp"/>
-    <EmbeddedResource Update="Resources\SpriteSheet.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SpriteSheets.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Internal\AppVariable.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>AppVariable.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Internal\EnvironmentVariable.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EnvironmentVariable.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="LDtkMonogame" Version="1.3.2"/>
@@ -59,18 +47,13 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libs\Components\Components.csproj"/>
+    <ProjectReference Include="..\..\Libs\CompositionRoots\CompositionRoots.csproj" />
+    <ProjectReference Include="..\..\Libs\Constants\Constants.csproj" />
     <ProjectReference Include="..\..\Libs\External\MonoGame.ImGuiNet\MonoGame.ImGuiNet\Monogame.ImGuiNet.csproj"/>
     <ProjectReference Include="..\..\Libs\Features\Features.csproj"/>
     <ProjectReference Include="..\..\Libs\Services\Services.csproj"/>
     <ProjectReference Include="..\..\Libs\Systems.Debugging\Systems.Debugging.csproj"/>
     <ProjectReference Include="..\..\Libs\UI\UI.csproj"/>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Resources\SpriteSheet.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>SpriteSheet.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\Content\**\*.*">

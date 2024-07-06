@@ -1,20 +1,20 @@
 ﻿using System;
 using System.IO;
+using Constants;
 using GameDesktop;
-using GameDesktop.CompositionRoots;
-using GameDesktop.Factories;
-using GameDesktop.Resources.Internal;
+using GameDesktop.Builders;
 using LightInject;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
+using ConfigurationBuilder = GameDesktop.Builders.ConfigurationBuilder;
 
-IConfigurationRoot configuration = ConfigurationFactory.Create();
-Environment.SetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory,
+IConfigurationRoot configuration = ConfigurationBuilder.Create();
+Environment.SetEnvironmentVariable(EnvironmentNames.AppBaseDirectory,
     Directory.GetParent(AppContext.BaseDirectory)!.FullName);
 
-using Logger logger = LogFactory.Create(configuration);
-Log.Logger = logger;
+using Logger logger = LoggerBuilder.Create(configuration);
+Log.Logger = Logger.None;
 // To disable logging, use this instead:
 // ILogger logger = Logger.None;
 
@@ -48,10 +48,7 @@ try
 catch (Exception e)
 {
 #if IS_CI
-    if (e.Message.Contains(Error.FailedToCreateGraphicsDevice))
-    {
-        Environment.Exit(0);
-    }
+    if (e.Message.Contains(Errors.FailedToCreateGraphicsDevice)) Environment.Exit(0);
 #endif
 
     logger.ForContext<Program>().Fatal(e.ToString());

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using CompositionRoots;
 using Features;
-using GameDesktop.CompositionRoots.Features;
-using GameDesktop.Factories;
-using GameDesktop.Resources.Internal;
 using ImGuiNET;
 using JetBrains.Annotations;
 using MonoGame.ImGuiNet;
@@ -39,10 +33,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private GraphicsDeviceManager _graphicsDeviceManager;
     private Desktop _desktop;
 
-    // TODO: Frames updating
-    // TODO: Player position & other things debug showing, input, etc
     // TODO: Nez has cool physics & other projects libs to use as deps, ImGUI viewports, solutions, etc.
-
 
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
@@ -119,14 +110,19 @@ public class Game : Microsoft.Xna.Framework.Game
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _rootFeature.OnUpdate(deltaTime);
 
+        FixedUpdate(deltaTime);
+
+        _rootFeature.OnLateUpdate(deltaTime);
+    }
+
+    private void FixedUpdate(float deltaTime)
+    {
         _fixedDeltaTime += deltaTime;
         while (_fixedDeltaTime >= TargetElapsedTime.TotalSeconds)
         {
             _rootFeature.OnFixedUpdate(_fixedDeltaTime);
             _fixedDeltaTime -= (float)TargetElapsedTime.TotalSeconds;
         }
-
-        _rootFeature.OnLateUpdate(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime)
@@ -166,11 +162,12 @@ public class Game : Microsoft.Xna.Framework.Game
     private void RegisterGraphicsDeviceManager()
     {
         _graphicsDeviceManager = _container.GetInstance<GraphicsDeviceManager>();
+        _container.RegisterInstance(GraphicsDevice);
     }
 
     private void RegisterSpriteBatch()
     {
-        _container.RegisterSingleton(_ => new SpriteBatch(GraphicsDevice));
+        _container.RegisterSingleton(_ => new SpriteBatch(_container.GetInstance<GraphicsDevice>()));
         _spriteBatch = _container.GetInstance<SpriteBatch>();
     }
 
@@ -194,7 +191,7 @@ public class Game : Microsoft.Xna.Framework.Game
         ImGui.GetIO().ConfigFlags = ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable;
     }
 
-    private void RegisterMyraUIEnvironment() => MyraEnvironment.Game = this;
+    private void RegisterMyraUIEnvironment() => MyraEnvironment.Game = _container.GetInstance<Game>();
 
     private void RegisterMyraUI() => _desktop = _container.GetInstance<Desktop>();
 }

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
-using GameDesktop.Resources.Internal;
+using Constants;
+using GameDesktop;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Serilog;
 
-[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.GameCompositionRoot))]
+[assembly: CompositionRootType(typeof(GameCompositionRoot))]
 
-namespace GameDesktop.CompositionRoots;
+namespace GameDesktop;
 
 internal class GameCompositionRoot : ICompositionRoot
 {
@@ -36,12 +37,12 @@ internal class GameCompositionRoot : ICompositionRoot
             IsMouseVisible = IsMouseVisible,
             IsFixedTimeStep = IsFixedTimeStep,
             TargetElapsedTime = TimeSpan.FromMilliseconds(SecondInMs / TargetFramesPerSecond),
-            Content = { RootDirectory = AppVariable.ContentRootDirectory, },
+            Content = { RootDirectory = Contents.RootDirectory, },
         };
         serviceRegistry.RegisterInstance(game);
 
         // Hack. Resolving cycle dependency issue (fundamental architecture)
-        // Implicitly adds itself in the game services container.
+        // Implicitly adds itself in the game services' container.
         GraphicsDeviceManager graphicsDeviceManager = new(game)
         {
             SynchronizeWithVerticalRetrace = IsVSyncOn,

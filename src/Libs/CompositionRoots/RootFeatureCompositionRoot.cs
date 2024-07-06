@@ -1,18 +1,14 @@
-﻿using System;
-using System.Linq;
-using Components.Data;
+﻿using CompositionRoots;
+using Constants;
 using Entities.Factories;
 using Entities.Factories.Characters;
-using Entities.Factories.Items;
 using Entities.Factories.Items.Rocks;
 using Entities.Factories.Items.Trees;
 using Entities.Factories.Meta;
 using Features;
 using FontStashSharp.RichText;
-using LightInject;
-using GameDesktop.CompositionRoots.Components;
-using GameDesktop.CompositionRoots.Entities;
 using LDtk;
+using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
@@ -20,22 +16,19 @@ using Scellecs.Morpeh.Extended;
 using Services.Movement;
 using Systems;
 using Systems.Debugging.Diagnostics;
+using Systems.Debugging.Render;
 using Systems.Debugging.World;
 using Systems.Render;
 using UI.Blocks;
 using UI.Factories;
 using UI.Feature;
 using World = Scellecs.Morpeh.World;
-#if DEBUG
-using Systems.Debugging.Render;
-using GameDesktop.CompositionRoots.DebugFeatures;
-#endif
 
-[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Features.RootFeatureCompositionRoot))]
+[assembly: CompositionRootType(typeof(RootFeatureCompositionRoot))]
 
-namespace GameDesktop.CompositionRoots.Features;
+namespace CompositionRoots;
 
-internal class RootFeatureCompositionRoot : ICompositionRoot
+public class RootFeatureCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
@@ -49,12 +42,10 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         RegisterFundamental(serviceRegistry);
 
         RegisterComponents(serviceRegistry);
-        RegisterEntities(serviceRegistry);
 
         // RegisterFeatures(serviceRegistry);
 
 #if DEBUG
-        serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
         serviceRegistry.RegisterSingleton<WorldEntityFactory>();
 #endif
         serviceRegistry.RegisterSingleton<PlayerFactory>();
@@ -78,21 +69,6 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
     private static void RegisterComponents(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterFrom<ComponentsCompositionRoot>();
-
-    private static void RegisterEntities(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.RegisterFrom<PlayerEntityCompositionRoot>();
-        serviceRegistry.RegisterFrom<StaticEntityCompositionRoot>();
-        serviceRegistry.RegisterFrom<RockEntityCompositionRoot>();
-    }
-
-    // private static void RegisterFeatures(IServiceRegistry serviceRegistry)
-    // {
-    // serviceRegistry.RegisterFrom<WorldInitializeFeatureCompositionRoot>();
-    // serviceRegistry.RegisterFrom<InputFeatureCompositionRoot>();
-    // serviceRegistry.RegisterFrom<CameraFeatureCompositionRoot>();
-    // serviceRegistry.RegisterFrom<MovementFeatureCompositionRoot>();
-    // }
 
     private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
     {
@@ -187,7 +163,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                 Left = -30,
                 Top = -20,
                 TextAlign = TextHorizontalAlignment.Right,
-                Text = "Pre-alpha v0.3.2"
+                Text = AppVariables.GameVersion
             }));
         serviceRegistry.RegisterSingleton<Func<GameVersion>>(factory => factory.GetInstance<GameVersion>);
 

@@ -1,8 +1,8 @@
 ﻿using Myra.Graphics2D.UI;
 
-namespace GameDesktop.Factories;
+namespace GameDesktop.Builders;
 
-public class UIFactory(Grid grid, Label label, ComboBox comboBox, Button button, SpinButton spinButton)
+public class UIBuilder(Grid grid, Label label, ComboBox comboBox, Button button, SpinButton spinButton)
 {
     // Stylesheet.Current.ButtonStyle = new ButtonStyle
     // {

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using GameDesktop.Resources.Internal;
+﻿using CompositionRoots;
+using Constants;
 using LDtk;
 using LightInject;
 using Microsoft.Xna.Framework;
@@ -11,16 +8,16 @@ using MonoGame.Aseprite.Sprites;
 using Services.Builders;
 using Services.Math;
 
-[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.FundamentalCompositionRoot))]
+[assembly: CompositionRootType(typeof(FundamentalCompositionRoot))]
 
-namespace GameDesktop.CompositionRoots;
+namespace CompositionRoots;
 
 internal class FundamentalCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
         RegisterLdtk(serviceRegistry);
-        RegisterAnimationsFactory(serviceRegistry);
+        RegisterAsepriteAnimatedCharacter(serviceRegistry);
     }
 
     private static void RegisterLdtk(IServiceRegistry serviceRegistry)
@@ -28,15 +25,15 @@ internal class FundamentalCompositionRoot : ICompositionRoot
         serviceRegistry.RegisterSingleton(_ =>
         {
             var fileName = Path.Join(
-                Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
-                "Content/TileMaps/Test.ldtk"
+                Environment.GetEnvironmentVariable(EnvironmentNames.AppBaseDirectory),
+                Contents.TileMaps.Test
             );
 
             return LDtkFile.FromFile(fileName);
         });
     }
 
-    private static void RegisterAnimationsFactory(IServiceRegistry serviceRegistry)
+    private static void RegisterAsepriteAnimatedCharacter(IServiceRegistry serviceRegistry)
     {
         serviceRegistry.RegisterTransient<AsepriteAnimatedCharactersBuilder>();
         // Warning: binding to <string, T> where T is any type, is dangerous and you should have a different

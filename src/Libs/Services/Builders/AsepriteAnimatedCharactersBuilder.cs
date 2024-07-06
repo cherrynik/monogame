@@ -8,7 +8,7 @@ namespace Services.Builders;
 
 public class AsepriteAnimatedCharactersBuilder
 {
-    public Dictionary<Sector, AnimatedSprite>? Animations { get; private set; }
+    public Dictionary<Sector, AnimatedSprite> Animations { get; private set; } = new();
 
     private SpriteSheet? _spriteSheet;
 

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Components.Data;
+﻿using Components.Data;
 using Components.Render.Animation;
 using Components.Render.Static;
 using Components.Tags;
-using GameDesktop.Resources.Internal;
+using CompositionRoots;
+using Constants;
 using LightInject;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,16 +11,15 @@ using MonoGame.Aseprite;
 using MonoGame.Aseprite.Sprites;
 using Services.Math;
 
+[assembly: CompositionRootType(typeof(ComponentsCompositionRoot))]
 
-[assembly: CompositionRootType(typeof(GameDesktop.CompositionRoots.Components.ComponentsCompositionRoot))]
-
-namespace GameDesktop.CompositionRoots.Components;
+namespace CompositionRoots;
 
 internal class ComponentsCompositionRoot : ICompositionRoot
 {
     private static readonly string PlayerSpriteSheetPath = Path.Join(
-        Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
-        Resources.SpriteSheet.Player);
+        Environment.GetEnvironmentVariable(EnvironmentNames.AppBaseDirectory),
+        Contents.SpriteSheets.Player);
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
@@ -39,7 +36,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         serviceRegistry.Register<string, Texture2D>((factory, path) =>
         {
             var fileName = Path.Join(
-                Environment.GetEnvironmentVariable(EnvironmentVariable.AppBaseDirectory),
+                Environment.GetEnvironmentVariable(EnvironmentNames.AppBaseDirectory),
                 path
             );
             return Texture2D.FromFile(factory.GetInstance<GraphicsDeviceManager>().GraphicsDevice, fileName);
@@ -48,7 +45,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
         // TODO: Automatically get texture & its rect from a tile set (by aseprite?)
         serviceRegistry.RegisterSingleton(factory =>
         {
-            var texture = factory.GetInstance<string, Texture2D>("Content/SpriteSheets/Main.png");
+            var texture = factory.GetInstance<string, Texture2D>(Contents.Textures.Main);
             var sprite = new Sprite("Pebble", new TextureRegion("Pebble", texture, new(208, 48, 16, 16)));
 
             return new SpriteComponent(sprite, factory.GetInstance<TransformComponent>());
@@ -56,7 +53,7 @@ internal class ComponentsCompositionRoot : ICompositionRoot
 
         serviceRegistry.RegisterSingleton(factory =>
         {
-            var texture = factory.GetInstance<string, Texture2D>("Content/SpriteSheets/Main.png");
+            var texture = factory.GetInstance<string, Texture2D>(Contents.Textures.Main);
             var sprite = new Sprite("Tree", new TextureRegion("Tree", texture, new(144, 0, 48, 96)));
 
             return new SpriteComponent(sprite, factory.GetInstance<TransformComponent>());

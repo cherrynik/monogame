@@ -2,9 +2,9 @@
 using Serilog;
 using Serilog.Core;
 
-namespace GameDesktop.Factories;
+namespace GameDesktop.Builders;
 
-internal static class LogFactory
+internal static class LoggerBuilder
 {
     public static Logger Create(IConfiguration configuration) =>
         new LoggerConfiguration()
