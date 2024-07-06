@@ -1,5 +1,5 @@
 using System.Numerics;
-using Services.Math;
+using Services.Implementations.Math;
 
 namespace UnitTests.Services;
 

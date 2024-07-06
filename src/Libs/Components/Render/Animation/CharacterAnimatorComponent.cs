@@ -2,7 +2,7 @@ using System.Numerics;
 using Components.Data;
 using MonoGame.Aseprite.Sprites;
 using Scellecs.Morpeh;
-using Services.Math;
+using Services.Implementations.Math;
 
 namespace Components.Render.Animation;
 

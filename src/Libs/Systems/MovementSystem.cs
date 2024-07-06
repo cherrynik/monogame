@@ -1,7 +1,7 @@
 using Components.Data;
 using Components.Tags;
 using Scellecs.Morpeh;
-using Services.Movement;
+using Services.Implementations.Movement;
 
 namespace Systems;
 

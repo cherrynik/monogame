@@ -1,24 +1,20 @@
 ﻿using CompositionRoots;
+using CompositionRoots.Components.Data;
+using CompositionRoots.Entities;
+using CompositionRoots.Entities.Rocks;
+using CompositionRoots.Entities.Trees;
+using CompositionRoots.Features;
+using CompositionRoots.Helpers;
+using CompositionRoots.Systems;
 using Constants;
 using Entities.Factories;
-using Entities.Factories.Characters;
-using Entities.Factories.Items.Rocks;
-using Entities.Factories.Items.Trees;
-using Entities.Factories.Meta;
 using Features;
 using FontStashSharp.RichText;
-using LDtk;
 using LightInject;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using Scellecs.Morpeh.Extended;
-using Services.Movement;
+using Services.Helpers;
 using Systems;
-using Systems.Debugging.Diagnostics;
-using Systems.Debugging.Render;
-using Systems.Debugging.World;
-using Systems.Render;
 using UI.Blocks;
 using UI.Factories;
 using UI.Feature;
@@ -33,112 +29,66 @@ public class RootFeatureCompositionRoot : ICompositionRoot
     public void Compose(IServiceRegistry serviceRegistry)
     {
         // Layered registration architecture (horizontally & vertically)
-        // Hence, it allows async/multi-threaded registration
+        // Hence, it allows async/multithreaded registration
 
         // If it's split with space-line, then it's the end of a group.
-        // A group (of registering lines) can be multi-threaded.
+        // A group (of registering lines) can be multithreaded.
         // At the end of a group, the whole group has to be resolved successfully,
         // before going further.
-        RegisterFundamental(serviceRegistry);
+        serviceRegistry.RegisterFrom<LdtkModule>()
+            .RegisterFrom<AsepriteAnimatedCharacterBuilderModule>()
+            .RegisterFrom<TextureResolverModule>();
 
-        RegisterComponents(serviceRegistry);
+        serviceRegistry.RegisterFrom<NameModule>();
+        serviceRegistry.RegisterFrom<CameraModule>();
 
-        // RegisterFeatures(serviceRegistry);
+        serviceRegistry.RegisterFrom<TransformModule>();
 
-#if DEBUG
-        serviceRegistry.RegisterSingleton<WorldEntityFactory>();
-#endif
-        serviceRegistry.RegisterSingleton<PlayerFactory>();
+        serviceRegistry.RegisterFrom<PebbleModule>();
+        serviceRegistry.RegisterFrom<TreeModule>();
 
-        serviceRegistry.RegisterSingleton<TreeFactory>();
-        serviceRegistry.RegisterSingleton<AbstractTreeFactory>();
+        serviceRegistry.RegisterFrom<ItemModule>();
 
-        serviceRegistry.RegisterSingleton<PebbleFactory>();
-        serviceRegistry.RegisterSingleton<AbstractRockFactory>();
+        serviceRegistry.RegisterFrom<EntityFactoriesCompositionRoot>();
 
-        serviceRegistry.RegisterSingleton<EntitiesFactory>();
-
+        serviceRegistry.RegisterSingleton(_ => World.Create());
         RegisterEntryPoint(serviceRegistry);
+        RegisterUI(serviceRegistry);
     }
-
-
-    private static void RegisterFundamental(IServiceRegistry serviceRegistry)
-    {
-        serviceRegistry.RegisterFrom<FundamentalCompositionRoot>();
-    }
-
-    private static void RegisterComponents(IServiceRegistry serviceRegistry) =>
-        serviceRegistry.RegisterFrom<ComponentsCompositionRoot>();
 
     private static void RegisterEntryPoint(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(factory => new CollisionSystem(factory.GetInstance<World>()));
-        // serviceRegistry.RegisterSingleton(factory =>
-        // new TriggerSystem(factory.GetInstance<World>(), factory.GetInstance<CollisionSystem>()));
-        serviceRegistry.RegisterSingleton(factory => new InventorySystem(factory.GetInstance<World>()));
+        serviceRegistry.RegisterFrom<CollisionSystemModule>()
+            .RegisterFrom<InventorySystemModule>()
+            .RegisterFrom<SystemsEngineModule>();
 
-        // ECS
-        serviceRegistry.RegisterSingleton(_ => World.Create());
+        serviceRegistry.RegisterFrom<MovementFeatureModule>()
+            .RegisterFrom<PreRenderFeatureModule>()
+            .RegisterFrom<RenderFeatureModule>()
+            .RegisterFrom<DebugFeatureModule>();
 
-        // TODO: I guess, I should delete "Features" project,
-        // register features actually in another particular place,
-        // and create "CompositionRoots" project
-        serviceRegistry.RegisterSingleton(factory => new SystemsEngine(factory.GetInstance<World>()));
         serviceRegistry.RegisterSingleton(factory =>
         {
             // ⚠ Order-sensitive zone ⚠ 
-            var movement = new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>(),
-                new InputSystem(factory.GetInstance<World>(), new KeyboardInput()),
-                factory.GetInstance<CollisionSystem>(),
-                // factory.GetInstance<TriggerSystem>(),
-                factory.GetInstance<InventorySystem>(),
-                new MovementSystem(factory.GetInstance<World>(), new SimpleMovement()));
+            factory.GetInstance<Feature>(DINames.Features.Movement);
+            factory.GetInstance<Feature>(DINames.Features.PreRender);
+            factory.GetInstance<Feature>(DINames.Features.Render);
 
-            var preRender = new Feature(factory.GetInstance<World>(),
-                factory.GetInstance<SystemsEngine>(),
-                new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
-                new CameraFollowingSystem(factory.GetInstance<World>(), factory.GetInstance<GraphicsDeviceManager>()));
-
-            var render = new Feature(factory.GetInstance<World>(),
-                factory.GetInstance<SystemsEngine>(),
-                new TilesRenderingSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
-                    factory.GetInstance<LDtkFile>()),
-                new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
-                    factory.GetInstance<SpriteBatch>()));
 #if DEBUG
-            const int w = 2, h = 2;
-            Texture2D pivotPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
-            pivotPixel.SetData(Enumerable.Repeat(Color.Khaki, w * h).ToArray());
-
-            Texture2D colliderPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
-            colliderPixel.SetData(Enumerable.Repeat(Color.LawnGreen, w * h).ToArray());
-
-            var debug = new Feature(factory.GetInstance<World>(),
-                factory.GetInstance<SystemsEngine>(),
-                new SystemsList(factory.GetInstance<World>(),
-                    factory.GetInstance<SystemsEngine>()),
-                new EntitiesList(factory.GetInstance<World>()),
-                new FrameCounter(factory.GetInstance<World>()),
-                new RenderFramesPerSec(factory.GetInstance<World>(), factory.GetInstance<IServiceFactory>()),
-                new RectangleColliderRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
-                    colliderPixel)
-                // new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pivotPixel)
-            );
+            factory.GetInstance<Feature>(DINames.Features.Debug);
 #endif
 
             return new RootFeature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
                 new WorldInitializer(factory.GetInstance<World>(),
-                    // new WorldEntityFactory(new WorldMetaComponent()),
-                    // factory.GetInstance<PlayerEntityFactory>(),
-                    // factory.GetInstance<DummyEntityFactory>(),
-                    // factory.GetInstance<RockEntityFactory>(),
                     factory.GetInstance<EntitiesFactory>(),
-                    factory.GetInstance<LDtkFile>())
+                    LdtkResolver.ResolveFromApp(Contents.TileMaps.Test))
             );
         });
+    }
 
-        // UI
+    private static void RegisterUI(IServiceRegistry serviceRegistry)
+    {
         serviceRegistry.RegisterSingleton(_ => new Panel());
         serviceRegistry.RegisterSingleton(factory =>
             new Inventory(factory.GetInstance<Panel>(), factory.GetInstance<InventorySystem>()));
@@ -183,5 +133,4 @@ public class RootFeatureCompositionRoot : ICompositionRoot
             return desktop;
         });
     }
-    // serviceRegistry.RegisterSingleton<RootFeature>();
 }

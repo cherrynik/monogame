@@ -3,7 +3,7 @@ using Components.Data;
 using Components.Render.Animation;
 using MonoGame.Aseprite.Sprites;
 using Scellecs.Morpeh;
-using Services.Math;
+using Services.Implementations.Math;
 
 namespace Systems;
 

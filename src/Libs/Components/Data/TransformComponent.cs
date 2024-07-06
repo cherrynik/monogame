@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 using Scellecs.Morpeh;
-using Services.Math;
+using Services.Implementations.Math;
 
 namespace Components.Data;
 

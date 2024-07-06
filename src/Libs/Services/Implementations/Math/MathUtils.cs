@@ -1,7 +1,6 @@
-﻿using System.Numerics;
-using Vector2 = System.Numerics.Vector2;
+﻿using Vector2 = System.Numerics.Vector2;
 
-namespace Services.Math;
+namespace Services.Implementations.Math;
 
 public enum Sector
 {
@@ -37,14 +36,14 @@ public static class MathUtils
     public static Sector VectorToSector(Vector2 dir) => (Sector)GetRadianSector(dir.X, dir.Y, sectors: 8);
 
 
-    // Useful as MonoGame has Y-flipped coordinate system
+    // Useful as MonoGame has a Y-flipped coordinate system
 
     public static Sector VectorToSectorYFlipped(Vector2 dir) => (Sector)GetRadianSector(dir.X, -dir.Y, sectors: 8);
 
     public static Sector VectorTo4Sector(Vector2 dir) => (Sector)GetRadianSector(dir.X, dir.Y, sectors: 4);
 
 
-    // Useful as MonoGame has Y-flipped coordinate system
+    // Useful as MonoGame has a Y-flipped coordinate system
 
     public static Sector VectorTo4SectorYFlipped(Vector2 dir) => (Sector)GetRadianSector(dir.X, dir.Y, sectors: 4);
 

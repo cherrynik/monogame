@@ -1,6 +1,6 @@
 ﻿using Scellecs.Morpeh;
 using MonoGame.Aseprite.Sprites;
-using Services.Math;
+using Services.Implementations.Math;
 
 namespace Components.Render.Animation;
 

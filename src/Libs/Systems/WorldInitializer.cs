@@ -3,7 +3,7 @@ using Components.Data;
 using Entities.Factories;
 using LDtk;
 using Scellecs.Morpeh;
-using Services.Math;
+using Services.Implementations.Math;
 
 namespace Systems;
 

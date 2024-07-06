@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace Services.Movement;
+namespace Services.Implementations.Movement;
 
 public interface IMovement
 {
