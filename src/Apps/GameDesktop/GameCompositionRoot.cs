@@ -4,7 +4,6 @@ using Constants;
 using GameDesktop;
 using LightInject;
 using Microsoft.Xna.Framework;
-using Serilog;
 
 [assembly: CompositionRootType(typeof(GameCompositionRoot))]
 
@@ -36,7 +35,6 @@ internal class GameCompositionRoot : ICompositionRoot
             TargetElapsedTime = TimeSpan.FromMilliseconds(SecondInMs / TargetFramesPerSecond),
             Content = { RootDirectory = Contents.RootDirectory, },
         };
-        serviceRegistry.RegisterInstance(game);
 
         // Hack. Resolving cycle dependency issue (fundamental architecture)
         // Implicitly adds itself in the game services' container.
@@ -47,6 +45,8 @@ internal class GameCompositionRoot : ICompositionRoot
             PreferredBackBufferWidth = WindowWidth,
             PreferredBackBufferHeight = WindowHeight
         };
-        serviceRegistry.RegisterInstance(graphicsDeviceManager);
+
+        serviceRegistry.RegisterInstance(game)
+            .RegisterInstance(graphicsDeviceManager);
     }
 }

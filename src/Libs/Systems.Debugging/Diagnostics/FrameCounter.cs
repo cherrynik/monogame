@@ -11,6 +11,7 @@ public class FrameCounter(Scellecs.Morpeh.World world) : ISystem
     private const float UpdateFrequencyInSec = .0875f;
     private float _elapsedTime;
     private int _framesCount;
+    private float _framesPerSecond;
 
     public Scellecs.Morpeh.World World { get; set; } = world;
 
@@ -26,19 +27,26 @@ public class FrameCounter(Scellecs.Morpeh.World world) : ISystem
 
         if (filter.IsEmpty()) return;
 
-        ++_framesCount;
-        _elapsedTime += deltaTime;
-
-        if (_elapsedTime < UpdateFrequencyInSec) return;
-
         ref WorldMetaComponent worldMeta = ref filter
             .First()
             .GetComponent<WorldMetaComponent>();
 
-        worldMeta.FramesPerSec = _framesCount / _elapsedTime;
+        worldMeta.FramesPerSec = CalculateFps(deltaTime);
+    }
+
+    private float CalculateFps(float deltaTime)
+    {
+        ++_framesCount;
+        _elapsedTime += deltaTime;
+
+        if (_elapsedTime < UpdateFrequencyInSec) return _framesPerSecond;
+
+        _framesPerSecond = _framesCount / _elapsedTime;
 
         _framesCount = 0;
         _elapsedTime = 0;
+
+        return _framesPerSecond;
     }
 
     public void Dispose()

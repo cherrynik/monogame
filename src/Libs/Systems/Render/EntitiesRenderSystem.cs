@@ -4,10 +4,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
+using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Systems.Render;
 
-public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spriteBatch) : IRenderSystem
+public class EntitiesRenderSystem(World world, SpriteBatch spriteBatch) : IRenderSystem
 {
     public World World { get; set; } = world;
 
@@ -31,9 +32,14 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
         var camera = cameraFilter.First()
             .GetComponent<CameraComponent>();
 
-        IEnumerable<Entity> entities = SortEntitiesByYPosition(transformFilter);
+        var worldMetaFilter = World.Filter.With<WorldMetaComponent>().Build().First();
 
-        foreach (Entity e in entities)
+        ref var worldMeta = ref worldMetaFilter.GetComponent<WorldMetaComponent>();
+        worldMeta.SortedEntities = transformFilter.AsEnumerableSlow()
+            .OrderBy(x => x.GetComponent<TransformComponent>().Position.Y);
+
+        // TODO: Refactor
+        foreach (Entity e in worldMeta.SortedEntities)
         {
             ref var transform = ref e.GetComponent<TransformComponent>();
             var at = camera.WorldToScreen(transform.Position);
@@ -58,46 +64,13 @@ public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spr
                 var position = at + localTransform.Position - pivotOffset;
 
                 // casting to int for pixel perfect matching
-                sprite.Sprite.Draw(spriteBatch, new Vector2((int)System.Math.Round(position.X), (int)System.Math.Round(position.Y)));
+                sprite.Sprite.Draw(spriteBatch,
+                    new Vector2((int)System.Math.Round(position.X), (int)System.Math.Round(position.Y)));
             }
         }
     }
 
     public void Dispose()
     {
-    }
-
-    private static IEnumerable<Entity> SortEntitiesByYPosition(Filter filter)
-    {
-        List<Entity> entities = new List<Entity>();
-
-        foreach (Entity e in filter)
-        {
-            entities.Add(e);
-        }
-
-        return entities.OrderBy(x =>
-        {
-            ref var transform = ref x.GetComponent<TransformComponent>();
-
-            // if (x.Has<SpriteComponent>())
-            // {
-            //     ref var sprite = ref x.GetComponent<SpriteComponent>();
-            //     var localTransform = sprite.LocalTransform;
-            //     return transform.Position.Y + localTransform.Position.Y -
-            //            transform.GetOffPivot(sprite.Sprite.Width, sprite.Sprite.Height).Y;
-            // }
-            //
-            // if (x.Has<CharacterAnimatorComponent>())
-            // {
-            //     ref var animator = ref x.GetComponent<CharacterAnimatorComponent>();
-            //     var localTransform = animator.LocalTransform;
-            //
-            //     return transform.Position.Y + localTransform.Position.Y -
-            //            transform.GetOffPivot(animator.Animation.Width, animator.Animation.Height).Y;
-            // }
-
-            return transform.Position.Y;
-        });
     }
 }

@@ -9,7 +9,7 @@ public class MovementSystemModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton<IMovement, SimpleMovement>();
-        serviceRegistry.RegisterSingleton<MovementSystem>();
+        serviceRegistry.RegisterSingleton<IMovement, SimpleMovement>()
+            .RegisterSingleton<MovementSystem>();
     }
 }

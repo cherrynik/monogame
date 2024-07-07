@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Constants\Constants.csproj" />
-    <ProjectReference Include="..\Features\Features.csproj" />
     <ProjectReference Include="..\Systems.Debugging\Systems.Debugging.csproj" />
     <ProjectReference Include="..\Systems\Systems.csproj" />
     <ProjectReference Include="..\UI\UI.csproj" />

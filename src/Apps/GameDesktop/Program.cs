@@ -20,9 +20,8 @@ Log.Logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) init
 
 try
 {
-    // "Using" keyword should be used either with the container or with the game instance.
-    // Otherwise, you'll get the double-disposing behavior.
-    ServiceContainer container = new(
+    // If "using" is used with the container, then the game systems are disposed.
+    using ServiceContainer container = new(
         new ContainerOptions
         {
             EnablePropertyInjection = false,
@@ -32,14 +31,13 @@ try
                 .Verbose($"{entry.Message}"),
         });
 
-    container.RegisterInstance<IServiceContainer>(container);
-    container.RegisterInstance<IServiceFactory>(container);
+    container.RegisterInstance<IServiceContainer>(container)
+        .RegisterInstance<IServiceFactory>(container)
+        .RegisterInstance<IConfiguration>(configuration)
+        .RegisterInstance<ILogger>(logger)
+        .RegisterFrom<GameCompositionRoot>();
 
-    container.RegisterInstance<IConfiguration>(configuration);
-    container.RegisterInstance<ILogger>(logger);
-
-    container.RegisterFrom<GameCompositionRoot>();
-
+    // If "using" is used with the game instance, only the instance is disposed.
     using var game = container.GetInstance<Game>();
     game.Run();
 }

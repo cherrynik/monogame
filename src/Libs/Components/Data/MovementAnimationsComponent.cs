@@ -1,4 +1,5 @@
-﻿using MonoGame.Aseprite.Sprites;
+﻿using System.Collections.Immutable;
+using MonoGame.Aseprite.Sprites;
 using Scellecs.Morpeh;
 using Services.Math;
 
@@ -9,6 +10,6 @@ public struct MovementAnimationsComponent(
     Dictionary<Sector, AnimatedSprite> walkingAnimations)
     : IComponent
 {
-    public readonly Dictionary<Sector, AnimatedSprite> IdleAnimations = idleAnimations;
-    public readonly Dictionary<Sector, AnimatedSprite> WalkingAnimations = walkingAnimations;
+    public readonly ImmutableDictionary<Sector, AnimatedSprite> IdleAnimations = idleAnimations.ToImmutableDictionary();
+    public readonly ImmutableDictionary<Sector, AnimatedSprite> WalkingAnimations = walkingAnimations.ToImmutableDictionary();
 }

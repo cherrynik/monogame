@@ -12,15 +12,12 @@ public class EntityFactoriesCompositionRoot : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterFrom<WorldModule>();
-        serviceRegistry.RegisterFrom<PlayerModule>();
-
-        serviceRegistry.RegisterSingleton<TreeFactory>();
-        serviceRegistry.RegisterSingleton<AbstractTreeFactory>();
-
-        serviceRegistry.RegisterSingleton<PebbleFactory>();
-        serviceRegistry.RegisterSingleton<AbstractRockFactory>();
-
-        serviceRegistry.RegisterSingleton<EntitiesFactory>();
+        serviceRegistry.RegisterFrom<WorldModule>()
+            .RegisterFrom<PlayerModule>()
+            .RegisterSingleton<TreeFactory>()
+            .RegisterSingleton<AbstractTreeFactory>()
+            .RegisterSingleton<PebbleFactory>()
+            .RegisterSingleton<AbstractRockFactory>()
+            .RegisterSingleton<LdtkEntitiesFactory>();
     }
 }

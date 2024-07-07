@@ -5,10 +5,10 @@ using Scellecs.Morpeh;
 
 namespace Components.Render;
 
-public readonly struct SpriteComponent(Sprite sprite, TransformComponent transform) : IComponent, IPivotted
+public readonly struct SpriteComponent(Sprite sprite, TransformComponent localTransform) : IComponent, IPivotted
 {
     public Sprite Sprite { get; } = sprite;
-    public TransformComponent LocalTransform { get; } = transform;
+    public TransformComponent LocalTransform { get; } = localTransform;
 
     public Vector2 GetOffPivot(TransformComponent parentTransform) =>
         parentTransform.GetOffPivot(Sprite.Width, Sprite.Height);

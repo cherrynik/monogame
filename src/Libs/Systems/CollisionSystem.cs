@@ -40,6 +40,7 @@ public class CollisionSystem(World world) : IFixedSystem
             .With<TransformComponent>()
             .Build();
 
+        // TODO: Refactor
         foreach (Entity e in filter)
         {
             ref var leftTransform = ref e.GetComponent<TransformComponent>();

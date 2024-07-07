@@ -1,4 +1,5 @@
-﻿using LightInject;
+﻿using Implementations.Input;
+using LightInject;
 using Scellecs.Morpeh;
 using Systems;
 
@@ -8,7 +9,7 @@ public class InputSystemModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton<IInputScanner, KeyboardInput>();
-        serviceRegistry.RegisterSingleton<InputSystem>();
+        serviceRegistry.RegisterSingleton<IInputScanner, KeyboardInput>()
+            .RegisterSingleton<InputSystem>();
     }
 }

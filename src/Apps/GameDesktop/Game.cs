@@ -1,5 +1,5 @@
 ﻿using CompositionRoots;
-using Features;
+using Constants;
 using ImGuiNET;
 using JetBrains.Annotations;
 using MonoGame.ImGuiNet;
@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Serilog;
 using Myra.Graphics2D.UI;
+using Scellecs.Morpeh.Extended;
 using Serilog.Core;
 
 namespace GameDesktop;
@@ -27,6 +28,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private const bool IsWindowResizable = true;
 
     private readonly IServiceContainer _container;
+    private readonly ILogger _logger;
 
     [CanBeNull] private ImGuiRenderer _imGuiRenderer;
     private SpriteBatch _spriteBatch;
@@ -37,39 +39,40 @@ public class Game : Microsoft.Xna.Framework.Game
 
     // https://gafferongames.com/post/fix_your_timestep/
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
-    private RootFeature _rootFeature;
+    private Feature _rootFeature;
     private float _passedSinceDeltaTime;
 
     public Game(IServiceContainer container)
     {
         _container = container;
+        _logger = Log.Logger.ForContext<Game>();
 
-        Log.Logger.ForContext<Game>().Verbose("ctor");
+        _logger.Verbose("ctor");
     }
 
     protected override void Initialize()
     {
-        Log.Logger.ForContext<Game>().Verbose($"Initialize(): start; available {GraphicsDevice}");
-        Log.Logger.ForContext<Game>().Verbose("Circular dependencies (external) initialization...");
+        _logger.Verbose($"Initialize(): start; available {GraphicsDevice}");
+        _logger.Verbose("Circular dependencies (external) initialization...");
         RegisterGraphicsDeviceManager();
         RegisterSpriteBatch();
-        Log.Logger.ForContext<Game>().Verbose("Circular dependencies (external) initialized");
+        _logger.Verbose("Circular dependencies (external) initialized");
         RegisterWindowSettings();
 
-        Log.Logger.ForContext<Game>().Verbose("Game services initialization...");
+        _logger.Verbose("Game services initialization...");
         RegisterRootFeature();
-        Log.Logger.ForContext<Game>().Verbose("Game services initialized");
+        _logger.Verbose("Game services initialized");
 
         base.Initialize();
 
-        Log.Logger.ForContext<Game>().Verbose("Initialize(): end");
+        _logger.Verbose("Initialize(): end");
     }
 
     protected override void LoadContent()
     {
         // TODO: Logging with game flags (like LOG_MOVEMENT, etc)?
         // TODO: Error handling
-        Log.Logger.ForContext<Game>().Verbose("LoadContent(): start");
+        _logger.Verbose("LoadContent(): start");
 
         // Register UIs before systems onAwake, because we subscribe on systems' events:
         // System ctor() -> UI ctor(System) -> System onAwake & event raise -> UI onEvent
@@ -81,26 +84,26 @@ public class Game : Microsoft.Xna.Framework.Game
 
         _rootFeature.OnAwake();
 
-        Log.Logger.ForContext<Game>().Verbose("LoadContent(): end");
+        _logger.Verbose("LoadContent(): end");
     }
 
 
     protected override void BeginRun()
     {
-        Log.Logger.ForContext<Game>().Verbose("Beginning to run...");
+        _logger.Verbose("Beginning to run...");
 
         base.BeginRun();
 
-        Log.Logger.ForContext<Game>().Verbose("Running");
+        _logger.Verbose("Running");
     }
 
     protected override void EndRun()
     {
-        Log.Logger.ForContext<Game>().Verbose("Ending run...");
+        _logger.Verbose("Ending run...");
 
         base.EndRun();
 
-        Log.Logger.ForContext<Game>().Verbose("Ended");
+        _logger.Verbose("Ended");
     }
 
     protected override void Update(GameTime gameTime)
@@ -146,11 +149,11 @@ public class Game : Microsoft.Xna.Framework.Game
 
     protected override void Dispose(bool disposing)
     {
-        Log.Logger.ForContext<Game>().Verbose("Disposing...");
+        _logger.Verbose("Disposing...");
 
         base.Dispose(disposing);
 
-        Log.Logger.ForContext<Game>().Verbose("Disposed");
+        _logger.Verbose("Disposed");
     }
 
     private void RegisterWindowSettings()
@@ -173,7 +176,7 @@ public class Game : Microsoft.Xna.Framework.Game
     private void RegisterRootFeature()
     {
         _container.RegisterFrom<RootFeatureCompositionRoot>();
-        _rootFeature = _container.GetInstance<RootFeature>();
+        _rootFeature = _container.GetInstance<Feature>(DiContainerNames.Features.Root);
     }
 
     private void RegisterImGuiRenderer()

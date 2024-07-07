@@ -28,10 +28,6 @@ public class CharacterMovementAnimationSystem(World world) : ISystem
             ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
             ref var transform = ref e.GetComponent<TransformComponent>();
 
-            // 2. And this one could be in the draw state
-            // animator.Animation.Draw(_spriteBatch, transform.Position);
-
-            // 1. Actually, all of this could be put in the pre-draw
             animator.Animation.Update(deltaTime);
 
             AnimatedSprite animation = GetAnimation(transform, animations, animator);
@@ -43,7 +39,7 @@ public class CharacterMovementAnimationSystem(World world) : ISystem
             }
 
             animator.Animation = animation;
-            // .Play() is called in the AnimatedCharactersFactory (on the step of creation),
+            // .Play() is called in the AnimatedCharactersFactory (on the step of creation);
             // otherwise, you'd call it manually here.
         }
     }

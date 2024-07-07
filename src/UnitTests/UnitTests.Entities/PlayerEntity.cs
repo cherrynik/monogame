@@ -26,7 +26,7 @@ public class Tests
 
         _serviceContainer.RegisterInstance((IServiceFactory)_serviceContainer);
 
-        _serviceContainer.RegisterSingleton<EntitiesFactory>();
+        _serviceContainer.RegisterSingleton<LdtkEntitiesFactory>();
         _serviceContainer.RegisterSingleton<AbstractRockFactory>();
     }
 

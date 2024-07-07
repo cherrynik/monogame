@@ -23,64 +23,61 @@ public class PlayerModule : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(_ => new InputMovableTagComponent(), DiContainerNames.Player);
-        serviceRegistry.RegisterSingleton(_ =>
-            new TransformComponent { Position = DefaultPosition, Pivot = Sector.Up }, DiContainerNames.Player);
-        serviceRegistry.RegisterSingleton(_ =>
-            new TransformComponent { Position = new(0, 3) }, DiContainerNames.PlayerAnimationsOffset);
-        serviceRegistry.RegisterSingleton(_ =>
-            new MovableComponent(MovementSpeed));
+        serviceRegistry.RegisterSingleton(_ => new InputMovableTagComponent(), DiContainerNames.Player)
+            .RegisterSingleton(_ => new TransformComponent { Position = DefaultPosition, Pivot = Sector.Up },
+                DiContainerNames.Player)
+            .RegisterSingleton(_ => new TransformComponent { Position = new(0, 3) },
+                DiContainerNames.PlayerAnimationsOffset)
+            .RegisterSingleton(_ => new MovableComponent(MovementSpeed))
+            .RegisterSingleton(_ => new RectangleColliderComponent { Size = Collider }, DiContainerNames.Player)
+            .RegisterTransient(_ =>
+            {
+                Slot[] slots = new Slot[InventorySlotsCount];
+
+                slots[3].Put(ItemId.Rock, 3);
+
+                return new InventoryComponent(slots);
+            })
+            .RegisterSingleton<PlayerFactory>();
+
         RegisterVisuals(serviceRegistry);
-        serviceRegistry.RegisterSingleton(_ =>
-            new RectangleColliderComponent { Size = Collider }, DiContainerNames.Player);
-        serviceRegistry.RegisterTransient(_ =>
-        {
-            Slot[] slots = new Slot[InventorySlotsCount];
-
-            slots[3].Put(ItemId.Rock, 3);
-
-            return new InventoryComponent(slots);
-        });
-
-        serviceRegistry.RegisterSingleton<PlayerFactory>();
     }
 
     private static void RegisterVisuals(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(factory =>
-        {
-            var getAnimations =
-                factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>(
-                    DiContainerNames.Helpers.AsepriteAnimatedCharacterBuilder);
+        serviceRegistry
+            .RegisterSingleton(factory =>
+            {
+                var getAnimations =
+                    factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>(
+                        DiContainerNames.Helpers.AsepriteAnimatedCharacterBuilder);
 
-            var path = FileResolver.ResolveFromApp(Contents.SpriteSheets.Player);
+                var path = FileResolver.ResolveFromApp(Contents.SpriteSheets.Player);
 
-            Dictionary<Sector, AnimatedSprite> idle = getAnimations(path, AsepriteIdleTag);
-            AnimatedSprite defaultSprite = idle[Sector.Down];
+                Dictionary<Sector, AnimatedSprite> idle = getAnimations(path, AsepriteIdleTag);
+                var animatedDefaultSprite = idle[Sector.Down];
 
-            return new SpriteComponent(defaultSprite, factory.GetInstance<TransformComponent>());
-        }, DiContainerNames.Player);
+                return new SpriteComponent(animatedDefaultSprite, factory.GetInstance<TransformComponent>());
+            }, DiContainerNames.Player)
+            .RegisterTransient(factory =>
+            {
+                var getAnimations =
+                    factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>(
+                        DiContainerNames.Helpers.AsepriteAnimatedCharacterBuilder);
 
-        serviceRegistry.RegisterTransient(factory =>
-        {
-            var getAnimations =
-                factory.GetInstance<Func<string, string, Dictionary<Sector, AnimatedSprite>>>(
-                    DiContainerNames.Helpers.AsepriteAnimatedCharacterBuilder);
+                var path = FileResolver.ResolveFromApp(Contents.SpriteSheets.Player);
 
-            var path = FileResolver.ResolveFromApp(Contents.SpriteSheets.Player);
+                return new MovementAnimationsComponent(
+                    getAnimations(path, AsepriteIdleTag),
+                    getAnimations(path, AsepriteWalkingTag));
+            }, DiContainerNames.Player)
+            .RegisterSingleton(factory =>
+            {
+                var movementAnimations = factory.GetInstance<MovementAnimationsComponent>(DiContainerNames.Player);
+                const Sector facing = Sector.Right;
+                var transform = factory.GetInstance<TransformComponent>(DiContainerNames.PlayerAnimationsOffset);
 
-            return new MovementAnimationsComponent(
-                getAnimations(path, AsepriteIdleTag),
-                getAnimations(path, AsepriteWalkingTag));
-        }, DiContainerNames.Player);
-
-        serviceRegistry.RegisterSingleton(factory =>
-        {
-            var movementAnimations = factory.GetInstance<MovementAnimationsComponent>(DiContainerNames.Player);
-            const Sector facing = Sector.Right;
-            var transform = factory.GetInstance<TransformComponent>(DiContainerNames.PlayerAnimationsOffset);
-
-            return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing], transform);
-        }, DiContainerNames.Player);
+                return new CharacterAnimatorComponent(facing, movementAnimations.IdleAnimations[facing], transform);
+            }, DiContainerNames.Player);
     }
 }

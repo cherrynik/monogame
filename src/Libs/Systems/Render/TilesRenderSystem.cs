@@ -9,7 +9,7 @@ using World = Scellecs.Morpeh.World;
 
 namespace Systems.Render;
 
-public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile ldtkFile) : IRenderSystem
+public class TilesRenderSystem(World world, SpriteBatch spriteBatch, LDtkFile ldtkFile) : IRenderSystem
 {
     public World World { get; set; } = world;
 
@@ -19,6 +19,7 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
 
     public void OnUpdate(float deltaTime)
     {
+        // TODO: Refactor
         Filter filter = World.Filter
             .With<CameraComponent>()
             .Build();
@@ -70,6 +71,7 @@ public class TilesRenderingSystem(World world, SpriteBatch spriteBatch, LDtkFile
                     break;
             }
 
+            // TODO: Cache
             Texture2D texture = GetTexture(level, layer._TilesetRelPath);
             // int width = layer._CWid * layer._GridSize;
             // int height = layer._CHei * layer._GridSize;

@@ -8,8 +8,7 @@ public class WorldModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton<WorldMetaComponent>();
-
-        serviceRegistry.RegisterSingleton<WorldEntityFactory>();
+        serviceRegistry.RegisterSingleton(_ => new WorldMetaComponent(new(10_000, 10_000)))
+            .RegisterSingleton<WorldEntityFactory>();
     }
 }

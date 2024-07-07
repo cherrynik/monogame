@@ -17,6 +17,7 @@ public static class DiContainerNames
 
     public static class Features
     {
+        public const string Root = "Root";
         public const string Initialize = "Initialize";
         public const string Update = "Update";
         public const string PreRender = "PreRender";

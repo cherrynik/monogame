@@ -13,11 +13,15 @@ public class RenderFeatureModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(factory => new Feature(factory.GetInstance<World>(),
-            factory.GetInstance<SystemsEngine>(),
-            new TilesRenderingSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
-                LdtkResolver.ResolveFromApp(Contents.TileMaps.Test)),
-            new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
-                factory.GetInstance<SpriteBatch>())), DiContainerNames.Features.Render);
+        serviceRegistry.RegisterSingleton(factory => new TilesRenderSystem(factory.GetInstance<World>(),
+                factory.GetInstance<SpriteBatch>(),
+                LdtkResolver.ResolveFromApp(Contents.TileMaps.Test)))
+            .RegisterSingleton(factory => new EntitiesRenderSystem(factory.GetInstance<World>(),
+                factory.GetInstance<SpriteBatch>()))
+            .RegisterSingleton(factory => new Feature(factory.GetInstance<World>(),
+                factory.GetInstance<SystemsEngine>(),
+                factory.GetInstance<TilesRenderSystem>(),
+                factory.GetInstance<EntitiesRenderSystem>()
+            ), DiContainerNames.Features.Render);
     }
 }

@@ -14,13 +14,12 @@ public class PreRenderFeatureModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton<CharacterMovementAnimationSystem>();
-
-        serviceRegistry.RegisterSingleton(factory => new Feature(factory.GetInstance<World>(),
-                factory.GetInstance<SystemsEngine>(),
-                factory.GetInstance<CharacterMovementAnimationSystem>(),
-                factory.GetInstance<CameraFollowingSystem>()),
-            DiContainerNames.Features.PreRender
-        );
+        serviceRegistry.RegisterSingleton<CharacterMovementAnimationSystem>()
+            .RegisterSingleton(factory => new Feature(factory.GetInstance<World>(),
+                    factory.GetInstance<SystemsEngine>(),
+                    factory.GetInstance<CharacterMovementAnimationSystem>(),
+                    factory.GetInstance<CameraFollowingSystem>()),
+                DiContainerNames.Features.PreRender
+            );
     }
 }

@@ -12,28 +12,41 @@ namespace CompositionRoots.Features;
 
 public class DebugFeatureModule : ICompositionRoot
 {
+    private const int Width = 2;
+    private const int Height = 2;
+
+
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(factory =>
-        {
-            const int w = 2, h = 2;
-            Texture2D pivotPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
-            pivotPixel.SetData(Enumerable.Repeat(Color.Khaki, w * h).ToArray());
+        serviceRegistry.RegisterSingleton<SystemsList>()
+            .RegisterSingleton<EntitiesList>()
+            .RegisterSingleton<FrameCounter>()
+            .RegisterSingleton<RenderFramesPerSec>()
+            .RegisterSingleton<RenderFramesPerSec>()
+            .RegisterSingleton(factory =>
+            {
+                Texture2D colliderPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, Width, Height);
+                colliderPixel.SetData(Enumerable.Repeat(Color.LawnGreen, Width * Height).ToArray());
+                return new RectangleColliderRenderSystem(factory.GetInstance<World>(),
+                    factory.GetInstance<SpriteBatch>(),
+                    colliderPixel);
+            })
+            .RegisterSingleton(factory =>
+            {
+                Texture2D pivotPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, Width, Height);
+                pivotPixel.SetData(Enumerable.Repeat(Color.Khaki, Width * Height).ToArray());
 
-            Texture2D colliderPixel = new(factory.GetInstance<SpriteBatch>().GraphicsDevice, w, h);
-            colliderPixel.SetData(Enumerable.Repeat(Color.LawnGreen, w * h).ToArray());
-
-            return new Feature(factory.GetInstance<World>(),
+                return new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
+                    pivotPixel);
+            })
+            .RegisterSingleton(factory => new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
-                new SystemsList(factory.GetInstance<World>(),
-                    factory.GetInstance<SystemsEngine>()),
-                new EntitiesList(factory.GetInstance<World>()),
-                new FrameCounter(factory.GetInstance<World>()),
-                new RenderFramesPerSec(factory.GetInstance<World>(), factory.GetInstance<IServiceFactory>()),
-                new RectangleColliderRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(),
-                    colliderPixel)
-                // new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pivotPixel)
-            );
-        }, DiContainerNames.Features.Debug);
+                factory.GetInstance<SystemsList>(),
+                factory.GetInstance<EntitiesList>(),
+                factory.GetInstance<FrameCounter>(),
+                factory.GetInstance<RenderFramesPerSec>(),
+                factory.GetInstance<RectangleColliderRenderSystem>()
+                // factory.GetInstance<PivotRenderSystem>()
+            ), DiContainerNames.Features.Debug);
     }
 }

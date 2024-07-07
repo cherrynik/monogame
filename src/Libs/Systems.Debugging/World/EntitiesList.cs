@@ -90,26 +90,30 @@ public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
         // TODO: menu for each component to edit the values
     }
 
-    // TODO: refactor this?
     private static void DrawComponentEditor(Type component, Entity e)
     {
-        if (component == typeof(TransformComponent))
-        {
-            ref TransformComponent transformComponent = ref e.GetComponent<TransformComponent>();
+        if (component == typeof(TransformComponent)) TransformInspector(e);
+        else if (component == typeof(InventoryComponent)) InventoryInspector(e);
+        else ImGui.Text("Not implemented");
+    }
 
-            ImGui.SliderFloat2("Position", ref transformComponent.Position, 0, 300);
-            ImGui.Text($"Pivot: {transformComponent.Pivot.ToString()}");
-        }
-        else if (component == typeof(InventoryComponent))
+    private static void TransformInspector(Entity e)
+    {
+        ref TransformComponent transformComponent = ref e.GetComponent<TransformComponent>();
+
+        ImGui.SliderFloat2("Position", ref transformComponent.Position, 0, 300);
+        ImGui.Text($"Pivot: {transformComponent.Pivot.ToString()}");
+    }
+
+    private static void InventoryInspector(Entity e)
+    {
+        // TODO: table with dropdown selectable items of the range of ItemsTable & ItemIds enum at the slots
+        ref InventoryComponent inventoryComponent = ref e.GetComponent<InventoryComponent>();
+        ImGui.SeparatorText("Slots");
+        for (var i = 0; i < inventoryComponent.Slots.Length; i++)
         {
-            // TODO: table with dropdown selectable items of the range of ItemsTable & ItemIds enum at the slots
-            ref InventoryComponent inventoryComponent = ref e.GetComponent<InventoryComponent>();
-            ImGui.SeparatorText("Slots");
-            for (var i = 0; i < inventoryComponent.Slots.Length; i++)
-            {
-                var slot = inventoryComponent.Slots[i];
-                ImGui.TextWrapped($"{i + 1}: {slot.GetItemInfo().Name}");
-            }
+            var slot = inventoryComponent.Slots[i];
+            ImGui.TextWrapped($"{i + 1}: {slot.GetItemInfo().Name}");
         }
     }
 

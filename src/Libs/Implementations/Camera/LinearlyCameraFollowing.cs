@@ -29,5 +29,5 @@ public class LinearlyCameraFollowing(SpriteBatch spriteBatch, Viewport viewport)
         // base.RenderSprite(e, at: relativePosition);
     }
 
-    public Vector2 Move(Vector2 from, Vector2 by) => by;
+    public Vector2 Move(Vector2 from, Vector2 to, float step) => Vector2.Lerp(from, to, step);
 }

@@ -8,7 +8,6 @@ using CompositionRoots.Helpers;
 using CompositionRoots.Systems;
 using Constants;
 using Entities;
-using Features;
 using FontStashSharp.RichText;
 using LightInject;
 using Myra.Graphics2D.UI;
@@ -59,31 +58,27 @@ public class RootFeatureCompositionRoot : ICompositionRoot
             .RegisterFrom<CameraSystemModule>();
 
         serviceRegistry
-            // .RegisterFrom<InitializeFeatureModule>()
+            .RegisterFrom<InitializeFeatureModule>()
             .RegisterFrom<UpdateFeatureModule>()
             .RegisterFrom<PreRenderFeatureModule>()
             .RegisterFrom<RenderFeatureModule>()
             .RegisterFrom<DebugFeatureModule>();
 
-        serviceRegistry.RegisterSingleton(factory =>
-        {
-            // ⚠ Order-sensitive zone ⚠ 
-            // factory.GetInstance<Feature>(DiContainerNames.Features.Initialize);
-            factory.GetInstance<Feature>(DiContainerNames.Features.Update);
-            factory.GetInstance<Feature>(DiContainerNames.Features.PreRender);
-            factory.GetInstance<Feature>(DiContainerNames.Features.Render);
-
+        serviceRegistry.RegisterSingleton(
+            factory =>
+            {
+                // ⚠ Order-sensitive zone ⚠ 
+                factory.GetInstance<Feature>(DiContainerNames.Features.Initialize);
+                factory.GetInstance<Feature>(DiContainerNames.Features.Update);
+                factory.GetInstance<Feature>(DiContainerNames.Features.PreRender);
+                factory.GetInstance<Feature>(DiContainerNames.Features.Render);
 #if DEBUG
-            factory.GetInstance<Feature>(DiContainerNames.Features.Debug);
+                factory.GetInstance<Feature>(DiContainerNames.Features.Debug);
 #endif
 
-            return new RootFeature(factory.GetInstance<World>(),
-                factory.GetInstance<SystemsEngine>(),
-                new WorldInitializer(factory.GetInstance<World>(),
-                    factory.GetInstance<EntitiesFactory>(),
-                    LdtkResolver.ResolveFromApp(Contents.TileMaps.Test))
-            );
-        });
+                return new Feature(factory.GetInstance<World>(), factory.GetInstance<SystemsEngine>());
+            }, DiContainerNames.Features.Root);
+
         RegisterUI(serviceRegistry);
     }
 

@@ -11,7 +11,7 @@ namespace Systems;
 
 public class WorldInitializer(
     World world,
-    EntitiesFactory entitiesFactory,
+    LdtkEntitiesFactory ldtkEntitiesFactory,
     LDtkFile ldtkFile)
     : IInitializer
 {
@@ -19,6 +19,7 @@ public class WorldInitializer(
 
     public void OnAwake()
     {
+        // TODO: Refactor
         // // FIXME: Duplicated at TilesRenderingSystem
         var ldtkWorld = ldtkFile.LoadWorld(ldtkFile.Worlds.First().Iid);
         var level = ldtkWorld.LoadLevel(0);
@@ -47,7 +48,7 @@ public class WorldInitializer(
 
             foreach (var entity in layer.EntityInstances)
             {
-                var e = entitiesFactory.CreateEntity(entity, World);
+                var e = ldtkEntitiesFactory.CreateEntity(entity, World);
 
                 if (e is null) continue;
 
@@ -61,7 +62,7 @@ public class WorldInitializer(
                 if (e.Has<CameraComponent>())
                 {
                     ref var camera = ref e.GetComponent<CameraComponent>();
-                    camera.Position = camera.GetCenteredPosition(camera.Viewport, transform.Position);
+                    camera.Position = camera.GetCenteredPosition(transform.Position, new(1_000, 1_000));
                 }
             }
         }

@@ -37,10 +37,7 @@ public class SystemsList(Scellecs.Morpeh.World world, SystemsEngine systemsEngin
 
     private static void DrawSystemsGroup<T>(string name, FastList<T> items)
     {
-        if (!ImGui.TreeNode($"{name} ({items.length})"))
-        {
-            return;
-        }
+        if (!ImGui.TreeNode($"{name} ({items.length})")) return;
 
         foreach (var system in items.data)
         {

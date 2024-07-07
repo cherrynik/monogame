@@ -14,14 +14,21 @@ public struct CameraComponent(Viewport viewport) : IComponent
 
     public Vector2 WorldToScreen(Vector2 other) => other - Position;
 
-    public Vector2 GetCenteredPosition(Viewport viewport, Vector2 off)
+    private Vector2 GetCenteredPosition(Vector2 relativelyTo)
     {
-        var cameraX = off.X - (float)viewport.Width / 2;
-        var cameraY = off.Y - (float)viewport.Height / 2;
-
-        cameraX = MathHelper.Clamp(cameraX, 0, 900 - viewport.Width);
-        cameraY = MathHelper.Clamp(cameraY, 0, 600 - viewport.Height);
+        var cameraX = relativelyTo.X - (float)Viewport.Width / 2;
+        var cameraY = relativelyTo.Y - (float)Viewport.Height / 2;
 
         return new Vector2(cameraX, cameraY);
+    }
+
+    public Vector2 GetCenteredPosition(Vector2 relativelyTo, Vector2 limitsByAxis)
+    {
+        var centeredPosition = GetCenteredPosition(relativelyTo);
+
+        var clampedX = Math.Clamp(centeredPosition.X, WorldMetaComponent.ZeroPosition.X, limitsByAxis.X);
+        var clampedY = Math.Clamp(centeredPosition.Y, WorldMetaComponent.ZeroPosition.Y, limitsByAxis.Y);
+
+        return new Vector2(clampedX, clampedY);
     }
 }

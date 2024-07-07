@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using System.Numerics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Implementations.Input;
@@ -8,7 +8,7 @@ public interface IInputScanner
     Vector2 GetDirection();
 }
 
-public class KeyboardScanner : IInputScanner
+public class KeyboardInput : IInputScanner
 {
     private static int GetAxisDirection(Keys negative, Keys positive)
     {
