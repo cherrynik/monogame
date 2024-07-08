@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
 using Implementations.Camera;
+using Implementations.Visuals;
 using Services.Resolvers;
 using Systems.Render;
 

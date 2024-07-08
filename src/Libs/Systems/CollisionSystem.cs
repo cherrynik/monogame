@@ -5,11 +5,7 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace Systems;
 
-public class CustomEventArgs(string message) : EventArgs
-{
-    public string Message = message;
-}
-
+// TODO: Refactor this
 // Input & Collision systems both have to be fixed execute systems,
 // otherwise it'll lead to the desynchronized behaviour.
 public class CollisionSystem(World world) : IFixedSystem
@@ -35,12 +31,13 @@ public class CollisionSystem(World world) : IFixedSystem
 
     public void OnUpdate(float deltaTime)
     {
-        Filter filter = World.Filter
-            .With<RectangleColliderComponent>()
-            .With<TransformComponent>()
-            .Build();
+        Filter filter = World.Filter.With<RectangleColliderComponent>().With<TransformComponent>().Build();
 
-        // TODO: Refactor
+        HandleCollisions(filter);
+    }
+
+    private void HandleCollisions(Filter filter)
+    {
         foreach (Entity e in filter)
         {
             ref var leftTransform = ref e.GetComponent<TransformComponent>();
@@ -55,48 +52,25 @@ public class CollisionSystem(World world) : IFixedSystem
 
                 var intersect = Intersect(new(leftTransform, leftCollider),
                     new(rightTransform, rightCollider));
+
                 var entities = (e.ID, other.ID);
                 if (!intersect)
                 {
-                    if (_activeIntersect.Contains(entities))
-                    {
-                        _activeIntersect = _activeIntersect
-                            .TakeWhile(x => x != entities)
-                            .ToArray();
-
-                        Exited?.Invoke(e, other);
-                    }
-
+                    OnExited(entities, e, other);
                     continue;
                 }
 
                 var isTriggerEvent = leftCollider.IsTrigger || rightCollider.IsTrigger;
                 if (!isTriggerEvent) OnCollision(ref leftTransform, ref rightTransform);
 
-                if (_activeIntersect.Contains(entities) || _activeIntersect.Contains((entities.Item2, entities.Item1)))
-                {
-                    Stay?.Invoke(e, other, isTriggerEvent);
-                    continue;
-                }
+                if (OnStay(entities, e, other, isTriggerEvent)) continue;
 
-                _activeIntersect = _activeIntersect
-                    .TakeWhile(x => x != entities || x != (entities.Item2, entities.Item1))
-                    .Append(entities)
-                    .ToArray();
-
-                Entered?.Invoke(e, other, isTriggerEvent);
+                OnEntered(entities, e, other, isTriggerEvent);
             }
         }
     }
 
-
-    private static void OnCollision(ref TransformComponent left, ref TransformComponent right)
-    {
-        left.Velocity = Vector2.Zero;
-        right.Velocity = Vector2.Zero;
-    }
-
-    private static bool Intersect(Tuple<TransformComponent, RectangleColliderComponent> first,
+    public static bool Intersect(Tuple<TransformComponent, RectangleColliderComponent> first,
         Tuple<TransformComponent, RectangleColliderComponent> second)
     {
         var left = BuildRectangle(first);
@@ -116,6 +90,46 @@ public class CollisionSystem(World world) : IFixedSystem
                 rectCollider.Size.Height);
         }
     }
+
+    private static void OnCollision(ref TransformComponent left, ref TransformComponent right)
+    {
+        left.Velocity = Vector2.Zero;
+        right.Velocity = Vector2.Zero;
+    }
+
+    private void OnEntered((EntityId, EntityId) entities, Entity e, Entity other, bool isTriggerEvent)
+    {
+        _activeIntersect = _activeIntersect
+            .TakeWhile(x => x != entities || x != (entities.Item2, entities.Item1))
+            .Append(entities)
+            .ToArray();
+
+        Entered?.Invoke(e, other, isTriggerEvent);
+    }
+
+    private bool OnStay((EntityId, EntityId) entities, Entity e, Entity other, bool isTriggerEvent)
+    {
+        if (_activeIntersect.Contains(entities) || _activeIntersect.Contains((entities.Item2, entities.Item1)))
+        {
+            Stay?.Invoke(e, other, isTriggerEvent);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void OnExited((EntityId, EntityId) entities, Entity e, Entity other)
+    {
+        if (_activeIntersect.Contains(entities))
+        {
+            _activeIntersect = _activeIntersect
+                .TakeWhile(x => x != entities)
+                .ToArray();
+
+            Exited?.Invoke(e, other);
+        }
+    }
+
 
     public void Dispose()
     {

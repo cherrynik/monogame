@@ -10,7 +10,7 @@ namespace Systems;
 public class CameraFollowingSystem(
     World world,
     GraphicsDeviceManager graphicsDeviceManager,
-    ICameraFollowing cameraImpl)
+    ICamera cameraImpl)
     : IFixedSystem
 {
     public World World { get; set; } = world;
@@ -31,13 +31,16 @@ public class CameraFollowingSystem(
         ref var target = ref e.GetComponent<TransformComponent>();
         ref var camera = ref e.GetComponent<CameraComponent>();
 
-        // https://community.monogame.net/t/jittering-with-lerping-camera/15899/9
-        camera.Viewport = graphicsDeviceManager.GraphicsDevice.Viewport;
+        SyncViewport(ref camera);
 
         camera.Position = cameraImpl.Move(from: camera.Position,
             to: camera.GetCenteredPosition(target.Position, new(10_000, 10_000)),
             step: .2f);
     }
+
+    // https://community.monogame.net/t/jittering-with-lerping-camera/15899/9
+    private void SyncViewport(ref CameraComponent camera) =>
+        camera.Viewport = graphicsDeviceManager.GraphicsDevice.Viewport;
 
     public void Dispose()
     {

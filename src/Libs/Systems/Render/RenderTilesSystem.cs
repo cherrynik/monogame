@@ -20,15 +20,9 @@ public class RenderTilesSystem(World world, SpriteBatch spriteBatch, LDtkFile ld
     public void OnUpdate(float deltaTime)
     {
         // TODO: Refactor
-        Filter filter = World.Filter
-            .With<CameraComponent>()
-            .Build();
-
+        Filter filter = World.Filter.With<CameraComponent>().Build();
         if (filter.IsEmpty()) return;
-
-        var camera = filter
-            .First()
-            .GetComponent<CameraComponent>();
+        var camera = filter.First().GetComponent<CameraComponent>();
 
         // FIXME: Duplicated at WorldInitializer
         var world = ldtkFile.LoadWorld(ldtkFile.Worlds.First().Iid);

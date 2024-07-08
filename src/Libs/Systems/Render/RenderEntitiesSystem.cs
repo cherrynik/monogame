@@ -1,5 +1,6 @@
 ﻿using Components.Data;
 using Implementations;
+using Implementations.Visuals;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
 using Scellecs.Morpeh.Extended.Extensions;

@@ -1,7 +1,7 @@
 ﻿using Components.Data;
 using Scellecs.Morpeh;
 
-namespace Implementations;
+namespace Implementations.Visuals;
 
 public class EntitiesSorting
 {

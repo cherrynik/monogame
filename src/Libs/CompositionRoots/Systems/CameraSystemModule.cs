@@ -15,7 +15,7 @@ public class CameraSystemModule : ICompositionRoot
         serviceRegistry.RegisterSingleton(factory =>
                 new CameraComponent(factory.GetInstance<Viewport>(DiContainerNames.Camera)))
             .RegisterSingleton(_ => new Viewport(0, 0, 801, 480), DiContainerNames.Camera)
-            .RegisterSingleton<ICameraFollowing, LinearlyCameraFollowing>()
+            .RegisterSingleton<ICamera, Camera>()
             .RegisterSingleton<CameraFollowingSystem>();
     }
 }

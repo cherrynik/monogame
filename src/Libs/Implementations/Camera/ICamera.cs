@@ -1,8 +1,8 @@
-﻿using Scellecs.Morpeh;
+﻿using System.Numerics;
 
 namespace Implementations.Camera;
 
 public interface ICamera
 {
-    void Render(Entity e);
+    Vector2 Move(Vector2 from, Vector2 to, float step = 1);
 }

@@ -4,7 +4,7 @@ using Components.Render;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
 
-namespace Implementations;
+namespace Implementations.Visuals;
 
 public class Rendering(SpriteBatch spriteBatch)
 {
