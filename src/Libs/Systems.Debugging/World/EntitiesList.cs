@@ -73,7 +73,7 @@ public class EntitiesList(Scellecs.Morpeh.World world) : IRenderSystem
 
         foreach (var (key, value) in Types.Where(type => e.Has(type.Key)))
         {
-            // FIXME: button to open closable window (now it's screwed, the window is closed when unfocused)
+            // FIXME: button to open a closable window (now it's screwed, the window is closed when unfocused)
             if (ImGui.Button(value)) ImGui.OpenPopup(value);
 
             if (!ImGui.IsPopupOpen(value))

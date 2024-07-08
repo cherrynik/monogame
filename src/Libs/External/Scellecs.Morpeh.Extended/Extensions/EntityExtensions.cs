@@ -14,8 +14,8 @@ public static class EntityExtensions
         return ref added;
     }
 
-    // Just in case, if u wanna get extension methods,
-    // you gotta get it directly from the extension class: typeof(ExtensionClass).GetMethods();
+    // Just in case, if you want to get extension methods,
+    // you have to get it directly from the extension class: typeof(ExtensionClass).GetMethods();
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool Has(this Entity e, Type type) => GetWorld(e).GetReflectionStash(type).Has(e);
 

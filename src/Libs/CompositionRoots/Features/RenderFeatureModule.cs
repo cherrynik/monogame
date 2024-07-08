@@ -1,4 +1,5 @@
 ﻿using Constants;
+using Implementations;
 using LightInject;
 using Microsoft.Xna.Framework.Graphics;
 using Scellecs.Morpeh;
@@ -13,15 +14,15 @@ public class RenderFeatureModule : ICompositionRoot
 {
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(factory => new TilesRenderSystem(factory.GetInstance<World>(),
+        serviceRegistry.RegisterSingleton(factory => new RenderTilesSystem(factory.GetInstance<World>(),
                 factory.GetInstance<SpriteBatch>(),
                 LdtkResolver.ResolveFromApp(Contents.TileMaps.Test)))
-            .RegisterSingleton(factory => new EntitiesRenderSystem(factory.GetInstance<World>(),
-                factory.GetInstance<SpriteBatch>()))
+            .RegisterSingleton<Rendering>()
+            .RegisterSingleton<RenderEntitiesSystem>()
             .RegisterSingleton(factory => new Feature(factory.GetInstance<World>(),
                 factory.GetInstance<SystemsEngine>(),
-                factory.GetInstance<TilesRenderSystem>(),
-                factory.GetInstance<EntitiesRenderSystem>()
+                factory.GetInstance<RenderTilesSystem>(),
+                factory.GetInstance<RenderEntitiesSystem>()
             ), DiContainerNames.Features.Render);
     }
 }

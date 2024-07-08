@@ -21,6 +21,7 @@ Log.Logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) init
 try
 {
     // If "using" is used with the container, then the game systems are disposed.
+    // For custom graph visualization, as a reference: https://docs.simpleinjector.org/en/latest/diagnostics.html
     using ServiceContainer container = new(
         new ContainerOptions
         {

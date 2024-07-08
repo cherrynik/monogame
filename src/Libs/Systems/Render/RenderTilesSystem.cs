@@ -9,7 +9,7 @@ using World = Scellecs.Morpeh.World;
 
 namespace Systems.Render;
 
-public class TilesRenderSystem(World world, SpriteBatch spriteBatch, LDtkFile ldtkFile) : IRenderSystem
+public class RenderTilesSystem(World world, SpriteBatch spriteBatch, LDtkFile ldtkFile) : IRenderSystem
 {
     public World World { get; set; } = world;
 
