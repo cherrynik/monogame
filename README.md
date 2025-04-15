@@ -1,5 +1,7 @@
 ﻿[![.NET](https://github.com/cherrynik/monogame/actions/workflows/dotnet.yml/badge.svg)](https://github.com/cherrynik/monogame/actions/workflows/dotnet.yml)
 
+Might improve UI with these approaches - https://claude.ai/share/3f3cdd7b-9763-4dfd-8bdd-43d9ec9f0d4c
+
 ## Getting Started
 
 - [Wiki](./docs/TableOfContent.md)
