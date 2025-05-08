@@ -19,7 +19,9 @@ logger.ForContext<Program>().Verbose("Configuration & Logger (+ Sentry) initiali
 
 try
 {
-    using ServiceContainer container = new(
+    // "Using" keyword should be used either with the container, or with the game instance.
+    // Otherwise, you'll get the double-disposing behaviour.
+    ServiceContainer container = new(
         new ContainerOptions
         {
             EnablePropertyInjection = false,

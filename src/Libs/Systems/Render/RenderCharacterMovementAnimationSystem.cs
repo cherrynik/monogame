@@ -8,17 +8,10 @@ using Scellecs.Morpeh.Extended;
 
 namespace Systems.Render;
 
-public class RenderCharacterMovementAnimationSystem : IRenderSystem
+public class RenderCharacterMovementAnimationSystem(World world, SpriteBatch spriteBatch) : IRenderSystem
 {
-    public World World { get; set; }
-    private readonly SpriteBatch _spriteBatch;
+    public World World { get; set; } = world;
 
-
-    public RenderCharacterMovementAnimationSystem(World world, SpriteBatch spriteBatch)
-    {
-        World = world;
-        _spriteBatch = spriteBatch;
-    }
 
     public void OnAwake()
     {
@@ -39,20 +32,20 @@ public class RenderCharacterMovementAnimationSystem : IRenderSystem
         foreach (Entity e in entities)
         {
             ref var transform = ref e.GetComponent<TransformComponent>();
-            var at = transform.Position - camera.Position;
+            var at = camera.WorldToScreen(transform.Position);
 
             if (e.Has<CharacterAnimatorComponent>())
             {
                 ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
 
-                animator.Animation.Draw(_spriteBatch, at);
+                animator.Animation.Draw(spriteBatch, at);
             }
 
             if (e.Has<SpriteComponent>())
             {
                 ref var sprite = ref e.GetComponent<SpriteComponent>();
 
-                sprite.Sprite.Draw(_spriteBatch, at);
+                sprite.Sprite.Draw(spriteBatch, at);
             }
         }
     }

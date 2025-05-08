@@ -2,6 +2,4 @@
 
 namespace Components.Tags;
 
-public struct MovableComponent : IComponent
-{
-}
+public struct MovableComponent : IComponent;

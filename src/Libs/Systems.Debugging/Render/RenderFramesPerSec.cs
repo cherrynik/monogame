@@ -5,14 +5,9 @@ using Scellecs.Morpeh.Extended;
 
 namespace Systems.Debugging.Render;
 
-public class RenderFramesPerSec : IRenderSystem
+public class RenderFramesPerSec(Scellecs.Morpeh.World world) : IRenderSystem
 {
-    public World World { get; set; }
-
-    public RenderFramesPerSec(World world)
-    {
-        World = world;
-    }
+    public Scellecs.Morpeh.World World { get; set; } = world;
 
     public void OnAwake()
     {
@@ -20,11 +15,12 @@ public class RenderFramesPerSec : IRenderSystem
 
     public void OnUpdate(float deltaTime)
     {
-        var world = World.Filter.With<WorldComponent>().Build().First().GetComponent<WorldComponent>();
+        var world = World.Filter.With<WorldMetaComponent>().Build().First().GetComponent<WorldMetaComponent>();
 
-        ImGui.Begin("Diagnostics");
+        ImGui.Begin("Diagnostics",
+            ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoDocking);
 
-        ImGui.Text($"FPS: {world.FramesPerSec}");
+        ImGui.Text($"FPS: {world.FramesPerSec:F2}");
 
         ImGui.End();
     }
@@ -36,8 +32,6 @@ public class RenderFramesPerSec : IRenderSystem
 }
 
 // TODO: Tiles, save system, understand the fps logic
-// UI Debug: entities inspector, memory graph, fps setter/limiter
-// Testing ECS, workflow cleanup
+// UI Debug: memory graph, fps setter/limiter, viewports
 // camera zoom, pause, scenes (menu, game), content (mechanics: quests, dialogues, details, tree chopping, etc)
-// optimization, collisions, events, UI styling
-// shaders
+// optimization, UI styling, shaders

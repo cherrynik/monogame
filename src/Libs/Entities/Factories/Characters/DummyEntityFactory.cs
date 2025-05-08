@@ -1,26 +1,23 @@
 ﻿using Components.Data;
 using Components.Render.Static;
 using Scellecs.Morpeh;
-using Scellecs.Morpeh.Extended;
+using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Characters;
 
-public class DummyEntityFactory : EntityFactory
+public class DummyEntityFactory(
+    NameComponent name,
+    TransformComponent transform,
+    RectangleColliderComponent rectangleCollider)
+    : EntityFactory
 {
-    private readonly TransformComponent _transform;
     private readonly SpriteComponent _sprite;
-    private readonly RectangleCollisionComponent _rectangleCollision;
 
-    public DummyEntityFactory(TransformComponent transform,
-        RectangleCollisionComponent rectangleCollision)
-    {
-        _transform = transform;
-        _rectangleCollision = rectangleCollision;
-    }
-
-    public DummyEntityFactory(TransformComponent transform,
+    public DummyEntityFactory(
+        NameComponent name,
+        TransformComponent transform,
         SpriteComponent sprite,
-        RectangleCollisionComponent rectangleCollision) : this(transform, rectangleCollision)
+        RectangleColliderComponent rectangleCollider) : this(name, transform, rectangleCollider)
     {
         _sprite = sprite;
     }
@@ -31,8 +28,9 @@ public class DummyEntityFactory : EntityFactory
 
     protected override void AddData(Entity e)
     {
-        e.AddComponent(_transform);
-        e.AddComponent(_rectangleCollision);
+        e.AddComponent(name);
+        e.AddComponent(transform);
+        e.AddComponent(rectangleCollider);
     }
 
     protected override void AddRender(Entity e)

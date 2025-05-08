@@ -2,20 +2,19 @@
 
 namespace Components.Data;
 
-public interface IItem
+// TODO: not sure if i should have ItemId.None (myb get rid of that and use null?)
+public struct Slot()
 {
-    ItemSettings ItemSettings { get; }
-}
+    public ItemId Item = ItemId.None;
+    public int Amount;
 
-public struct ItemSettings(string name, bool isStackable)
-{
-    public string Name = name;
-    public bool IsStackable = isStackable;
-}
+    public Slot(ItemId item, int amount) : this()
+    {
+        Item = item;
+        Amount = amount;
+    }
 
-public struct Slot(IItem item)
-{
-    public IItem Item = item;
+    public Item GetInfo() => ItemsTable.Items[Item];
 }
 
 public struct InventoryComponent(Slot[] slots) : IComponent

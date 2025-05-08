@@ -2,8 +2,6 @@
 using GameDesktop.Resources.Internal;
 using LightInject;
 using Microsoft.Xna.Framework;
-using MonoGame.ImGuiNet;
-using Myra;
 using Serilog;
 
 namespace GameDesktop.CompositionRoots;
@@ -16,21 +14,24 @@ internal class GameCompositionRoot : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
-        serviceRegistry.RegisterSingleton(factory =>
-        {
-            Game game = new(factory.GetInstance<ILogger>(),
-                factory.GetInstance<IServiceContainer>())
-            {
-                IsMouseVisible = IsMouseVisible,
-                IsFixedTimeStep = IsFixedTimeStep,
-                Content = { RootDirectory = AppVariable.ContentRootDirectory, },
-            };
+        ServiceRegistration[] services = serviceRegistry.AvailableServices.ToArray();
 
-            // Hack. Resolving cycle dependency issue (fundamental architecture)
-            // Implicitly adds itself in the game services container.
-            new GraphicsDeviceManager(game);
-            
-            return game;
-        });
+        var logger =
+            (ILogger)services.First(r => r.ServiceType == typeof(ILogger)).Value;
+        var container =
+            (IServiceContainer)services.First(r => r.ServiceType == typeof(IServiceContainer)).Value;
+
+        Game game = new(logger, container)
+        {
+            IsMouseVisible = IsMouseVisible,
+            IsFixedTimeStep = IsFixedTimeStep,
+            Content = { RootDirectory = AppVariable.ContentRootDirectory, },
+        };
+        serviceRegistry.RegisterInstance(game);
+
+        // Hack. Resolving cycle dependency issue (fundamental architecture)
+        // Implicitly adds itself in the game services container.
+        GraphicsDeviceManager graphicsDeviceManager = new(game);
+        serviceRegistry.RegisterInstance(graphicsDeviceManager);
     }
 }

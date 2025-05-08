@@ -2,7 +2,7 @@
 using Components.Render.Animation;
 using Components.Tags;
 using Scellecs.Morpeh;
-using Scellecs.Morpeh.Extended;
+using Scellecs.Morpeh.Extended.Extensions;
 
 namespace Entities.Factories.Characters;
 
@@ -12,26 +12,29 @@ namespace Entities.Factories.Characters;
 // But also, for the factory, ig, the view of the entities class will change.
 // For now, Imma keep it as it is.
 public class PlayerEntityFactory(
+    NameComponent name,
     InputMovableComponent inputMovable,
     MovableComponent movable,
     TransformComponent transform,
     CameraComponent cameraComponent,
-    RectangleCollisionComponent rectangleCollision,
-    InventoryComponent inventoryComponent)
+    RectangleColliderComponent rectangleCollider,
+    InventoryComponent inventory)
     : EntityFactory
 {
     private readonly MovementAnimationsComponent _movementAnimations;
     private readonly CharacterAnimatorComponent _characterAnimator;
 
-    public PlayerEntityFactory(InputMovableComponent inputMovable,
+    public PlayerEntityFactory(
+        NameComponent name,
+        InputMovableComponent inputMovable,
         MovableComponent movable,
         TransformComponent transform,
         CameraComponent cameraComponent,
-        RectangleCollisionComponent rectangleCollision,
+        RectangleColliderComponent rectangleCollider,
         MovementAnimationsComponent movementAnimations,
         CharacterAnimatorComponent characterAnimator,
-        InventoryComponent inventoryComponent) : this(inputMovable, movable, transform, cameraComponent,
-        rectangleCollision, inventoryComponent)
+        InventoryComponent inventory) : this(name, inputMovable, movable, transform, cameraComponent, rectangleCollider,
+        inventory)
     {
         _movementAnimations = movementAnimations;
         _characterAnimator = characterAnimator;
@@ -46,9 +49,10 @@ public class PlayerEntityFactory(
 
     protected override void AddData(Entity e)
     {
+        e.AddComponent(name);
         e.AddComponent(transform);
-        e.AddComponent(rectangleCollision);
-        e.AddComponent(inventoryComponent);
+        e.AddComponent(rectangleCollider);
+        e.AddComponent(inventory);
     }
 
     protected override void AddRender(Entity e)

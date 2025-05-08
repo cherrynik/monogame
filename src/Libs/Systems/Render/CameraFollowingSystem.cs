@@ -8,15 +8,10 @@ using Scellecs.Morpeh;
 
 namespace Systems.Render;
 
-public class CameraFollowingSystem : ILateSystem
+public class CameraFollowingSystem(World world) : ILateSystem
 {
     // private readonly ICamera _camera;
-    public World World { get; set; }
-
-    public CameraFollowingSystem(World world)
-    {
-        World = world;
-    }
+    public World World { get; set; } = world;
 
     public void OnAwake()
     {
@@ -71,12 +66,8 @@ public interface ICamera
     void Render(Entity e);
 }
 
-public class StaticCamera : BaseCamera, ICamera
+public class StaticCamera(SpriteBatch spriteBatch, Viewport viewport) : BaseCamera(spriteBatch, viewport), ICamera
 {
-    public StaticCamera(SpriteBatch spriteBatch, Viewport viewport) : base(spriteBatch, viewport)
-    {
-    }
-
     public void Render(Entity e)
     {
         if (!e.Has<TransformComponent>())
@@ -91,15 +82,9 @@ public class StaticCamera : BaseCamera, ICamera
     }
 }
 
-public class FollowingCamera : BaseCamera, ICamera
+public class FollowingCamera(SpriteBatch spriteBatch, Viewport viewport, Vector2 position)
+    : BaseCamera(spriteBatch, viewport), ICamera
 {
-    private Vector2 _position;
-
-    public FollowingCamera(SpriteBatch spriteBatch, Viewport viewport, Vector2 position) : base(spriteBatch, viewport)
-    {
-        _position = position;
-    }
-
     public void Render(Entity e)
     {
         if (!e.Has<TransformComponent>())
@@ -108,30 +93,23 @@ public class FollowingCamera : BaseCamera, ICamera
         }
 
         ref var transform = ref e.GetComponent<TransformComponent>();
-        Vector2 position = transform.Position;
+        Vector2 position1 = transform.Position;
 
         if (e.Has<CameraComponent>())
         {
             // _position = GetCenteredPosition(off: position);
         }
 
-        Vector2 relativePosition = position - _position;
+        Vector2 relativePosition = position1 - position;
 
         base.RenderCharacterAnimator(e, at: relativePosition);
         base.RenderSprite(e, at: relativePosition);
     }
 }
 
-public abstract class BaseCamera
+public abstract class BaseCamera(SpriteBatch spriteBatch, Viewport viewport)
 {
-    private readonly SpriteBatch _spriteBatch;
-    protected readonly Viewport _viewport;
-
-    protected BaseCamera(SpriteBatch spriteBatch, Viewport viewport)
-    {
-        _spriteBatch = spriteBatch;
-        _viewport = viewport;
-    }
+    protected readonly Viewport _viewport = viewport;
 
     protected void RenderCharacterAnimator(Entity e, Vector2 at)
     {
@@ -141,7 +119,7 @@ public abstract class BaseCamera
         }
 
         ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
-        animator.Animation.Draw(_spriteBatch, at);
+        animator.Animation.Draw(spriteBatch, at);
     }
 
     protected void RenderSprite(Entity e, Vector2 at)
@@ -152,6 +130,6 @@ public abstract class BaseCamera
         }
 
         ref var spriteComponent = ref e.GetComponent<SpriteComponent>();
-        spriteComponent.Sprite.Draw(_spriteBatch, at);
+        spriteComponent.Sprite.Draw(spriteBatch, at);
     }
 }

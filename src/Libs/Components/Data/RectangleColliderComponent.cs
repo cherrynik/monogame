@@ -3,7 +3,8 @@ using Scellecs.Morpeh;
 
 namespace Components.Data;
 
-public struct RectangleCollisionComponent : IComponent
+public struct RectangleColliderComponent : IComponent
 {
     public Rectangle Size;
+    public bool IsTrigger;
 }

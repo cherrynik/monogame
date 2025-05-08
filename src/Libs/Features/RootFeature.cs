@@ -1,41 +1,16 @@
-﻿using GameDesktop;
-using Scellecs.Morpeh;
+﻿using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
+using Systems;
 
 namespace Features;
 
 public class RootFeature : Feature
 {
     public RootFeature(World world,
-        WorldInitializer worldInitializer,
-        MovementFeature movementFeature
-    ) : base(world)
+        SystemsEngine systemsEngine,
+        WorldInitializer worldInitializer
+    ) : base(world, systemsEngine)
     {
         Add(worldInitializer);
-        Add(movementFeature);
     }
-
-    public RootFeature(World world,
-        WorldInitializer worldInitializer,
-        MovementFeature movementFeature,
-        PreRenderFeature preRenderFeature,
-        RenderFeature renderFeature
-    ) : this(world, worldInitializer, movementFeature)
-    {
-        Add(preRenderFeature);
-        Add(renderFeature);
-    }
-
-#if DEBUG
-    public RootFeature(World world,
-        WorldInitializer worldInitializer,
-        MovementFeature movementFeature,
-        PreRenderFeature preRenderFeature,
-        RenderFeature renderFeature,
-        DebugFeature debugFeature
-    ) : this(world, worldInitializer, movementFeature, preRenderFeature, renderFeature)
-    {
-        Add(debugFeature);
-    }
-#endif
 }

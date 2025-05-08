@@ -1,7 +1,5 @@
 ﻿using Components.Data;
 using Components.Render.Static;
-using Entities;
-using Entities.Factories;
 using Entities.Factories.Characters;
 using LightInject;
 
@@ -17,7 +15,8 @@ internal class StaticEntityCompositionRoot : ICompositionRoot
 
     private static void RegisterEntity(IServiceRegistry serviceRegistry) =>
         serviceRegistry.RegisterTransient(factory => new DummyEntityFactory(
+            new NameComponent("Dummy"), // factory.GetInstance<NameComponent>("Dummy")
             factory.GetInstance<TransformComponent>("DummyEntity"),
             factory.GetInstance<SpriteComponent>(),
-            factory.GetInstance<RectangleCollisionComponent>()));
+            factory.GetInstance<RectangleColliderComponent>("DummyEntity")));
 }

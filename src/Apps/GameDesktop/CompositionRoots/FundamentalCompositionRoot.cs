@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GameDesktop.Resources.Internal;
 using LightInject;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Aseprite.Sprites;
 using Services.Factories;
@@ -24,7 +25,7 @@ internal class FundamentalCompositionRoot : ICompositionRoot
         // service name. Thus, I use 3 type args here.
         serviceRegistry.Register<string, string, Dictionary<Direction, AnimatedSprite>>((factory, path, action) =>
         {
-            GraphicsDevice graphicsDevice = factory.GetInstance<SpriteBatch>().GraphicsDevice;
+            GraphicsDevice graphicsDevice = factory.GetInstance<GraphicsDeviceManager>().GraphicsDevice;
             SpriteSheet spriteSheet = AnimatedCharactersFactory.LoadSpriteSheet(graphicsDevice, path);
 
             return AnimatedCharactersFactory.CreateAnimations(spriteSheet, action);
