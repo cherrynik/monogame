@@ -5,12 +5,12 @@ using Components.Tags;
 using Entities.Factories.Characters;
 using Entities.Factories.Meta;
 using Features;
-using Implementations;
 using Microsoft.Xna.Framework.Graphics;
 using Moq;
 using Scellecs.Morpeh;
 using Services.Movement;
 using Systems;
+using Systems.Input.Abstractions;
 
 namespace UnitTests.Entities;
 
@@ -43,11 +43,7 @@ public class Tests
                 new InventoryComponent())
             .CreateEntity(@in: _world);
 
-        {
-            _world.TryGetEntity(playerEntity.ID, out Entity result);
-
-            Assert.That(playerEntity.ID, Is.EqualTo(result.ID));
-        }
+        Assert.That(playerEntity, Is.Not.EqualTo(default(Entity)));
     }
 
     [Test]
@@ -62,15 +58,13 @@ public class Tests
                 new CharacterAnimatorComponent(),
                 new InventoryComponent())
             .CreateEntity(@in: _world);
+        var inputMovableStash = _world.GetStash<InputMovableComponent>();
+        var movableStash = _world.GetStash<MovableComponent>();
+        Assert.Multiple(() =>
         {
-            _world.TryGetEntity(playerEntity.ID, out Entity result);
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(result.Has<InputMovableComponent>(), Is.True);
-                Assert.That(result.Has<MovableComponent>(), Is.True);
-            });
-        }
+            Assert.That(inputMovableStash.Has(playerEntity), Is.True);
+            Assert.That(movableStash.Has(playerEntity), Is.True);
+        });
     }
 
     [Test]

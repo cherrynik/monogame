@@ -4,13 +4,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <DisableHandlePackageFileConflicts>true</DisableHandlePackageFileConflicts>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <LangVersion>default</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="MonoGame.Aseprite" Version="5.1.1" />
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303"/>
-    <PackageReference Include="Scellecs.Morpeh" Version="2023.1.0" />
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.4.1" />
+    <PackageReference Include="Scellecs.Morpeh" Version="2024.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\External\Scellecs.Morpeh.Extended\Scellecs.Morpeh.Extended.csproj" />

@@ -1,4 +1,4 @@
-﻿using Components.Data;
+using Components.Data;
 using ImGuiNET;
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
@@ -20,7 +20,23 @@ public class RenderFramesPerSec : IRenderSystem
 
     public void OnUpdate(float deltaTime)
     {
-        var world = World.Filter.With<WorldComponent>().Build().First().GetComponent<WorldComponent>();
+        var worldComponentStash = World.GetStash<WorldComponent>();
+        Entity worldEntity = default;
+        bool hasWorldEntity = false;
+        Filter worldFilter = World.Filter.With<WorldComponent>().Build();
+        foreach (Entity entity in worldFilter)
+        {
+            worldEntity = entity;
+            hasWorldEntity = true;
+            break;
+        }
+
+        if (!hasWorldEntity || !worldComponentStash.Has(worldEntity))
+        {
+            return;
+        }
+
+        var world = worldComponentStash.Get(worldEntity);
 
         ImGui.Begin("Diagnostics");
 
@@ -31,7 +47,6 @@ public class RenderFramesPerSec : IRenderSystem
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 }
 

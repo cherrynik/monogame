@@ -4,13 +4,8 @@ using Services.Math;
 
 namespace UnitTests.Services;
 
-public class Rad8Dir
+public class Rad8DirTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [Test]
     public void Right()
     {
@@ -58,7 +53,6 @@ public class Rad8Dir
         Direction direction = MathUtils.Rad8Dir(downLeft);
         Assert.That(direction, Is.EqualTo(Direction.DownLeft));
     }
-
 
     [Test]
     public void Down()

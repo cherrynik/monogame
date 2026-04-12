@@ -1,0 +1,168 @@
+---
+description: MonoGame repo — stack, architecture, Docker/CI, and docs for AI agents
+alwaysApply: true
+---
+
+# MonoGame project — agent context
+
+Use this rule for **all** work in this repository. Long-form reference: `docs/development-architecture.md`. Gameplay notes: `docs/Logic.md`, `docs/Requirements.md`. `docs/Workflow.md` mixes still-useful workflow notes with **outdated Entitas/Jenny material** — the codebase uses **Scellecs.Morpeh**, not Entitas.
+
+## Stack (canonical)
+
+| Area | Choice |
+|------|--------|
+| Runtime | .NET 10 (`net10.0`), SDK pin in `global.json` |
+| Game | MonoGame.Framework.DesktopGL 3.8.1.x |
+| Content | MGCB, `MonoGame.Content.Builder.Task`, tools in `.config/dotnet-tools.json` |
+| ECS | **Scellecs.Morpeh** (components, systems, features) |
+| DI | LightInject — roots in `src/Apps/GameDesktop/CompositionRoots/` |
+| UI | Myra |
+| Debug UI | ImGui.NET + **MonoGame.ImGuiNet** (git submodule) — ImGui only in **DEBUG** |
+| Logging / errors | Serilog, Sentry |
+
+## Solution layout
+
+- `src/Apps/GameDesktop/` — entry (`Program.cs`), `Game`, composition, `Content/`, `Resources/`
+- `src/Libs/Components`, `Entities`, `Systems`, `Systems.Debugging`, `Features`, `Features.Debugging`, `Services`
+- `src/Libs/External/MonoGame.ImGuiNet/` — **submodule** (`.gitmodules`; CI may need `PAT_TOKEN` + `submodules: recursive`)
+- `src/Libs/External/Scellecs.Morpeh.Extended/`
+- `src/UnitTests/` — NUnit
+
+`GameCompositionRoot` documents a deliberate **GraphicsDeviceManager** / Game ↔ container hack; do not “fix” cycles without understanding that.
+
+## Application flow
+
+1. `Program.cs`: config → Serilog → LightInject → `GameCompositionRoot` → resolve `Game` → `Run()`.
+2. `Game.Initialize`: `SpriteBatch`, Myra; **DEBUG**: ImGui renderer; root feature + UI.
+3. `LoadContent`: `RootFeature.OnAwake()`.
+4. **CI**: Release + `IS_CI` may exit 0 on graphics device failure (headless runners) — see `.github/workflows/dotnet.yml`.
+
+## Tool restore (important)
+
+Do **not** reintroduce MSBuild `RestoreDotnetTools` with `BeforeTargets="Restore"` on `GameDesktop` or `Monogame.ImGuiNet`. Use explicit **`dotnet tool restore`** after clone, in Docker scripts, and in CI.
+
+## Docker (`Dockerfile`, `docker-compose.yml`)
+
+- Image: `mcr.microsoft.com/dotnet/sdk:10.0` + apt: git, font/freetype, ICU dev, OpenAL, SDL2, **xvfb**.
+- **Volumes**: `nuget-packages` → `/root/.nuget/packages`, `nuget-work` → `/root/.local/share/NuGet`.
+- **`build`**: `tool restore` → `restore` → `build` with `-m:1` / `BuildInParallel=false`; optional `BUILD_CONFIGURATION` (default Debug). No fixed RID.
+- **`run`**: headless **`xvfb-run -a dotnet run`**. **No window on the host** (use local `dotnet run` on macOS for a real window).
+- **ImGui native**: `cimgui` is shipped for **linux-x64**, not linux-arm64. **`run`** uses **`platform: linux/amd64`** and **`-r linux-x64`** for build + run.
+- After changing `Dockerfile` base or `global.json`: `docker compose build --pull build`.
+
+## CI (summary)
+
+Ubuntu + Windows matrix; .NET 10.x; `dotnet tool restore`; build; test; `dotnet run` with `net10.0`, Release, `DefineConstants=IS_CI`.
+
+## Local commands (cheat sheet)
+
+```bash
+git submodule update --init --recursive
+dotnet tool restore
+dotnet restore MonoGame.sln
+dotnet build MonoGame.sln
+dotnet run --project src/Apps/GameDesktop/GameDesktop.csproj
+# Docker: docker compose run --rm build | docker compose run --rm run
+```
+
+---
+
+## From `docs/Logic.md` (movement & coords)
+
+- Normalize movement vectors for **diagonal** directions.
+- MonoGame **Y axis is flipped**; code may use `-YFlipped` naming.
+- Direction pipeline: key axes → vector → radians → **8-direction enum** (spritesheets, etc.).
+
+## From `docs/Requirements.md` (DesktopGL)
+
+- DesktopGL: SDL windowing, OpenGL, OpenAL-Soft; Windows / macOS / Linux (64-bit Linux).
+- OpenGL 2.0 + `ARB_framebuffer_object` or OpenGL 3.0+.
+- Cross-compile/publish across desktop OSes from one project.
+- No `VideoPlayer` on DesktopGL.
+
+## From `docs/Workflow.md` — still useful
+
+- **GitHub Actions**: runners have **no GPU**; game run step relies on `IS_CI` / graphics failure handling — see workflow and `Program.cs`.
+- **MGCB**: rebuild after editing `.mgcb`.
+- **Makefile**: if Make acts weird, check **BOM** in file encoding.
+- **Content**: in `Content.mgcb`, use **Copy** or `/copy:` for files you read manually; use `Content.Load` vs `File.*` depending on path (some `Resources` paths start with `Content/`, some don’t — see doc).
+- **Resources**: app `Resources/*.resx` for non-secret constants/paths; see Microsoft resource docs.
+- **Logging**: Serilog; **Sentry** for errors (VPN if region blocked).
+
+## From `docs/Workflow.md` — do **not** follow for ECS codegen
+
+Sections on **Entitas** and **Jenny** describe an older stack. This repo uses **Morpeh** only. Ignore Jenny/Entitas package lists unless migrating the whole project.
+
+## Roadmap (high level)
+
+Timestep polish, debug logging flags, richer debug UI, optional tooling (e.g. compose `publish` for self-contained macOS), bump ImGui/MonoGame if linux-arm64 natives help Docker on Apple Silicon. Details: `docs/development-architecture.md` §10.
+
+## Editing discipline
+
+- Prefer small, task-scoped diffs; match existing naming and DI patterns.
+- Do not add unsolicited markdown files unless the user asks.
+- Keep `docs/development-architecture.md` and this rule aligned when changing Docker, SDK, or architecture conventions.
+- After each implementation iteration, run a cleanup pass on touched code before finishing.
+- Cleanup must prioritize readability, naming clarity, small responsibilities, and low coupling (clean code style aligned with Robert C. Martin principles).
+- Follow TDD by default for feature work: define/update tests first, implement behavior, then refactor while keeping tests green.
+- Every new feature must include tests in the same iteration: unit tests are mandatory.
+- E2E tests are required only when business scenarios or acceptance flows depend on end-to-end behavior.
+- Integration tests are required when a feature crosses module or service boundaries.
+- When touching legacy areas with missing coverage, add or extend tests for that area before finishing the task.
+- Validation loop is mandatory for delivered changes: `dotnet build`, `dotnet test`, and a smoke `dotnet run` check for app-facing behavior.
+- Keep test taxonomy explicit and separated by structure:
+  - unit tests under `src/UnitTests/<Project>/Unit/` and in `UnitTests.*` projects only;
+  - integration tests under dedicated `src/IntegrationTests/<Project>/` and `IntegrationTests.*` projects only (when used);
+  - e2e tests under dedicated `src/E2ETests/<Project>/` and `E2ETests.*` projects only.
+- Do not colocate integration/e2e tests in unit-test projects, folders, or namespaces.
+- Keep test flow explicit in CI/local runs:
+  - run unit tests first (fast feedback gate),
+  - run integration tests second when present (cross-module behavior gate),
+  - run e2e last (full-system gate).
+- Keep folder structure clean and responsibility-driven:
+  - do not mix app-specific UI code into core libs unless intentionally shared;
+  - organize code by cohesive modules (state/actions/reducer/view/theme for UI modules);
+  - avoid dumping unrelated files into the same folder.
+- Keep source files responsibility-scoped:
+  - split files into cohesive units by intent (abstractions, models, services, systems, composition);
+  - avoid "god files" with multiple unrelated top-level types;
+  - prefer one primary top-level type per file unless types are tightly coupled and intentionally local.
+- Keep `src/Apps/GameDesktop/Game.cs` as a top-level orchestration entry point:
+  - only keep flow-level lifecycle coordination and high-level feature wiring there;
+  - allow additions in `Game.cs` only when introducing/changing whole architecture capabilities (for example introducing UI as a platform-level feature);
+  - implement feature details (input mapping, UI effects, state transitions, helpers, side effects) in dedicated lower-level modules/services under explicit architectural folders and namespaces.
+- Keep folder and namespace structure aligned:
+  - namespaces must mirror physical folder paths from the project root;
+  - create semantic subfolders for grouped responsibilities only inside an existing bounded module (for example `Abstractions`, `Model`, `Sources`, `Composition`);
+  - avoid flat folders when a module has multiple responsibility groups.
+- Do not create new top-level `src/Libs/*` libraries for routine refactors.
+  - First place code in the most appropriate existing library (`UI`, `Services`, `Systems`, `Features`, etc.) based on ownership;
+  - create a new top-level library only when the user explicitly requests it or when architecture migration scope is explicitly approved.
+- Prefer event-driven design when it improves decoupling or avoids repeated work:
+  - emit explicit ECS events for state transitions that other systems consume (movement, UI intent, domain signals);
+  - keep frame-driven loops only for inherently continuous behavior (rendering, animation ticks, physics stepping);
+  - avoid event indirection when it adds complexity without measurable value.
+- For each new feature, choose established and efficient algorithms/patterns:
+  - default to well-known approaches with predictable complexity and maintainability;
+  - document intentional tradeoffs when choosing simpler but slower paths;
+  - evaluate reactive streams (for example Rx) only when asynchronous or multi-source event composition is required; do not add Rx to hot game-loop paths by default.
+- Before adding new implementation, search for existing solutions in the repo, extract shared logic into common modules, and reuse it; avoid duplicate implementations.
+- Before changing code, read and understand the current implementation path end-to-end (call chain + ownership) and then place changes at the lowest appropriate architectural level.
+- Prefer established, well-documented libraries over custom implementations when they solve the problem sufficiently.
+- For new external dependencies or major library choices, verify current best practices and version/reliability information from up-to-date official docs or release sources before implementation.
+- Bias decisions toward feature value delivery and reduced maintenance burden: avoid writing/maintaining custom infrastructure when a mature library can safely cover the need.
+- Naming must be explicit and human-readable across files, folders, namespaces, and test classes.
+- Conventional abbreviations are allowed when they are standard and unambiguous (e.g. `UI`, `DTO`, `E2E`, `API`, `ID`).
+
+## UI Architecture (FSD-inspired)
+
+- Build UI with FSD-style boundaries and explicit responsibilities per layer.
+- Preferred namespace/layer mapping:
+  - `GameUi.App.*` — app-level orchestration and state transitions,
+  - `GameUi.Pages.*` — page-level composition,
+  - `GameUi.Widgets.*` — reusable visual blocks,
+  - `GameUi.Features.*` — feature-specific interaction logic,
+  - `GameUi.Entities.*` — UI-facing entities/value models,
+  - `GameUi.Shared.*` — themes, styles, utilities, and shared primitives.
+- Keep dependency direction top-down (`App -> Pages -> Widgets/Features -> Entities -> Shared`).
+- Avoid cross-layer shortcuts that break modularity (for example, `Shared` must not depend on `Features`/`Pages`).

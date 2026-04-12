@@ -1,0 +1,51 @@
+services:
+  build:
+    build: .
+    working_dir: /src
+    volumes:
+      - .:/src
+      - nuget-packages:/root/.nuget/packages
+      - nuget-work:/root/.local/share/NuGet
+    environment:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
+      BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Debug}
+    command:
+      - sh
+      - -ec
+      - |
+        git config --global --add safe.directory /src
+        dotnet tool restore
+        dotnet restore MonoGame.sln
+        dotnet build MonoGame.sln -c "$$BUILD_CONFIGURATION" -m:1 /p:BuildInParallel=false
+
+  # Headless (xvfb). ImGui.NET ships cimgui for linux-x64, not linux-arm64 — on Apple Silicon Docker use amd64 + RID below.
+  # Real window on macOS: dotnet run --project src/Apps/GameDesktop/GameDesktop.csproj
+  run:
+    platform: linux/amd64
+    build: .
+    working_dir: /src
+    volumes:
+      - .:/src
+      - nuget-packages:/root/.nuget/packages
+      - nuget-work:/root/.local/share/NuGet
+    environment:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "1"
+      DOTNET_ENVIRONMENT: Development
+      BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Debug}
+    command:
+      - sh
+      - -ec
+      - |
+        git config --global --add safe.directory /src
+        dotnet tool restore
+        dotnet restore MonoGame.sln
+        dotnet build MonoGame.sln -c "$$BUILD_CONFIGURATION" -r linux-x64 -m:1 /p:BuildInParallel=false
+        xvfb-run -a dotnet run --project src/Apps/GameDesktop/GameDesktop.csproj -c "$$BUILD_CONFIGURATION" -r linux-x64 --no-build
+
+volumes:
+  nuget-packages:
+  nuget-work:

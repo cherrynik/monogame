@@ -1,4 +1,5 @@
 ﻿using Components.Data;
+using Components.Events.Movement;
 using Components.Render.Animation;
 using Components.Render.Static;
 using Components.Tags;
@@ -12,8 +13,11 @@ public class RenderCharacterMovementAnimationSystem : IRenderSystem
 {
     public World World { get; set; }
     private readonly SpriteBatch _spriteBatch;
-
-
+    private Filter _transformFilter = default!;
+    private Filter _cameraFilter = default!;
+    private Filter _movedEventsFilter = default!;
+    private readonly List<Entity> _sortedEntities = [];
+    private bool _isSortingDirty = true;
     public RenderCharacterMovementAnimationSystem(World world, SpriteBatch spriteBatch)
     {
         World = world;
@@ -22,35 +26,42 @@ public class RenderCharacterMovementAnimationSystem : IRenderSystem
 
     public void OnAwake()
     {
+        _transformFilter = World.Filter.With<TransformComponent>().Build();
+        _cameraFilter = World.Filter.With<CameraComponent>().Build();
+        _movedEventsFilter = World.Filter.With<TransformMovedEvent>().Build();
     }
 
     public void OnUpdate(float deltaTime)
     {
-        Filter filter = World.Filter.With<TransformComponent>().Build();
-        
-        var camera = World.Filter
-            .With<CameraComponent>()
-            .Build()
-            .First()
-            .GetComponent<CameraComponent>();
-
-        IEnumerable<Entity> entities = SortEntitiesByYPosition(filter);
-
-        foreach (Entity e in entities)
+        var transformStash = World.GetStash<TransformComponent>();
+        var cameraStash = World.GetStash<CameraComponent>();
+        var characterAnimatorStash = World.GetStash<CharacterAnimatorComponent>();
+        var spriteStash = World.GetStash<SpriteComponent>();
+        if (!TryGetCamera(out var camera, cameraStash))
         {
-            ref var transform = ref e.GetComponent<TransformComponent>();
+            return;
+        }
+        if (_isSortingDirty || HasMovementEvents())
+        {
+            RebuildSortedEntities(_transformFilter, transformStash, _sortedEntities);
+            _isSortingDirty = false;
+        }
+
+        foreach (Entity e in _sortedEntities)
+        {
+            ref var transform = ref transformStash.Get(e);
             var at = transform.Position - camera.Position;
 
-            if (e.Has<CharacterAnimatorComponent>())
+            if (characterAnimatorStash.Has(e))
             {
-                ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
+                ref var animator = ref characterAnimatorStash.Get(e);
 
                 animator.Animation.Draw(_spriteBatch, at);
             }
 
-            if (e.Has<SpriteComponent>())
+            if (spriteStash.Has(e))
             {
-                ref var sprite = ref e.GetComponent<SpriteComponent>();
+                ref var sprite = ref spriteStash.Get(e);
 
                 sprite.Sprite.Draw(_spriteBatch, at);
             }
@@ -61,19 +72,42 @@ public class RenderCharacterMovementAnimationSystem : IRenderSystem
     {
     }
 
-    private static IEnumerable<Entity> SortEntitiesByYPosition(Filter filter)
+    private bool HasMovementEvents()
     {
-        List<Entity> entities = new List<Entity>();
+        foreach (Entity _ in _movedEventsFilter)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool TryGetCamera(out CameraComponent camera, Stash<CameraComponent> cameraStash)
+    {
+        foreach (Entity entity in _cameraFilter)
+        {
+            camera = cameraStash.Get(entity);
+            return true;
+        }
+
+        camera = default;
+        return false;
+    }
+
+    private static void RebuildSortedEntities(Filter filter, Stash<TransformComponent> transformStash, List<Entity> sortedEntities)
+    {
+        sortedEntities.Clear();
 
         foreach (Entity e in filter)
         {
-            entities.Add(e);
+            sortedEntities.Add(e);
         }
 
-        return entities.OrderBy(x =>
+        sortedEntities.Sort((left, right) =>
         {
-            ref var transform = ref x.GetComponent<TransformComponent>();
-            return transform.Position.Y;
+            ref var leftTransform = ref transformStash.Get(left);
+            ref var rightTransform = ref transformStash.Get(right);
+            return leftTransform.Position.Y.CompareTo(rightTransform.Position.Y);
         });
     }
 }

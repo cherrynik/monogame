@@ -1,9 +1,9 @@
-﻿using Components.Data;
+using Components.Data;
 using Scellecs.Morpeh;
 
 namespace Systems.Debugging;
 
-public class FrameCounter : ISystem
+public class FrameCounter : ILateSystem
 {
     private const float UpdateFrequencyInSec = .02f;
     private float _elapsedTime;
@@ -30,8 +30,24 @@ public class FrameCounter : ISystem
             return;
         }
 
-        World.Filter.With<WorldComponent>().Build().First().GetComponent<WorldComponent>().FramesPerSec =
-            _framesCount / _elapsedTime;
+        var worldComponentStash = World.GetStash<WorldComponent>();
+        Entity worldEntity = default;
+        bool hasWorldEntity = false;
+        Filter worldFilter = World.Filter.With<WorldComponent>().Build();
+        foreach (Entity entity in worldFilter)
+        {
+            worldEntity = entity;
+            hasWorldEntity = true;
+            break;
+        }
+
+        if (!hasWorldEntity || !worldComponentStash.Has(worldEntity))
+        {
+            return;
+        }
+
+        ref var worldComponent = ref worldComponentStash.Get(worldEntity);
+        worldComponent.FramesPerSec = _framesCount / _elapsedTime;
 
         _framesCount = 0;
         _elapsedTime = 0;

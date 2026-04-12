@@ -9,6 +9,7 @@ namespace Systems.Render;
 
 public class CharacterMovementAnimationSystem : ISystem
 {
+    private Filter _filter = default!;
     public World World { get; set; }
 
     public CharacterMovementAnimationSystem(World world)
@@ -18,20 +19,23 @@ public class CharacterMovementAnimationSystem : ISystem
 
     public void OnAwake()
     {
+        _filter = World.Filter
+            .With<CharacterAnimatorComponent>()
+            .With<MovementAnimationsComponent>()
+            .Build();
     }
 
     public void OnUpdate(float deltaTime)
     {
-        Filter filter = World.Filter
-            .With<CharacterAnimatorComponent>()
-            .With<MovementAnimationsComponent>()
-            .Build();
+        var movementAnimationsStash = World.GetStash<MovementAnimationsComponent>();
+        var characterAnimatorStash = World.GetStash<CharacterAnimatorComponent>();
+        var transformStash = World.GetStash<TransformComponent>();
 
-        foreach (Entity e in filter)
+        foreach (Entity e in _filter)
         {
-            ref var animations = ref e.GetComponent<MovementAnimationsComponent>();
-            ref var animator = ref e.GetComponent<CharacterAnimatorComponent>();
-            ref var transform = ref e.GetComponent<TransformComponent>();
+            ref var animations = ref movementAnimationsStash.Get(e);
+            ref var animator = ref characterAnimatorStash.Get(e);
+            ref var transform = ref transformStash.Get(e);
 
             // 2. And this one could be in the draw state
             // animator.Animation.Draw(_spriteBatch, transform.Position);

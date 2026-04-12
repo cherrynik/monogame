@@ -1,11 +1,10 @@
-﻿using Components.Data;
+using Components.Data;
 using Entities.Factories.Characters;
 using Entities.Factories.Meta;
 using Features;
 using LightInject;
 using GameDesktop.CompositionRoots.Components;
 using GameDesktop.CompositionRoots.Entities;
-using Implementations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra;
@@ -15,10 +14,9 @@ using Services.Movement;
 using Systems;
 using Systems.Debugging;
 using Systems.Debugging.Render;
+using Systems.Input;
 using Systems.Render;
-#if DEBUG
 using GameDesktop.CompositionRoots.DebugFeatures;
-#endif
 
 namespace GameDesktop.CompositionRoots.Features;
 
@@ -40,9 +38,7 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
         RegisterFeatures(serviceRegistry);
 
-#if DEBUG
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
-#endif
 
         RegisterEntryPoint(serviceRegistry);
     }
@@ -77,10 +73,8 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
         {
             var grid = new Grid { RowSpacing = 8, ColumnSpacing = 8 };
 
-            grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.ColumnsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
-            grid.RowsProportions.Add(new Proportion(ProportionType.Auto));
+            grid.ColumnsProportions.Add(new Proportion(ProportionType.Fill));
+            grid.RowsProportions.Add(new Proportion(ProportionType.Fill));
 
             return grid;
         });
@@ -110,17 +104,14 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                     new MovementSystem(factory.GetInstance<World>(), new SimpleMovement())),
                 new PreRenderFeature(factory.GetInstance<World>(),
                     new CharacterMovementAnimationSystem(factory.GetInstance<World>()),
-                    new CameraFollowingSystem(factory.GetInstance<World>())),
+                    new CameraFollowingSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>().GraphicsDevice)),
                 new RenderFeature(factory.GetInstance<World>(),
                     new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
-                        factory.GetInstance<SpriteBatch>()))
-#if DEBUG
-                ,
+                        factory.GetInstance<SpriteBatch>())),
                 new DebugFeature(factory.GetInstance<World>(), new EntitiesList(factory.GetInstance<World>()),
                     new FrameCounter(factory.GetInstance<World>()),
                     new RenderFramesPerSec(factory.GetInstance<World>()),
                     new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel))
-#endif
             );
         });
     }
