@@ -23,13 +23,12 @@ public sealed class GameInputRouter
             BuildPauseHotkeyState(keyboardState, ReadPauseHotkeysFromScancodes());
 
         bool togglePauseRequested = IsEdgePressed(Keys.Escape, keyboardState);
-        bool toggleFullscreenRequested = IsFullscreenToggleRequested(keyboardState);
         UiAction? pauseAction = PauseHotkeyResolver.Resolve(currentPauseHotkeys, _previousPauseHotkeys);
 
         _previousKeyboardState = keyboardState;
         _previousPauseHotkeys = currentPauseHotkeys;
 
-        return new GameInputFrame(togglePauseRequested, toggleFullscreenRequested, pauseAction);
+        return new GameInputFrame(togglePauseRequested, pauseAction);
     }
 
     private bool IsEdgePressed(Keys key, KeyboardState currentKeyboardState) =>
@@ -45,13 +44,6 @@ public sealed class GameInputRouter
             OpenSettings: physicalHotkeys.OpenSettings || keyboardState.IsKeyDown(Keys.S),
             OpenRestart: physicalHotkeys.OpenRestart || keyboardState.IsKeyDown(Keys.T),
             Exit: physicalHotkeys.Exit || keyboardState.IsKeyDown(Keys.E));
-    }
-
-    private bool IsFullscreenToggleRequested(KeyboardState keyboardState)
-    {
-        bool altDown = keyboardState.IsKeyDown(Keys.LeftAlt) || keyboardState.IsKeyDown(Keys.RightAlt);
-        bool enterEdgePressed = keyboardState.IsKeyDown(Keys.Enter) && !_previousKeyboardState.IsKeyDown(Keys.Enter);
-        return altDown && enterEdgePressed;
     }
 
     private PauseHotkeyState ReadPauseHotkeysFromScancodes()

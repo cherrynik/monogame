@@ -1,4 +1,6 @@
+#if DEBUG
 using GameDesktop;
+#endif
 using Scellecs.Morpeh;
 using Scellecs.Morpeh.Extended;
 
@@ -26,6 +28,7 @@ public class RootFeature : Feature
         Add(renderFeature);
     }
 
+#if DEBUG
     public RootFeature(World world,
         WorldInitializer worldInitializer,
         MovementFeature movementFeature,
@@ -36,4 +39,5 @@ public class RootFeature : Feature
     {
         Add(debugFeature);
     }
+#endif
 }

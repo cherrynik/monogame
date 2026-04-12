@@ -10,90 +10,132 @@ namespace GameUi.Widgets.PauseMenu;
 
 public sealed class PauseMenuComponent
 {
-    private static readonly Color Overlay   = new(16,  12,   8, 160);
-    private static readonly Color Stone     = new(200, 192, 176);
-    private static readonly Color StoneEdge = new(164, 156, 140);
-    private static readonly Color Outline   = new(40,   32,  24);
-    private static readonly Color BtnHover  = new(216, 208, 192);
-    private static readonly Color BtnPress  = new(180, 172, 156);
-    private static readonly Color TitleGold = new(224, 164,  48);
-    private static readonly Color TextDark  = new(48,   36,  24);
-    private static readonly Color TextMuted = new(120, 108,  88);
+    private static readonly Color Shadow    = new(0, 0, 0, 180);
 
-    private readonly Panel _overlay;
+    private static readonly Color TitleGold = new(224, 176, 56);
+    private static readonly Color SepGold   = new(160, 120, 40, 140);
+
+    private static readonly Color BtnBg     = new(186, 174, 154);
+    private static readonly Color BtnBorder = new(48, 36, 24);
+    private static readonly Color BtnHover  = new(210, 198, 178);
+    private static readonly Color BtnPress  = new(160, 148, 128);
+    private static readonly Color BtnText   = new(48, 36, 24);
+
+    private static readonly Color FooterClr = new(180, 170, 150, 160);
+
+    private readonly Panel _root;
     private readonly Label _footer;
+    private readonly Label _footerShadow;
     private readonly UiTheme _theme;
 
     public PauseMenuComponent(UiTheme theme, UiVisualStyle style, Action<UiAction> onAction)
     {
         _theme = theme;
 
-        _overlay = new Panel
+        _root = new Panel
         {
-            Background = new SolidBrush(Overlay),
             HorizontalAlignment = HorizontalAlignment.Stretch,
-            VerticalAlignment = VerticalAlignment.Stretch
+            VerticalAlignment = VerticalAlignment.Stretch,
         };
 
         var stack = new VerticalStackPanel
         {
-            Spacing = 4,
+            Spacing = style.VerticalSpacing,
             HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center
+            VerticalAlignment = VerticalAlignment.Center,
         };
 
-        stack.Widgets.Add(new Label
+        // Title with drop shadow
+        stack.Widgets.Add(ShadowText(theme.PauseTitle.ToUpperInvariant(), TitleGold));
+
+        // Gold separator
+        stack.Widgets.Add(new Panel
         {
-            Text = theme.PauseTitle.ToUpperInvariant(),
-            TextColor = TitleGold,
+            Height = 2,
+            Width = style.ButtonWidth - 20,
+            Background = new SolidBrush(SepGold),
             HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 0, 0, 4)
+            Margin = new Thickness(0, 2, 0, 6),
         });
 
+        // Buttons
         IReadOnlyList<PauseMenuItem> items = PauseMenuModel.Create(theme);
         for (int i = 0; i < items.Count; i++)
         {
             PauseMenuItem item = items[i];
+            char hotkey = item.HotkeyHint[0];
 
             var btn = new Button
             {
                 Width = style.ButtonWidth,
-                Height = 32,
+                Height = 34,
                 Content = new Label
                 {
-                    Text = item.Title.ToUpperInvariant(),
-                    TextColor = TextDark,
+                    Text = $"[{hotkey}]  {item.Title.ToUpperInvariant()}",
+                    TextColor = BtnText,
                     HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
+                    VerticalAlignment = VerticalAlignment.Center,
                 },
                 HorizontalAlignment = HorizontalAlignment.Center,
-                Background = new SolidBrush(Stone),
+                Background = new SolidBrush(BtnBg),
                 OverBackground = new SolidBrush(BtnHover),
                 PressedBackground = new SolidBrush(BtnPress),
-                Border = new SolidBrush(Outline),
+                Border = new SolidBrush(BtnBorder),
                 BorderThickness = new Thickness(3),
-                Padding = new Thickness(0)
+                Padding = new Thickness(0),
             };
             btn.Click += (_, _) => onAction(item.Action);
             stack.Widgets.Add(btn);
         }
 
+        // Footer with drop shadow
+        _footerShadow = new Label
+        {
+            TextColor = Shadow,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(2, 10, 0, 0),
+        };
         _footer = new Label
         {
-            TextColor = TextMuted,
+            TextColor = FooterClr,
             HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 4, 0, 0)
+            Margin = new Thickness(0, 8, 0, 0),
         };
-        stack.Widgets.Add(_footer);
 
-        _overlay.Widgets.Add(stack);
+        var footerPanel = new Panel();
+        footerPanel.Widgets.Add(_footerShadow);
+        footerPanel.Widgets.Add(_footer);
+        stack.Widgets.Add(footerPanel);
+
+        _root.Widgets.Add(stack);
     }
 
-    public Widget Widget => _overlay;
+    public Widget Widget => _root;
 
     public void Render(UiState state)
     {
-        _overlay.Visible = state.IsPaused;
-        _footer.Text = UiTextComposer.ComposePauseCard(_theme, state);
+        _root.Visible = state.IsPaused;
+        string text = UiTextComposer.ComposePauseCard(_theme, state);
+        _footer.Text = text;
+        _footerShadow.Text = text;
+    }
+
+    private static Panel ShadowText(string text, Color color)
+    {
+        var panel = new Panel { HorizontalAlignment = HorizontalAlignment.Center };
+        panel.Widgets.Add(new Label
+        {
+            Text = text,
+            TextColor = Shadow,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Margin = new Thickness(2, 2, 0, 0),
+        });
+        panel.Widgets.Add(new Label
+        {
+            Text = text,
+            TextColor = color,
+            HorizontalAlignment = HorizontalAlignment.Center,
+        });
+        return panel;
     }
 }

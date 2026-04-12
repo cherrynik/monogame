@@ -6,7 +6,8 @@ This document is a living plan. Add new wishes to the **Wishlist Inbox** first, 
 
 - Main menu screen: beautiful background, "New Game", "Continue" buttons, same pixel-art stone style.
 - Loading screen: transition between main menu and gameplay with visual feedback.
-- Game settings menu: keybindings, language, later graphics settings.
+- Game settings menu: keybindings (rebind + persist), language, persisted options (load user config at startup, save on apply/exit; migrate defaults when options evolve), later graphics settings.
+- Save game / load game: save slots (or checkpoints), main-menu Continue from last save, optional auto-save.
 - Mod support (content/gameplay extension points).
 - Online/multiplayer support.
 - Texture packs support.
@@ -165,9 +166,11 @@ Goal: provide a player-facing settings experience with progressive depth.
 ### Backlog
 
 - Add settings screen in pause/main menu.
-- Add keybindings rebinding UI and persistence.
+- Implement settings persistence: load user config at game start, save when the player applies or exits; merge defaults when new options appear.
+- Add keybindings rebinding UI and persistence (same user config or dedicated bindings file).
 - Add language switch (localization selection + persistence).
 - Add graphics settings later (quality, fullscreen/windowed, vsync, resolution where applicable).
+- Add save/load game flow: slots or checkpoints, Continue entry point, optional auto-save (separate from settings persistence).
 
 ### Success Criteria
 

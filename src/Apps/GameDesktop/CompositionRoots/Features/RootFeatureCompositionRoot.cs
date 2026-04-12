@@ -12,11 +12,13 @@ using Myra.Graphics2D.UI;
 using Scellecs.Morpeh;
 using Services.Movement;
 using Systems;
-using Systems.Debugging;
-using Systems.Debugging.Render;
 using Systems.Input;
 using Systems.Render;
+#if DEBUG
+using Systems.Debugging;
+using Systems.Debugging.Render;
 using GameDesktop.CompositionRoots.DebugFeatures;
+#endif
 
 namespace GameDesktop.CompositionRoots.Features;
 
@@ -38,7 +40,9 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
 
         RegisterFeatures(serviceRegistry);
 
+#if DEBUG
         serviceRegistry.RegisterFrom<DebugRootFeatureCompositionRoot>();
+#endif
 
         RegisterEntryPoint(serviceRegistry);
     }
@@ -107,11 +111,17 @@ internal class RootFeatureCompositionRoot : ICompositionRoot
                     new CameraFollowingSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>().GraphicsDevice)),
                 new RenderFeature(factory.GetInstance<World>(),
                     new RenderCharacterMovementAnimationSystem(factory.GetInstance<World>(),
-                        factory.GetInstance<SpriteBatch>())),
-                new DebugFeature(factory.GetInstance<World>(), new EntitiesList(factory.GetInstance<World>()),
+                        factory.GetInstance<SpriteBatch>()))
+#if DEBUG
+                , new DebugFeature(factory.GetInstance<World>(), new EntitiesList(factory.GetInstance<World>()),
                     new FrameCounter(factory.GetInstance<World>()),
-                    new RenderFramesPerSec(factory.GetInstance<World>()),
+                    new DiagnosticsPanel(factory.GetInstance<World>(),
+                        factory.GetInstance<SpriteBatch>().GraphicsDevice,
+                        new GameInfo(
+                            IsFixedTimeStep: true,
+                            IsMouseVisible: true)),
                     new PivotRenderSystem(factory.GetInstance<World>(), factory.GetInstance<SpriteBatch>(), pixel))
+#endif
             );
         });
     }

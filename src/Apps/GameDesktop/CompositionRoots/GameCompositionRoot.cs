@@ -1,5 +1,6 @@
-﻿using System.Linq;
+using System.Linq;
 using GameDesktop.Resources.Internal;
+using GameDesktop.Ui.Myra;
 using LightInject;
 using Microsoft.Xna.Framework;
 using MonoGame.ImGuiNet;
@@ -16,10 +17,13 @@ internal class GameCompositionRoot : ICompositionRoot
 
     public void Compose(IServiceRegistry serviceRegistry)
     {
+        serviceRegistry.RegisterSingleton<MyraUiEnvironmentInitializer>();
+
         serviceRegistry.RegisterSingleton(factory =>
         {
             Game game = new(factory.GetInstance<ILogger>(),
-                factory.GetInstance<IServiceContainer>())
+                factory.GetInstance<IServiceContainer>(),
+                factory.GetInstance<MyraUiEnvironmentInitializer>())
             {
                 IsMouseVisible = IsMouseVisible,
                 IsFixedTimeStep = IsFixedTimeStep,

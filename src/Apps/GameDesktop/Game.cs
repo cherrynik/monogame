@@ -1,8 +1,7 @@
 using System;
-using System.IO;
 using Features;
-using FontStashSharp;
 using GameDesktop.CompositionRoots.Features;
+using GameDesktop.Ui.Myra;
 using GameUi.App.Effects;
 using GameUi.App.Input;
 using GameUi.App.State;
@@ -18,15 +17,15 @@ using Myra;
 using Myra.Graphics2D.UI;
 using Myra.Graphics2D.UI.Styles;
 using Serilog;
-using Services.Display;
 using Services.Input;
 
 namespace GameDesktop;
 
-public class Game : Microsoft.Xna.Framework.Game
+internal class Game : Microsoft.Xna.Framework.Game
 {
     private readonly ILogger _logger;
     private readonly IServiceContainer _container;
+    private readonly MyraUiEnvironmentInitializer _myraUiEnvironmentInitializer;
 
     [CanBeNull] private ImGuiRenderer _imGuiRenderer;
     private SpriteBatch _spriteBatch;
@@ -35,7 +34,6 @@ public class Game : Microsoft.Xna.Framework.Game
     private UiStore _uiStore = new();
     private readonly UiTheme _uiTheme = UiTheme.Default;
     private readonly UiVisualStyle _uiStyle = UiVisualStyle.Default;
-    private FullscreenController _fullscreenController = new(null);
     private readonly GameInputRouter _inputRouter = new(new SdlKeyboardStateSource());
     private readonly GameUiEffectsHandler _uiEffectsHandler = new();
 
@@ -47,10 +45,11 @@ public class Game : Microsoft.Xna.Framework.Game
     // https://lajbert.wordpress.com/2021/05/02/fix-your-timestep-in-monogame/
     private RootFeature _rootFeature;
 
-    public Game(ILogger logger, IServiceContainer container)
+    public Game(ILogger logger, IServiceContainer container, MyraUiEnvironmentInitializer myraUiEnvironmentInitializer)
     {
         _logger = logger;
         _container = container;
+        _myraUiEnvironmentInitializer = myraUiEnvironmentInitializer;
 
         _logger.ForContext<Game>().Verbose("ctor");
     }
@@ -63,7 +62,6 @@ public class Game : Microsoft.Xna.Framework.Game
         RegisterSpriteBatch();
         RegisterMyraUIEnvironment();
         RegisterImGuiRenderer();
-        _fullscreenController = new FullscreenController(Services.GetService<IGraphicsDeviceManager>() as GraphicsDeviceManager);
         _logger.ForContext<Game>().Verbose("Circular dependencies (external) initialized");
 
         _logger.ForContext<Game>().Verbose("Game services initialization...");
@@ -113,11 +111,6 @@ public class Game : Microsoft.Xna.Framework.Game
         if (inputFrame.TogglePauseRequested)
         {
             DispatchUi(UiAction.TogglePause);
-        }
-
-        if (inputFrame.ToggleFullscreenRequested)
-        {
-            _fullscreenController.Toggle();
         }
 
         if (_uiStore.State.IsPaused && inputFrame.PauseMenuAction.HasValue)
@@ -174,16 +167,7 @@ public class Game : Microsoft.Xna.Framework.Game
 
     private void RegisterMyraUIEnvironment()
     {
-        MyraEnvironment.Game = this;
-
-        string fontPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory, "Fonts", "Cairopixel.ttf");
-        byte[] fontData = File.ReadAllBytes(fontPath);
-        var fontSystem = new FontSystem();
-        fontSystem.AddFont(fontData);
-
-        SpriteFontBase pixelFont = fontSystem.GetFont(20);
-        Stylesheet.Current.LabelStyle.Font = pixelFont;
-        Stylesheet.Current.ButtonStyle.LabelStyle.Font = pixelFont;
+        _myraUiEnvironmentInitializer.Initialize(this);
     }
 
     private void RegisterImGuiRenderer()
